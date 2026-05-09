@@ -4,8 +4,17 @@ import {
   Phone, ChevronRight, Shield, Clock, Star, Users, Award, Smile,
   Stethoscope, Baby, Crown, Scissors, Zap, AlignJustify
 } from 'lucide-react';
-import { serviceCategories } from '../data/services';
-import { doctors } from '../data/doctors';
+import { api } from '../api/index.js';
+import { useFetch } from '../hooks/useFetch.js';
+
+const CATEGORY_META = {
+  therapy:      { icon: Zap,           label: 'Терапия' },
+  children:     { icon: Baby,          label: 'Детская стоматология' },
+  orthopedics:  { icon: Crown,         label: 'Ортопедия' },
+  surgery:      { icon: Scissors,      label: 'Хирургия' },
+  implants:     { icon: Stethoscope,   label: 'Имплантация' },
+  orthodontics: { icon: AlignJustify,  label: 'Ортодонтия' },
+};
 
 const stats = [
   { value: '15+', label: 'лет работы', icon: Award },
@@ -55,14 +64,6 @@ const reviews = [
   },
 ];
 
-const serviceIcons = {
-  therapy: Zap,
-  children: Baby,
-  orthopedics: Crown,
-  surgery: Scissors,
-  implants: Stethoscope,
-  orthodontics: AlignJustify,
-};
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -72,6 +73,24 @@ const fadeUp = {
 };
 
 export default function Home() {
+  const { data: services } = useFetch(api.getServices);
+  const { data: doctors }  = useFetch(api.getDoctors);
+
+  // Группируем услуги по категориям для карточек на главной
+  const serviceCategories = services
+    ? Object.entries(
+        services.reduce((acc, s) => {
+          if (!acc[s.category]) acc[s.category] = [];
+          acc[s.category].push(s);
+          return acc;
+        }, {})
+      ).map(([id, items]) => ({
+        id,
+        ...(CATEGORY_META[id] || { icon: Zap, label: id }),
+        services: items,
+      }))
+    : [];
+
   return (
     <>
       {/* Hero */}
@@ -168,8 +187,11 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {serviceCategories.length === 0 && Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse h-40" />
+            ))}
             {serviceCategories.map((cat, i) => {
-              const Icon = serviceIcons[cat.id] || Zap;
+              const Icon = cat.icon || Zap;
               const minPrice = Math.min(...cat.services.map((s) => s.price));
               return (
                 <motion.div
@@ -243,9 +265,18 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {doctors.slice(0, 3).map((doc, i) => (
+            {!doctors && Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse flex gap-4">
+                <div className="w-16 h-16 bg-slate-200 rounded-2xl flex-shrink-0" />
+                <div className="flex-1 space-y-2 pt-1">
+                  <div className="h-4 bg-slate-200 rounded w-3/4" />
+                  <div className="h-3 bg-slate-200 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+            {(doctors || []).slice(0, 3).map((doc, i) => (
               <motion.div
-                key={doc.id}
+                key={doc._id}
                 {...fadeUp}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="card p-6 flex items-start gap-4"

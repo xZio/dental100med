@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { api } from '../api/index.js';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -123,9 +124,18 @@ export default function Contacts() {
     touchAll();
     if (!isValid) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSent(true);
-    setLoading(false);
+    try {
+      await api.sendAppointment({
+        name: form.name,
+        phone: form.phone,
+        message: form.message,
+      });
+      setSent(true);
+    } catch {
+      alert('Не удалось отправить заявку. Попробуйте позвонить нам напрямую.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
