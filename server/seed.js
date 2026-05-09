@@ -2,9 +2,19 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { connectDB } from './config/db.js';
-import Service from './models/Service.js';
-import Doctor from './models/Doctor.js';
+import Service  from './models/Service.js';
+import Doctor   from './models/Doctor.js';
 import Promotion from './models/Promotion.js';
+import Category from './models/Category.js';
+
+const categories = [
+  { name: 'Терапия',               order: 1 },
+  { name: 'Детская стоматология',  order: 2 },
+  { name: 'Ортопедия',             order: 3 },
+  { name: 'Хирургия',              order: 4 },
+  { name: 'Имплантация',           order: 5 },
+  { name: 'Ортодонтия',            order: 6 },
+];
 
 const services = [
   // Терапия
@@ -55,10 +65,12 @@ async function seed() {
   await connectDB();
 
   // Очищаем старые данные
+  await Category.deleteMany({});
   await Service.deleteMany({});
   await Doctor.deleteMany({});
   await Promotion.deleteMany({});
 
+  await Category.insertMany(categories);
   await Service.insertMany(services);
   await Doctor.insertMany(doctors);
   await Promotion.insertMany(promotions);

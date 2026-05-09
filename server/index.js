@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
 import authRoutes         from './routes/auth.js';
 import servicesRoutes     from './routes/services.js';
+import categoriesRoutes   from './routes/categories.js';
 import doctorsRoutes      from './routes/doctors.js';
 import promotionsRoutes   from './routes/promotions.js';
 import appointmentsRoutes from './routes/appointments.js';
@@ -23,6 +24,7 @@ app.use(express.json());
 // API роуты
 app.use('/api/auth',         authRoutes);
 app.use('/api/services',     servicesRoutes);
+app.use('/api/categories',   categoriesRoutes);
 app.use('/api/doctors',      doctorsRoutes);
 app.use('/api/promotions',   promotionsRoutes);
 app.use('/api/appointments', appointmentsRoutes);

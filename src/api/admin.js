@@ -28,6 +28,11 @@ export const adminApi = {
       body: JSON.stringify({ email, password }),
     }),
 
+  getCategories:    ()        => req('/categories'),
+  createCategory:   (data)    => req('/categories',    { method: 'POST',   headers: authHeaders(), body: JSON.stringify(data) }),
+  updateCategory:   (id, data)=> req(`/categories/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }),
+  deleteCategory:   (id)      => req(`/categories/${id}`, { method: 'DELETE', headers: authHeaders() }),
+
   getServices:    ()        => req('/services'),
   createService:  (data)    => req('/services',    { method: 'POST',   headers: authHeaders(), body: JSON.stringify(data) }),
   updateService:  (id, data)=> req(`/services/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }),
