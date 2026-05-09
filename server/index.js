@@ -33,7 +33,7 @@ if (isProd) {
   const distPath = path.join(__dirname, '../dist');
   app.use(express.static(distPath));
   // Все остальные запросы → index.html (React Router)
-  app.get('*', (_, res) => res.sendFile(path.join(distPath, 'index.html')));
+  app.get('/{*path}', (_, res) => res.sendFile(path.join(distPath, 'index.html')));
 }
 
 app.listen(PORT, () => {
