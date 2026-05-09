@@ -8,33 +8,33 @@ import Promotion from './models/Promotion.js';
 
 const services = [
   // Терапия
-  { category: 'therapy', order: 1, name: 'Консультация стоматолога', price: 1000 },
-  { category: 'therapy', order: 2, name: 'Лечение кариеса (1 поверхность)', price: 10300 },
-  { category: 'therapy', order: 3, name: 'Лечение кариеса (2 поверхности)', price: 12500 },
-  { category: 'therapy', order: 4, name: 'Профессиональная чистка зубов', price: 7000 },
-  { category: 'therapy', order: 5, name: 'Отбеливание зубов', price: 18000 },
+  { category: 'Терапия', order: 1, name: 'Консультация стоматолога', price: 1000 },
+  { category: 'Терапия', order: 2, name: 'Лечение кариеса (1 поверхность)', price: 10300 },
+  { category: 'Терапия', order: 3, name: 'Лечение кариеса (2 поверхности)', price: 12500 },
+  { category: 'Терапия', order: 4, name: 'Профессиональная чистка зубов', price: 7000 },
+  { category: 'Терапия', order: 5, name: 'Отбеливание зубов', price: 18000 },
   // Детская
-  { category: 'children', order: 1, name: 'Консультация детского стоматолога', price: 1000 },
-  { category: 'children', order: 2, name: 'Лечение кариеса молочного зуба', price: 7370 },
-  { category: 'children', order: 3, name: 'Удаление молочного зуба', price: 3500 },
-  { category: 'children', order: 4, name: 'Герметизация фиссур', price: 4200 },
+  { category: 'Детская стоматология', order: 1, name: 'Консультация детского стоматолога', price: 1000 },
+  { category: 'Детская стоматология', order: 2, name: 'Лечение кариеса молочного зуба', price: 7370 },
+  { category: 'Детская стоматология', order: 3, name: 'Удаление молочного зуба', price: 3500 },
+  { category: 'Детская стоматология', order: 4, name: 'Герметизация фиссур', price: 4200 },
   // Ортопедия
-  { category: 'orthopedics', order: 1, name: 'Коронка металлокерамическая', price: 27000 },
-  { category: 'orthopedics', order: 2, name: 'Коронка циркониевая', price: 37000 },
-  { category: 'orthopedics', order: 3, name: 'Съёмный протез (акриловый)', price: 35000 },
-  { category: 'orthopedics', order: 4, name: 'Виниры', price: 25000 },
+  { category: 'Ортопедия', order: 1, name: 'Коронка металлокерамическая', price: 27000 },
+  { category: 'Ортопедия', order: 2, name: 'Коронка циркониевая', price: 37000 },
+  { category: 'Ортопедия', order: 3, name: 'Съёмный протез (акриловый)', price: 35000 },
+  { category: 'Ортопедия', order: 4, name: 'Виниры', price: 25000 },
   // Хирургия
-  { category: 'surgery', order: 1, name: 'Удаление простого зуба', price: 5000 },
-  { category: 'surgery', order: 2, name: 'Удаление сложного зуба', price: 9000 },
-  { category: 'surgery', order: 3, name: 'Удаление зуба мудрости', price: 12000 },
+  { category: 'Хирургия', order: 1, name: 'Удаление простого зуба', price: 5000 },
+  { category: 'Хирургия', order: 2, name: 'Удаление сложного зуба', price: 9000 },
+  { category: 'Хирургия', order: 3, name: 'Удаление зуба мудрости', price: 12000 },
   // Имплантация
-  { category: 'implants', order: 1, name: 'Имплант Straumann (под ключ)', price: 135000 },
-  { category: 'implants', order: 2, name: 'Имплант Nobel Biocare', price: 120000 },
-  { category: 'implants', order: 3, name: 'Имплант отечественный', price: 65000 },
+  { category: 'Имплантация', order: 1, name: 'Имплант Straumann (под ключ)', price: 135000 },
+  { category: 'Имплантация', order: 2, name: 'Имплант Nobel Biocare', price: 120000 },
+  { category: 'Имплантация', order: 3, name: 'Имплант отечественный', price: 65000 },
   // Ортодонтия
-  { category: 'orthodontics', order: 1, name: 'Брекеты металлические (1 челюсть)', price: 85000 },
-  { category: 'orthodontics', order: 2, name: 'Брекеты керамические (1 челюсть)', price: 110000 },
-  { category: 'orthodontics', order: 3, name: 'Элайнеры (полный курс)', price: 150000 },
+  { category: 'Ортодонтия', order: 1, name: 'Брекеты металлические (1 челюсть)', price: 85000 },
+  { category: 'Ортодонтия', order: 2, name: 'Брекеты керамические (1 челюсть)', price: 110000 },
+  { category: 'Ортодонтия', order: 3, name: 'Элайнеры (полный курс)', price: 150000 },
 ];
 
 const doctors = [
