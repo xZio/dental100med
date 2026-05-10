@@ -310,7 +310,7 @@ export default function Contacts() {
               <div className="card overflow-hidden h-64 p-0">
                 <iframe
                   title="Карта клиники ДенталстоМед"
-                  src="https://yandex.ru/map-widget/v1/?ll=37.5674136%2C55.4845719&z=17&pt=37.5674136%2C55.4845719%2Cpm2rdl&l=map"
+                  src="https://yandex.ru/map-widget/v1/?ll=37.567411%2C55.484551&z=17&ol=biz&oid=159190759541"
                   width="100%"
                   height="100%"
                   className="border-0 w-full h-full"
