@@ -3,6 +3,7 @@ import { Stethoscope } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonCard, ErrorMessage } from '../components/Skeleton.jsx';
+import { useSEO } from '../hooks/useSEO.js';
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -12,7 +13,12 @@ const fadeUp = {
 };
 
 export default function Doctors() {
-  const { data: doctors, loading, error, } = useFetch(api.getDoctors);
+  useSEO({
+    title: 'Наши врачи',
+    description: 'Опытные стоматологи клиники ДенталстоМед в Подольске. Терапевты, хирурги, ортодонты, имплантологи.',
+  });
+
+  const { data: doctors, loading, error } = useFetch(api.getDoctors);
 
   return (
     <>

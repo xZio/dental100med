@@ -5,14 +5,16 @@ import { ChevronRight, Search } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonRow, ErrorMessage } from '../components/Skeleton.jsx';
+import { useSEO } from '../hooks/useSEO.js';
 
-const CATEGORY_LABELS = {
-  therapy:      { label: 'Терапия',              icon: '🦷' },
-  children:     { label: 'Детская стоматология', icon: '👶' },
-  orthopedics:  { label: 'Ортопедия',            icon: '👑' },
-  surgery:      { label: 'Хирургия',             icon: '⚕️' },
-  implants:     { label: 'Имплантация',          icon: '🔩' },
-  orthodontics: { label: 'Ортодонтия',           icon: '😁' },
+// Ключи — русские названия категорий (как в MongoDB)
+const CATEGORY_ICONS = {
+  'Терапия':               '🦷',
+  'Детская стоматология':  '👶',
+  'Ортопедия':             '👑',
+  'Хирургия':              '⚕️',
+  'Имплантация':           '🔩',
+  'Ортодонтия':            '😁',
 };
 
 const fadeUp = {
@@ -23,6 +25,11 @@ const fadeUp = {
 };
 
 export default function Services() {
+  useSEO({
+    title: 'Услуги и цены',
+    description: 'Прайс-лист стоматологической клиники ДенталстоМед в Подольске. Терапия, имплантация, ортодонтия, детская стоматология.',
+  });
+
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -38,7 +45,8 @@ export default function Services() {
     });
     return Object.entries(map).map(([id, items]) => ({
       id,
-      ...(CATEGORY_LABELS[id] || { label: id, icon: '🦷' }),
+      label: id,
+      icon: CATEGORY_ICONS[id] || '🦷',
       services: items,
     }));
   }, [services]);

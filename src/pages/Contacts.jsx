@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/index.js';
+import { useSEO } from '../hooks/useSEO.js';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -80,6 +81,11 @@ function inputClass(touched, error) {
 }
 
 export default function Contacts() {
+  useSEO({
+    title: 'Контакты и запись',
+    description: 'Стоматология ДенталстоМед в Подольске. Адрес: пр. Юных Ленинцев, 82В, ТЦ Максимум. Запись онлайн или по телефону.',
+  });
+
   const [form, setForm] = useState({ name: '', phone: '+7', message: '' });
   const [touched, setTouched] = useState({ name: false, phone: false, message: false });
   const [sent, setSent] = useState(false);
@@ -301,20 +307,26 @@ export default function Contacts() {
                 </ul>
               </div>
 
-              <div className="card overflow-hidden h-52 bg-slate-200 flex items-center justify-center">
-                <div className="text-center text-slate-500">
-                  <MapPin size={32} className="mx-auto mb-2 text-slate-400" />
-                  <p className="text-sm">Карта будет здесь</p>
-                  <a
-                    href="https://yandex.ru/maps/?text=Подольск+пр.+Юных+Ленинцев+82В"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-600 text-xs mt-1 inline-block hover:underline"
-                  >
-                    Открыть в Яндекс Картах →
-                  </a>
-                </div>
+              <div className="card overflow-hidden h-64 p-0">
+                <iframe
+                  title="Карта клиники ДенталстоМед"
+                  src="https://yandex.ru/map-widget/v1/?text=%D0%9F%D0%BE%D0%B4%D0%BE%D0%BB%D1%8C%D1%81%D0%BA%2C+%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82+%D0%AE%D0%BD%D1%8B%D1%85+%D0%9B%D0%B5%D0%BD%D0%B8%D0%BD%D1%86%D0%B5%D0%B2%2C+82%D0%B2&z=16&l=map"
+                  width="100%"
+                  height="100%"
+                  className="border-0 w-full h-full"
+                  allowFullScreen
+                  loading="lazy"
+                />
               </div>
+              <a
+                href="https://yandex.ru/maps/?text=Подольск+проспект+Юных+Ленинцев+82В"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 text-sm hover:underline flex items-center gap-1"
+              >
+                <MapPin size={14} />
+                Открыть в Яндекс Картах
+              </a>
             </motion.div>
           </div>
         </div>

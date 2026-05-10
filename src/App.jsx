@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 
@@ -10,6 +10,7 @@ import Gallery from './pages/Gallery';
 import About from './pages/About';
 import Contacts from './pages/Contacts';
 
+import NotFound from './pages/NotFound';
 import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -47,7 +48,7 @@ export default function App() {
           </Route>
 
           {/* 404 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

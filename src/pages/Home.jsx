@@ -2,18 +2,20 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Phone, ChevronRight, Shield, Clock, Star, Users, Award, Smile,
-  Stethoscope, Baby, Crown, Scissors, Zap, AlignJustify
+  Stethoscope, Baby, Crown, Scissors, Zap, AlignJustify, Tag
 } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
+import { useSEO } from '../hooks/useSEO.js';
 
+// Ключи — русские названия категорий (как в MongoDB)
 const CATEGORY_META = {
-  therapy:      { icon: Zap,           label: 'Терапия' },
-  children:     { icon: Baby,          label: 'Детская стоматология' },
-  orthopedics:  { icon: Crown,         label: 'Ортопедия' },
-  surgery:      { icon: Scissors,      label: 'Хирургия' },
-  implants:     { icon: Stethoscope,   label: 'Имплантация' },
-  orthodontics: { icon: AlignJustify,  label: 'Ортодонтия' },
+  'Терапия':               { icon: Zap },
+  'Детская стоматология':  { icon: Baby },
+  'Ортопедия':             { icon: Crown },
+  'Хирургия':              { icon: Scissors },
+  'Имплантация':           { icon: Stethoscope },
+  'Ортодонтия':            { icon: AlignJustify },
 };
 
 const stats = [
@@ -73,8 +75,14 @@ const fadeUp = {
 };
 
 export default function Home() {
-  const { data: services } = useFetch(api.getServices);
-  const { data: doctors }  = useFetch(api.getDoctors);
+  useSEO({
+    title: 'Стоматология в Подольске',
+    description: 'Семейная стоматологическая клиника ДенталстоМед в Подольске. Лечение, имплантация, ортодонтия. Запись онлайн.',
+  });
+
+  const { data: services }    = useFetch(api.getServices);
+  const { data: doctors }     = useFetch(api.getDoctors);
+  const { data: promotions }  = useFetch(api.getPromotions);
 
   // Группируем услуги по категориям для карточек на главной
   const serviceCategories = services
@@ -86,7 +94,8 @@ export default function Home() {
         }, {})
       ).map(([id, items]) => ({
         id,
-        ...(CATEGORY_META[id] || { icon: Zap, label: id }),
+        label: id,
+        icon: (CATEGORY_META[id] || { icon: Zap }).icon,
         services: items,
       }))
     : [];
@@ -313,6 +322,51 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Promotions */}
+      {promotions && promotions.length > 0 && (
+        <section className="bg-white py-16 md:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
+              <h2 className="section-title">Акции и спецпредложения</h2>
+              <p className="section-subtitle">Выгодные предложения для наших пациентов</p>
+            </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {promotions.map((promo, i) => (
+                <motion.div
+                  key={promo._id}
+                  {...fadeUp}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="card p-6 border-l-4 border-l-primary-500 flex flex-col gap-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
+                      <Tag size={18} className="text-primary-600" />
+                    </div>
+                    {promo.discount && (
+                      <span className="bg-primary-600 text-white text-sm font-bold px-3 py-1 rounded-full">
+                        {promo.discount}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-slate-800 text-lg">{promo.title}</h3>
+                  {promo.description && (
+                    <p className="text-slate-500 text-sm leading-relaxed flex-1">{promo.description}</p>
+                  )}
+                  {promo.expiresAt && (
+                    <p className="text-xs text-slate-400">
+                      До {new Date(promo.expiresAt).toLocaleDateString('ru-RU')}
+                    </p>
+                  )}
+                  <Link to="/contacts" className="mt-auto text-primary-600 text-sm font-medium hover:text-primary-800 flex items-center gap-1 transition-colors">
+                    Записаться <ChevronRight size={14} />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Gallery Preview */}
       <section className="bg-white py-16 md:py-24">
