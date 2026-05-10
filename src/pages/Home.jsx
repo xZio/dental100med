@@ -48,24 +48,6 @@ const advantages = [
   },
 ];
 
-const reviews = [
-  {
-    name: 'Ольга М.',
-    text: 'Отличная клиника! Сделала имплант — всё прошло безболезненно. Очень довольна результатом.',
-    rating: 5,
-  },
-  {
-    name: 'Сергей К.',
-    text: 'Привожу сюда детей. Доктор нашёл подход даже к самому капризному — теперь ходят без слёз.',
-    rating: 5,
-  },
-  {
-    name: 'Наталья В.',
-    text: 'Поставили брекеты, через год зубы выровнялись идеально. Спасибо большое!',
-    rating: 5,
-  },
-];
-
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -402,30 +384,86 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="bg-white py-16 md:py-24">
+      {/* Reviews — Яндекс виджет */}
+      <section className="bg-slate-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
             <h2 className="section-title">Отзывы пациентов</h2>
+            <p className="section-subtitle">Что говорят о нас пациенты на Яндекс Картах</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {reviews.map(({ name, text, rating }, i) => (
-              <motion.div
-                key={name}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="card p-6"
-              >
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: rating }).map((_, j) => (
-                    <Star key={j} size={16} className="text-yellow-400 fill-yellow-400" />
-                  ))}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 items-stretch">
+
+            {/* Левый блок — рейтинг */}
+            <motion.div {...fadeUp} className="lg:col-span-2 card p-8 flex flex-col justify-between gap-6">
+              <div>
+                {/* Яндекс лого */}
+                <div className="flex items-center gap-2 mb-6">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#FC3F1D"/>
+                    <path d="M13.32 7.17h-.82c-1.33 0-2.03.64-2.03 1.59 0 1.07.46 1.61 1.46 2.28l.81.54-2.34 3.47H8.9l2.12-3.14c-1.2-.86-1.88-1.7-1.88-3.08C9.14 6.77 10.3 6 12.46 6H15v9.05h-1.68V7.17z" fill="white"/>
+                  </svg>
+                  <span className="text-slate-500 text-sm font-medium">Яндекс Карты</span>
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-4">"{text}"</p>
-                <p className="font-semibold text-slate-800 text-sm">{name}</p>
-              </motion.div>
-            ))}
+
+                {/* Рейтинг */}
+                <div className="flex items-end gap-3 mb-3">
+                  <span className="text-7xl font-bold text-slate-800 leading-none">5.0</span>
+                  <div className="pb-2">
+                    <div className="flex gap-1 mb-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} size={20} className="text-yellow-400 fill-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-slate-400 text-sm">из 5 возможных</p>
+                  </div>
+                </div>
+
+                <p className="text-slate-500 text-sm mb-6">
+                  На основе <span className="font-semibold text-slate-700">320+ отзывов</span> и <span className="font-semibold text-slate-700">426 оценок</span>
+                </p>
+
+                {/* Шкалы */}
+                {[5, 4, 3, 2, 1].map((stars, i) => (
+                  <div key={stars} className="flex items-center gap-3 mb-2">
+                    <span className="text-xs text-slate-400 w-4 text-right">{stars}</span>
+                    <Star size={12} className="text-yellow-400 fill-yellow-400 flex-shrink-0" />
+                    <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-yellow-400 h-2 rounded-full"
+                        style={{ width: ['92%', '5%', '1%', '1%', '1%'][i] }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="https://yandex.com/maps/org/dentalstomed/159190759541/reviews/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary justify-center text-center"
+              >
+                Все отзывы на Яндексе
+              </a>
+            </motion.div>
+
+            {/* Правый блок — виджет */}
+            <motion.div
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="lg:col-span-3 rounded-2xl overflow-hidden shadow-sm border border-slate-200"
+            >
+              <iframe
+                src="https://yandex.ru/maps-reviews-widget/159190759541?comments"
+                title="Отзывы о клинике ДенталстоМед"
+                width="100%"
+                height="100%"
+                className="border-0 block min-h-[480px]"
+                allowFullScreen
+              />
+            </motion.div>
+
           </div>
         </div>
       </section>
