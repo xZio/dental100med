@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
 import { protect } from '../middleware/auth.js';
+import { notifyNewAppointment } from '../config/push.js';
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.post('/', (req, res) => {
       .run(name.trim(), phone, message || '', ts, ts);
 
     res.status(201).json({ message: 'Заявка принята', id: String(lastInsertRowid) });
+
+    // Ответ клиенту уже ушёл — уведомление отправляем следом и молча
+    notifyNewAppointment({ name, phone, message });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { adminApi } from '../../api/admin';
 import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import DeleteButton from '../../components/admin/DeleteButton';
+import PushToggle from '../../components/admin/PushToggle';
 import { Phone, MessageSquare, Clock } from 'lucide-react';
 
 const STATUS = {
@@ -72,9 +73,12 @@ export default function AdminAppointments() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Заявки</h1>
-        <p className="text-gray-500 text-sm mt-1">{appointments.length} всего</p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Заявки</h1>
+          <p className="text-gray-500 text-sm mt-1">{appointments.length} всего</p>
+        </div>
+        <PushToggle />
       </div>
 
       {/* Filter tabs */}

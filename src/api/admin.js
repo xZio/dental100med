@@ -48,6 +48,10 @@ export const adminApi = {
   updatePromotion:  (id, data)=> req(`/promotions/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }),
   deletePromotion:  (id)      => req(`/promotions/${id}`, { method: 'DELETE', headers: authHeaders() }),
 
+  getPushKey:       ()          => req('/push/key'),
+  subscribePush:    (subscription) => req('/push', { method: 'POST', headers: authHeaders(), body: JSON.stringify(subscription) }),
+  unsubscribePush:  (endpoint)   => req('/push', { method: 'DELETE', headers: authHeaders(), body: JSON.stringify({ endpoint }) }),
+
   getGallery:         ()     => req('/gallery'),
   createGalleryImage: (data) => req('/gallery', { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }),
   deleteGalleryImage: (id)   => req(`/gallery/${id}`, { method: 'DELETE', headers: authHeaders() }),
