@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-500">© 2025 Dental100. Все права защищены.</p>
+          <p className="text-xs text-slate-500">© {new Date().getFullYear()} Dental100. Все права защищены.</p>
           <p className="text-xs text-slate-500">Лицензия №ЛО-50-01-012345</p>
         </div>
       </div>

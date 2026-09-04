@@ -1,0 +1,16 @@
+{
+  "name": "ДенталстоМед — заявки",
+  "short_name": "Заявки",
+  "description": "Заявки с сайта клиники «ДенталстоМед»",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1c63d4",
+  "lang": "ru",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
