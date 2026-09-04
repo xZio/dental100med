@@ -55,4 +55,15 @@ router.put('/:id/status', protect, (req, res) => {
   }
 });
 
+// DELETE /api/appointments/:id — убрать отработанную заявку из списка
+router.delete('/:id', protect, (req, res) => {
+  try {
+    const { changes } = db.prepare('DELETE FROM appointments WHERE id = ?').run(Number(req.params.id));
+    if (!changes) return res.status(404).json({ message: 'Заявка не найдена' });
+    res.json({ message: 'Заявка удалена' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

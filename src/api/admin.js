@@ -63,4 +63,5 @@ export const adminApi = {
   updateAppointmentStatus:(id, status) => req(`/appointments/${id}/status`, {
     method: 'PUT', headers: authHeaders(), body: JSON.stringify({ status }),
   }),
+  deleteAppointment:      (id)         => req(`/appointments/${id}`, { method: 'DELETE', headers: authHeaders() }),
 };

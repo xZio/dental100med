@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { adminApi } from '../../api/admin';
 import Modal from '../../components/admin/Modal';
 import PhotoFramer from '../../components/admin/PhotoFramer';
+import DeleteButton from '../../components/admin/DeleteButton';
 import { DEFAULT_FRAMING, framingStyle } from '../../lib/framing';
-import { Plus, Pencil, Trash2, UserRound } from 'lucide-react';
+import { Plus, Pencil, UserRound } from 'lucide-react';
 
 const EMPTY = { name: '', specialty: '', experience: '', description: '', photo: '', order: 0, ...DEFAULT_FRAMING };
 
@@ -52,9 +53,8 @@ export default function AdminDoctors() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Удалить врача?')) return;
     await adminApi.deleteDoctor(id);
-    load();
+    await load();
   };
 
   if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
@@ -98,9 +98,7 @@ export default function AdminDoctors() {
               <button onClick={() => openEdit(d)} className="flex-1 flex items-center justify-center gap-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors">
                 <Pencil size={13} /> Изменить
               </button>
-              <button onClick={() => handleDelete(d._id)} className="flex items-center justify-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-red-400 hover:text-red-500 transition-colors">
-                <Trash2 size={13} />
-              </button>
+              <DeleteButton label="Удалить врача" onConfirm={() => handleDelete(d._id)} />
             </div>
           </div>
         ))}

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { adminApi } from '../../api/admin';
 import Modal from '../../components/admin/Modal';
+import DeleteButton from '../../components/admin/DeleteButton';
 import { Plus, Pencil, Trash2, FolderCog, GripVertical, Check, X } from 'lucide-react';
 
 const EMPTY_SERVICE = { name: '', category: '', price: '', order: 0 };
@@ -68,9 +69,8 @@ export default function AdminServices() {
   };
 
   const handleDeleteService = async (id) => {
-    if (!confirm('Удалить услугу?')) return;
     await adminApi.deleteService(id);
-    loadAll();
+    await loadAll();
   };
 
   /* ── Categories ── */
@@ -99,16 +99,11 @@ export default function AdminServices() {
   };
 
   const handleDeleteCat = async (cat) => {
-    const count = services.filter((s) => s.category === cat.name).length;
-    if (count > 0) {
-      alert(`В категории «${cat.name}» есть ${count} услуг.\nСначала удалите или перенесите их в другую категорию.`);
-      return;
-    }
-    if (!confirm(`Удалить категорию «${cat.name}»?`)) return;
+    setCatError('');
     try {
       await adminApi.deleteCategory(cat._id);
       await loadAll();
-    } catch (err) { alert(err.message); }
+    } catch (err) { setCatError(err.message); }
   };
 
   if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
@@ -183,9 +178,7 @@ export default function AdminServices() {
                             <button onClick={() => openEditService(s)} className="p-1.5 text-gray-400 hover:text-teal-600 transition-colors">
                               <Pencil size={15} />
                             </button>
-                            <button onClick={() => handleDeleteService(s._id)} className="p-1.5 text-gray-400 hover:text-red-500 transition-colors">
-                              <Trash2 size={15} />
-                            </button>
+                            <DeleteButton variant="icon" label="Удалить услугу" onConfirm={() => handleDeleteService(s._id)} />
                           </td>
                         </tr>
                       ))}
@@ -296,9 +289,16 @@ export default function AdminServices() {
                         <button onClick={() => handleRenameStart(cat)} className="p-1 text-gray-400 hover:text-teal-600 transition-colors">
                           <Pencil size={14} />
                         </button>
-                        <button onClick={() => handleDeleteCat(cat)} className="p-1 text-gray-400 hover:text-red-500 transition-colors">
-                          <Trash2 size={14} />
-                        </button>
+                        {services.some((s) => s.category === cat.name) ? (
+                          <span
+                            title="Сначала перенесите или удалите услуги этой категории"
+                            className="p-1 text-gray-300 cursor-not-allowed"
+                          >
+                            <Trash2 size={14} />
+                          </span>
+                        ) : (
+                          <DeleteButton variant="icon" label="Удалить категорию" onConfirm={() => handleDeleteCat(cat)} />
+                        )}
                       </>
                     )}
                   </div>

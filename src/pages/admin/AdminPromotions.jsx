@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { adminApi } from '../../api/admin';
 import Modal from '../../components/admin/Modal';
-import { Plus, Pencil, Trash2, Tag } from 'lucide-react';
+import { Plus, Pencil, Tag } from 'lucide-react';
+import DeleteButton from '../../components/admin/DeleteButton';
 
 const EMPTY = { title: '', description: '', discount: '', active: true, expiresAt: '' };
 
@@ -45,9 +46,8 @@ export default function AdminPromotions() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Удалить акцию?')) return;
     await adminApi.deletePromotion(id);
-    load();
+    await load();
   };
 
   const toggleActive = async (p) => {
@@ -102,9 +102,7 @@ export default function AdminPromotions() {
               <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors">
                 <Pencil size={13} /> Изменить
               </button>
-              <button onClick={() => handleDelete(p._id)} className="flex items-center justify-center gap-1 px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-red-400 hover:text-red-500 transition-colors">
-                <Trash2 size={13} />
-              </button>
+              <DeleteButton label="Удалить акцию" onConfirm={() => handleDelete(p._id)} />
             </div>
           </div>
         ))}

@@ -6,7 +6,8 @@ import { Trash2, Check, X } from 'lucide-react';
  * «Точно?», второй удаляет. На телефоне это заметно надёжнее — системный
  * диалог там легко смахнуть мимо.
  *
- * variant "floating" — для миниатюр: кнопка висит в углу фото.
+ * variant "floating" — для миниатюр: кнопка висит в углу фото,
+ * "icon" — для плотных таблиц: одна иконка без рамки.
  */
 export default function DeleteButton({ onConfirm, label = 'Удалить', variant = 'inline' }) {
   const [asking, setAsking] = useState(false);
@@ -57,10 +58,12 @@ export default function DeleteButton({ onConfirm, label = 'Удалить', vari
       className={
         floating
           ? 'absolute right-1.5 top-1.5 rounded-lg bg-white/90 p-1.5 text-gray-600 shadow-sm transition-colors hover:text-red-500'
-          : 'flex items-center justify-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 transition-colors hover:border-red-400 hover:text-red-500'
+          : variant === 'icon'
+            ? 'p-1.5 text-gray-400 transition-colors hover:text-red-500'
+            : 'flex items-center justify-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 transition-colors hover:border-red-400 hover:text-red-500'
       }
     >
-      <Trash2 size={13} />
+      <Trash2 size={variant === 'icon' ? 15 : 13} />
     </button>
   );
 }

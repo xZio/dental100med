@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { adminApi } from '../../api/admin';
+import { useAutoRefresh } from '../../hooks/useAutoRefresh';
+import DeleteButton from '../../components/admin/DeleteButton';
 import { Phone, MessageSquare, Clock } from 'lucide-react';
 
 const STATUS = {
@@ -13,15 +15,46 @@ export default function AdminAppointments() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
 
-  const load = () => adminApi.getAppointments().then(setAppointments).finally(() => setLoading(false));
+  // Пока в полёте наша правка, ответ автообновления игнорируем: сервер может
+  // ответить состоянием ДО неё и перетереть только что нажатый статус
+  const pending = useRef(0);
+
+  const load = () =>
+    adminApi
+      .getAppointments()
+      .then((data) => { if (pending.current === 0) setAppointments(data); })
+      .finally(() => setLoading(false));
+
   useEffect(() => { load(); }, []);
+  useAutoRefresh(load);
+
+  const mutate = async (fn) => {
+    pending.current += 1;
+    try {
+      await fn();
+    } finally {
+      pending.current -= 1;
+    }
+  };
 
   const filtered = filter ? appointments.filter((a) => a.status === filter) : appointments;
 
-  const handleStatus = async (id, status) => {
-    await adminApi.updateAppointmentStatus(id, status);
-    load();
-  };
+  const handleStatus = (id, status) =>
+    mutate(async () => {
+      const before = appointments;
+      setAppointments((prev) => prev.map((a) => (a._id === id ? { ...a, status } : a)));
+      try {
+        await adminApi.updateAppointmentStatus(id, status);
+      } catch {
+        setAppointments(before);
+      }
+    });
+
+  const handleDelete = (id) =>
+    mutate(async () => {
+      await adminApi.deleteAppointment(id);
+      setAppointments((prev) => prev.filter((a) => a._id !== id));
+    });
 
   const formatDate = (iso) =>
     new Date(iso).toLocaleString('ru-RU', {
@@ -94,7 +127,7 @@ export default function AdminAppointments() {
               )}
 
               {/* Status buttons */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {Object.entries(STATUS).map(([val, { label, cls }]) => (
                   <button
                     key={val}
@@ -109,6 +142,9 @@ export default function AdminAppointments() {
                     {label}
                   </button>
                 ))}
+                <div className="ml-auto">
+                  <DeleteButton label="Удалить заявку" onConfirm={() => handleDelete(a._id)} />
+                </div>
               </div>
             </div>
           ))}
