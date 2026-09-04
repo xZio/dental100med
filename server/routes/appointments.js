@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
 import { protect } from '../middleware/auth.js';
 import { notifyNewAppointment } from '../config/push.js';
+import { forwardAppointment } from '../config/zioForms.js';
 
 const router = Router();
 
@@ -19,8 +20,9 @@ router.post('/', (req, res) => {
 
     res.status(201).json({ message: 'Заявка принята', id: String(lastInsertRowid) });
 
-    // Ответ клиенту уже ушёл — уведомление отправляем следом и молча
+    // Ответ клиенту уже ушёл — уведомления отправляем следом и молча
     notifyNewAppointment({ name, phone, message });
+    forwardAppointment({ name, phone, message });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
