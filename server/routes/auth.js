@@ -1,21 +1,24 @@
 import { Router } from 'express';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { createHash, timingSafeEqual } from 'crypto';
 
 const router = Router();
 
+/** Сравнение за постоянное время. Хеши уравнивают длину — иначе timingSafeEqual бросает. */
+const same = (a, b) =>
+  timingSafeEqual(createHash('sha256').update(a).digest(), createHash('sha256').update(b).digest());
+
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
     return res.status(400).json({ message: 'Введите email и пароль' });
 
-  if (email !== process.env.ADMIN_EMAIL)
-    return res.status(401).json({ message: 'Неверный email или пароль' });
+  const emailOk    = same(email.trim().toLowerCase(), (process.env.ADMIN_EMAIL || '').toLowerCase());
+  const passwordOk = same(password, process.env.ADMIN_PASSWORD || '');
 
-  const isMatch = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
-  if (!isMatch)
+  if (!emailOk || !passwordOk)
     return res.status(401).json({ message: 'Неверный email или пароль' });
 
   const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });

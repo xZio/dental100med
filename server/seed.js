@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import bcrypt from 'bcryptjs';
 import { db, connectDB, now } from './config/db.js';
 
 const categories = [
@@ -70,7 +69,7 @@ const promotions = [
   { title: 'Скидка на чистку зубов', description: 'Профессиональная гигиена полости рта со скидкой', discount: '20%', active: true },
 ];
 
-async function seed() {
+function seed() {
   connectDB();
 
   // С флагом --if-empty (первый запуск в проде) не трогаем уже заполненную базу
@@ -106,12 +105,7 @@ async function seed() {
   const insertImage = db.prepare('INSERT INTO gallery (src, alt, tab, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
   for (const g of gallery) insertImage.run(g.src, g.alt, g.tab, g.order, ts, ts);
 
-  // Генерируем хэш пароля администратора
-  const password = process.env.ADMIN_PASSWORD || 'admin123';
-  const hash = await bcrypt.hash(password, 12);
   console.log('\n✅ База данных заполнена!');
-  console.log('\n🔑 Хэш пароля администратора — добавь в .env:');
-  console.log(`ADMIN_PASSWORD_HASH=${hash}\n`);
 
   db.close();
 }
