@@ -5,6 +5,7 @@ import {
   Stethoscope, Baby, Crown, Scissors, Zap, AlignJustify, Tag
 } from 'lucide-react';
 import { api } from '../api/index.js';
+import { framingStyle } from '../lib/framing.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
@@ -277,7 +278,8 @@ export default function Home() {
                     <img
                       src={doc.photo}
                       alt={doc.name}
-                      className="w-full h-full object-cover object-top"
+                      className="w-full h-full object-cover"
+                      style={framingStyle(doc)}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.parentElement.querySelector('.fb').style.display = 'flex';

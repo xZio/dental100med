@@ -68,7 +68,20 @@ export const connectDB = () => {
     );
   `);
 
+  // Кадр фото врача — добавлен позже, поэтому не в CREATE TABLE
+  addColumn('doctors', 'photoScale', 'REAL NOT NULL DEFAULT 1.22');
+  addColumn('doctors', 'photoPosX',  'REAL NOT NULL DEFAULT 50');
+  addColumn('doctors', 'photoPosY',  'REAL NOT NULL DEFAULT 0');
+
   console.log(`SQLite подключена: ${dbPath}`);
+};
+
+// ALTER TABLE ADD COLUMN нельзя выполнить дважды — проверяем по схеме
+const addColumn = (table, column, ddl) => {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+  if (!columns.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${ddl}`);
+  }
 };
 
 export const now = () => new Date().toISOString();

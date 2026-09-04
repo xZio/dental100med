@@ -18,15 +18,19 @@ router.get('/', (req, res) => {
 
 router.post('/', protect, (req, res) => {
   try {
-    const { name, specialty, experience, description, photo, order } = req.body;
+    const { name, specialty, experience, description, photo, order,
+            photoScale, photoPosX, photoPosY } = req.body;
     if (!name || !specialty)
       return res.status(400).json({ message: 'Имя и специальность обязательны' });
 
     const ts = now();
     const { lastInsertRowid } = db
-      .prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", createdAt, updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-      .run(name.trim(), specialty, experience || '', description || '', photo || '', Number(order) || 0, ts, ts);
+      .prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order",
+                                     photoScale, photoPosX, photoPosY, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(name.trim(), specialty, experience || '', description || '', photo || '', Number(order) || 0,
+           Number(photoScale) || 1.22, photoPosX == null ? 50 : Number(photoPosX),
+           Number(photoPosY) || 0, ts, ts);
 
     const doctor = db.prepare('SELECT * FROM doctors WHERE id = ?').get(lastInsertRowid);
     res.status(201).json(mapRow(doctor));
@@ -41,9 +45,11 @@ router.put('/:id', protect, (req, res) => {
     const current = db.prepare('SELECT * FROM doctors WHERE id = ?').get(id);
     if (!current) return res.status(404).json({ message: 'Врач не найден' });
 
-    const { name, specialty, experience, description, photo, order } = req.body;
+    const { name, specialty, experience, description, photo, order,
+            photoScale, photoPosX, photoPosY } = req.body;
     db.prepare(`UPDATE doctors SET name = ?, specialty = ?, experience = ?, description = ?,
-                photo = ?, "order" = ?, updatedAt = ? WHERE id = ?`)
+                photo = ?, "order" = ?, photoScale = ?, photoPosX = ?, photoPosY = ?,
+                updatedAt = ? WHERE id = ?`)
       .run(
         name?.trim() ?? current.name,
         specialty ?? current.specialty,
@@ -51,6 +57,9 @@ router.put('/:id', protect, (req, res) => {
         description ?? current.description,
         photo ?? current.photo,
         order == null ? current.order : Number(order),
+        photoScale == null ? current.photoScale : Number(photoScale),
+        photoPosX == null ? current.photoPosX : Number(photoPosX),
+        photoPosY == null ? current.photoPosY : Number(photoPosY),
         now(),
         id
       );

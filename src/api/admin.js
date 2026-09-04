@@ -48,6 +48,13 @@ export const adminApi = {
   updatePromotion:  (id, data)=> req(`/promotions/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }),
   deletePromotion:  (id)      => req(`/promotions/${id}`, { method: 'DELETE', headers: authHeaders() }),
 
+  // Файл шлём как multipart — Content-Type проставит браузер сам
+  uploadPhoto: (file) => {
+    const body = new FormData();
+    body.append('file', file);
+    return req('/uploads', { method: 'POST', headers: { Authorization: authHeaders().Authorization }, body });
+  },
+
   getAppointments:        ()           => req('/appointments', { headers: authHeaders() }),
   updateAppointmentStatus:(id, status) => req(`/appointments/${id}/status`, {
     method: 'PUT', headers: authHeaders(), body: JSON.stringify({ status }),

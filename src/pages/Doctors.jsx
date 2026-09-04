@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Stethoscope } from 'lucide-react';
 import { api } from '../api/index.js';
+import { framingStyle } from '../lib/framing.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonCard, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
@@ -62,7 +63,8 @@ export default function Doctors() {
                       <img
                         src={doc.photo}
                         alt={doc.name}
-                        className="w-full h-full object-cover object-top"
+                        className="w-full h-full object-cover"
+                      style={framingStyle(doc)}
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
                           e.currentTarget.parentElement.querySelector('.fallback-icon').style.display = 'flex';

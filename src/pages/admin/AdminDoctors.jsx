@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { adminApi } from '../../api/admin';
 import Modal from '../../components/admin/Modal';
+import PhotoFramer from '../../components/admin/PhotoFramer';
+import { DEFAULT_FRAMING, framingStyle } from '../../lib/framing';
 import { Plus, Pencil, Trash2, UserRound } from 'lucide-react';
 
-const EMPTY = { name: '', specialty: '', experience: '', description: '', photo: '', order: 0 };
+const EMPTY = { name: '', specialty: '', experience: '', description: '', photo: '', order: 0, ...DEFAULT_FRAMING };
 
 export default function AdminDoctors() {
   const [doctors, setDoctors] = useState([]);
@@ -18,7 +20,16 @@ export default function AdminDoctors() {
   useEffect(() => { load(); }, []);
 
   const openAdd  = () => { setForm(EMPTY); setEditing(null); setError(''); setModal(true); };
-  const openEdit = (d) => { setForm({ name: d.name, specialty: d.specialty, experience: d.experience, description: d.description, photo: d.photo, order: d.order }); setEditing(d); setError(''); setModal(true); };
+  const openEdit = (d) => {
+    setForm({
+      name: d.name, specialty: d.specialty, experience: d.experience,
+      description: d.description, photo: d.photo, order: d.order,
+      photoScale: d.photoScale ?? DEFAULT_FRAMING.photoScale,
+      photoPosX:  d.photoPosX  ?? DEFAULT_FRAMING.photoPosX,
+      photoPosY:  d.photoPosY  ?? DEFAULT_FRAMING.photoPosY,
+    });
+    setEditing(d); setError(''); setModal(true);
+  };
   const closeModal = () => setModal(false);
 
   const f = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -68,7 +79,9 @@ export default function AdminDoctors() {
           <div key={d._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col gap-3">
             <div className="flex items-center gap-3">
               {d.photo ? (
-                <img src={d.photo} alt={d.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+                <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                  <img src={d.photo} alt={d.name} className="w-full h-full object-cover" style={framingStyle(d)} />
+                </div>
               ) : (
                 <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
                   <UserRound size={20} className="text-teal-600" />
@@ -96,11 +109,16 @@ export default function AdminDoctors() {
       {modal && (
         <Modal title={editing ? 'Редактировать врача' : 'Новый врач'} onClose={closeModal}>
           <form onSubmit={handleSave} className="space-y-4">
+            <PhotoFramer
+              photo={form.photo}
+              framing={{ photoScale: form.photoScale, photoPosX: form.photoPosX, photoPosY: form.photoPosY }}
+              onPhotoChange={(src) => setForm((prev) => ({ ...prev, photo: src }))}
+              onFramingChange={(framing) => setForm((prev) => ({ ...prev, ...framing }))}
+            />
             {[
               { key: 'name',        label: 'ФИО',             required: true },
               { key: 'specialty',   label: 'Специальность',   required: true },
               { key: 'experience',  label: 'Стаж',            required: false },
-              { key: 'photo',       label: 'Фото (URL)',       required: false },
             ].map(({ key, label, required }) => (
               <div key={key}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>

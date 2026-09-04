@@ -12,6 +12,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=5000
 ENV DB_PATH=/data/app.db
+# Фото из админки — на том же volume, что и база
+ENV UPLOAD_DIR=/data/uploads
 
 COPY server/package.json server/package-lock.json ./server/
 RUN cd server && npm ci --omit=dev
