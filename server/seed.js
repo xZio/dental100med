@@ -1,11 +1,6 @@
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
-import mongoose from 'mongoose';
-import { connectDB } from './config/db.js';
-import Service  from './models/Service.js';
-import Doctor   from './models/Doctor.js';
-import Promotion from './models/Promotion.js';
-import Category from './models/Category.js';
+import { db, connectDB, now } from './config/db.js';
 
 const categories = [
   { name: 'Терапия',               order: 1 },
@@ -62,27 +57,46 @@ const promotions = [
 ];
 
 async function seed() {
-  await connectDB();
+  connectDB();
+
+  // С флагом --if-empty (первый запуск в проде) не трогаем уже заполненную базу
+  if (process.argv.includes('--if-empty')) {
+    const { count } = db.prepare('SELECT COUNT(*) AS count FROM services').get();
+    if (count > 0) {
+      console.log('База уже заполнена — сид пропущен');
+      db.close();
+      return;
+    }
+  }
 
   // Очищаем старые данные
-  await Category.deleteMany({});
-  await Service.deleteMany({});
-  await Doctor.deleteMany({});
-  await Promotion.deleteMany({});
+  db.exec('DELETE FROM categories; DELETE FROM services; DELETE FROM doctors; DELETE FROM promotions;');
+  db.exec("DELETE FROM sqlite_sequence WHERE name IN ('categories','services','doctors','promotions')");
 
-  await Category.insertMany(categories);
-  await Service.insertMany(services);
-  await Doctor.insertMany(doctors);
-  await Promotion.insertMany(promotions);
+  const ts = now();
+
+  const insertCategory = db.prepare('INSERT INTO categories (name, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?)');
+  for (const c of categories) insertCategory.run(c.name, c.order, ts, ts);
+
+  const insertService = db.prepare('INSERT INTO services (name, price, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
+  for (const s of services) insertService.run(s.name, s.price, s.category, s.order, ts, ts);
+
+  const insertDoctor = db.prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", createdAt, updatedAt)
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+  for (const d of doctors) insertDoctor.run(d.name, d.specialty, d.experience, d.description, d.photo, d.order, ts, ts);
+
+  const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, active, expiresAt, createdAt, updatedAt)
+                                  VALUES (?, ?, ?, ?, ?, ?, ?)`);
+  for (const p of promotions) insertPromo.run(p.title, p.description, p.discount, p.active ? 1 : 0, null, ts, ts);
 
   // Генерируем хэш пароля администратора
   const password = process.env.ADMIN_PASSWORD || 'admin123';
   const hash = await bcrypt.hash(password, 12);
   console.log('\n✅ База данных заполнена!');
-  console.log(`\n🔑 Хэш пароля администратора — добавь в .env:`);
+  console.log('\n🔑 Хэш пароля администратора — добавь в .env:');
   console.log(`ADMIN_PASSWORD_HASH=${hash}\n`);
 
-  await mongoose.disconnect();
+  db.close();
 }
 
 seed();

@@ -1,41 +1,71 @@
 import { Router } from 'express';
-import Doctor from '../models/Doctor.js';
+import { db, now, mapRow } from '../config/db.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   try {
-    const doctors = await Doctor.find().sort({ order: 1 });
+    const doctors = db
+      .prepare('SELECT * FROM doctors ORDER BY "order" ASC')
+      .all()
+      .map(mapRow);
     res.json(doctors);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, (req, res) => {
   try {
-    const doctor = await Doctor.create(req.body);
-    res.status(201).json(doctor);
+    const { name, specialty, experience, description, photo, order } = req.body;
+    if (!name || !specialty)
+      return res.status(400).json({ message: 'Имя и специальность обязательны' });
+
+    const ts = now();
+    const { lastInsertRowid } = db
+      .prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(name.trim(), specialty, experience || '', description || '', photo || '', Number(order) || 0, ts, ts);
+
+    const doctor = db.prepare('SELECT * FROM doctors WHERE id = ?').get(lastInsertRowid);
+    res.status(201).json(mapRow(doctor));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-router.put('/:id', protect, async (req, res) => {
+router.put('/:id', protect, (req, res) => {
   try {
-    const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!doctor) return res.status(404).json({ message: 'Врач не найден' });
-    res.json(doctor);
+    const id = Number(req.params.id);
+    const current = db.prepare('SELECT * FROM doctors WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ message: 'Врач не найден' });
+
+    const { name, specialty, experience, description, photo, order } = req.body;
+    db.prepare(`UPDATE doctors SET name = ?, specialty = ?, experience = ?, description = ?,
+                photo = ?, "order" = ?, updatedAt = ? WHERE id = ?`)
+      .run(
+        name?.trim() ?? current.name,
+        specialty ?? current.specialty,
+        experience ?? current.experience,
+        description ?? current.description,
+        photo ?? current.photo,
+        order == null ? current.order : Number(order),
+        now(),
+        id
+      );
+
+    const doctor = db.prepare('SELECT * FROM doctors WHERE id = ?').get(id);
+    res.json(mapRow(doctor));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', protect, (req, res) => {
   try {
-    const doctor = await Doctor.findByIdAndDelete(req.params.id);
-    if (!doctor) return res.status(404).json({ message: 'Врач не найден' });
+    const { changes } = db.prepare('DELETE FROM doctors WHERE id = ?').run(Number(req.params.id));
+    if (!changes) return res.status(404).json({ message: 'Врач не найден' });
     res.json({ message: 'Врач удалён' });
   } catch (err) {
     res.status(500).json({ message: err.message });

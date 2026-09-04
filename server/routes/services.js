@@ -1,13 +1,16 @@
 import { Router } from 'express';
-import Service from '../models/Service.js';
+import { db, now, mapRow } from '../config/db.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
 
 // GET /api/services — публичный, для фронтенда
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   try {
-    const services = await Service.find().sort({ category: 1, order: 1 });
+    const services = db
+      .prepare('SELECT * FROM services ORDER BY category ASC, "order" ASC')
+      .all()
+      .map(mapRow);
     res.json(services);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -15,31 +18,53 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/services — только админ
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, (req, res) => {
   try {
-    const service = await Service.create(req.body);
-    res.status(201).json(service);
+    const { name, price, category, order } = req.body;
+    if (!name || price == null || !category)
+      return res.status(400).json({ message: 'Название, цена и категория обязательны' });
+
+    const ts = now();
+    const { lastInsertRowid } = db
+      .prepare('INSERT INTO services (name, price, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(name.trim(), Number(price), category, Number(order) || 0, ts, ts);
+
+    const service = db.prepare('SELECT * FROM services WHERE id = ?').get(lastInsertRowid);
+    res.status(201).json(mapRow(service));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // PUT /api/services/:id — только админ
-router.put('/:id', protect, async (req, res) => {
+router.put('/:id', protect, (req, res) => {
   try {
-    const service = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!service) return res.status(404).json({ message: 'Услуга не найдена' });
-    res.json(service);
+    const current = db.prepare('SELECT * FROM services WHERE id = ?').get(Number(req.params.id));
+    if (!current) return res.status(404).json({ message: 'Услуга не найдена' });
+
+    const { name, price, category, order } = req.body;
+    db.prepare('UPDATE services SET name = ?, price = ?, category = ?, "order" = ?, updatedAt = ? WHERE id = ?')
+      .run(
+        name?.trim() ?? current.name,
+        price == null ? current.price : Number(price),
+        category ?? current.category,
+        order == null ? current.order : Number(order),
+        now(),
+        Number(req.params.id)
+      );
+
+    const service = db.prepare('SELECT * FROM services WHERE id = ?').get(Number(req.params.id));
+    res.json(mapRow(service));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // DELETE /api/services/:id — только админ
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', protect, (req, res) => {
   try {
-    const service = await Service.findByIdAndDelete(req.params.id);
-    if (!service) return res.status(404).json({ message: 'Услуга не найдена' });
+    const { changes } = db.prepare('DELETE FROM services WHERE id = ?').run(Number(req.params.id));
+    if (!changes) return res.status(404).json({ message: 'Услуга не найдена' });
     res.json({ message: 'Услуга удалена' });
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -1,27 +1,34 @@
 import { Router } from 'express';
-import Appointment from '../models/Appointment.js';
+import { db, now, mapRow } from '../config/db.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
 
 // POST /api/appointments — публичный, отправка формы с сайта
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   try {
     const { name, phone, message } = req.body;
     if (!name || !phone)
       return res.status(400).json({ message: 'Имя и телефон обязательны' });
 
-    const appointment = await Appointment.create({ name, phone, message });
-    res.status(201).json({ message: 'Заявка принята', id: appointment._id });
+    const ts = now();
+    const { lastInsertRowid } = db
+      .prepare('INSERT INTO appointments (name, phone, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)')
+      .run(name.trim(), phone, message || '', ts, ts);
+
+    res.status(201).json({ message: 'Заявка принята', id: String(lastInsertRowid) });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
 // GET /api/appointments — только админ, список всех заявок
-router.get('/', protect, async (req, res) => {
+router.get('/', protect, (req, res) => {
   try {
-    const appointments = await Appointment.find().sort({ createdAt: -1 });
+    const appointments = db
+      .prepare('SELECT * FROM appointments ORDER BY createdAt DESC')
+      .all()
+      .map(mapRow);
     res.json(appointments);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -29,16 +36,20 @@ router.get('/', protect, async (req, res) => {
 });
 
 // PUT /api/appointments/:id/status — обновить статус заявки
-router.put('/:id/status', protect, async (req, res) => {
+router.put('/:id/status', protect, (req, res) => {
   try {
+    const id = Number(req.params.id);
     const { status } = req.body;
-    const apt = await Appointment.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
-    if (!apt) return res.status(404).json({ message: 'Заявка не найдена' });
-    res.json(apt);
+    if (!['new', 'called', 'done'].includes(status))
+      return res.status(400).json({ message: 'Недопустимый статус' });
+
+    const { changes } = db
+      .prepare('UPDATE appointments SET status = ?, updatedAt = ? WHERE id = ?')
+      .run(status, now(), id);
+    if (!changes) return res.status(404).json({ message: 'Заявка не найдена' });
+
+    const apt = db.prepare('SELECT * FROM appointments WHERE id = ?').get(id);
+    res.json(mapRow(apt));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
