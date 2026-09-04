@@ -66,6 +66,7 @@ export default function Home() {
   const { data: services }    = useFetch(api.getServices);
   const { data: doctors }     = useFetch(api.getDoctors);
   const { data: promotions }  = useFetch(api.getPromotions);
+  const { data: gallery }     = useFetch(api.getGallery);
 
   // Группируем услуги по категориям для карточек на главной
   const serviceCategories = services
@@ -361,16 +362,16 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-            {Array.from({ length: 6 }, (_, i) => i + 1).map((n, i) => (
+            {(gallery ?? []).filter((p) => p.tab === 'clinic').slice(0, 6).map((photo, i) => (
               <motion.div
-                key={n}
+                key={photo._id}
                 {...fadeUp}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
                 className={`overflow-hidden rounded-xl bg-slate-100 ${i === 0 ? 'sm:col-span-2 sm:row-span-2' : ''}`}
               >
                 <img
-                  src={`/images/clinic/clinic-${String(n).padStart(2, '0')}.jpg`}
-                  alt={`Клиника ДенталстоМед — фото ${n}`}
+                  src={photo.src}
+                  alt={photo.alt}
                   className={`w-full object-cover ${i === 0 ? 'h-56 sm:h-72 md:h-96' : 'h-36 sm:h-44'} hover:scale-105 transition-transform duration-500`}
                   loading="lazy"
                 />

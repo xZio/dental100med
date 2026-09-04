@@ -1,22 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { api } from '../api/index.js';
+import { useFetch } from '../hooks/useFetch.js';
 
-const clinicPhotos = Array.from({ length: 16 }, (_, i) => ({
-  id: i + 1,
-  src: `/images/clinic/clinic-${String(i + 1).padStart(2, '0')}.jpg`,
-  alt: `Интерьер клиники ДенталстоМед — фото ${i + 1}`,
-}));
-
-const workPhotos = [
-  { id: 1, src: '/images/works/work-01.jpg', alt: 'Работа стоматолога — результат лечения' },
-  { id: 2, src: '/images/works/work-02.jpg', alt: 'Эстетическая реставрация зубов' },
-  { id: 3, src: '/images/works/work-03.jpg', alt: 'Результат лечения в ДенталстоМед' },
-];
-
-const tabs = [
-  { id: 'clinic', label: 'Наша клиника', photos: clinicPhotos },
-  { id: 'works', label: 'Наши работы', photos: workPhotos },
+const TABS = [
+  { id: 'clinic', label: 'Наша клиника' },
+  { id: 'works', label: 'Наши работы' },
 ];
 
 function Lightbox({ photos, startIndex, onClose }) {
@@ -85,7 +75,10 @@ function Lightbox({ photos, startIndex, onClose }) {
 export default function Gallery() {
   const [activeTab, setActiveTab] = useState('clinic');
   const [lightbox, setLightbox] = useState(null);
+  const { data: images } = useFetch(api.getGallery);
 
+  const all = images ?? [];
+  const tabs = TABS.map((tab) => ({ ...tab, photos: all.filter((p) => p.tab === tab.id) }));
   const currentTab = tabs.find((t) => t.id === activeTab);
 
   return (
@@ -117,7 +110,7 @@ export default function Gallery() {
                 }`}
               >
                 {tab.label}
-                <span className="ml-2 text-xs opacity-70">({currentTab?.id === tab.id ? currentTab.photos.length : tabs.find(t => t.id === tab.id)?.photos.length})</span>
+                <span className="ml-2 text-xs opacity-70">({tab.photos.length})</span>
               </button>
             ))}
           </div>
@@ -132,7 +125,7 @@ export default function Gallery() {
           >
             {currentTab?.photos.map((photo, i) => (
               <motion.button
-                key={photo.id}
+                key={photo._id}
                 initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}

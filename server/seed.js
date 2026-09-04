@@ -51,6 +51,20 @@ const doctors = [
   { order: 6, name: 'Логунова Полина Алексеевна',     specialty: 'Детский стоматолог',                 experience: 'Специалист по детской стоматологии',  photo: '/images/doctor-logunova.jpg',     description: 'Лечение детей от 1 года. Комфортный подход без страха и боли.' },
 ];
 
+// Фото лежат в public/images — в базу кладём только пути; новые снимки
+// админ загрузит через админку, они попадут в /uploads на volume
+const gallery = [
+  ...Array.from({ length: 16 }, (_, i) => ({
+    src: `/images/clinic/clinic-${String(i + 1).padStart(2, '0')}.jpg`,
+    alt: `Интерьер клиники ДенталстоМед — фото ${i + 1}`,
+    tab: 'clinic',
+    order: i + 1,
+  })),
+  { src: '/images/works/work-01.jpg', alt: 'Работа стоматолога — результат лечения', tab: 'works', order: 1 },
+  { src: '/images/works/work-02.jpg', alt: 'Эстетическая реставрация зубов',        tab: 'works', order: 2 },
+  { src: '/images/works/work-03.jpg', alt: 'Результат лечения в ДенталстоМед',      tab: 'works', order: 3 },
+];
+
 const promotions = [
   { title: 'Бесплатная консультация', description: 'Первичный осмотр и консультация врача — бесплатно', discount: 'Бесплатно', active: true },
   { title: 'Скидка на чистку зубов', description: 'Профессиональная гигиена полости рта со скидкой', discount: '20%', active: true },
@@ -70,8 +84,8 @@ async function seed() {
   }
 
   // Очищаем старые данные
-  db.exec('DELETE FROM categories; DELETE FROM services; DELETE FROM doctors; DELETE FROM promotions;');
-  db.exec("DELETE FROM sqlite_sequence WHERE name IN ('categories','services','doctors','promotions')");
+  db.exec('DELETE FROM categories; DELETE FROM services; DELETE FROM doctors; DELETE FROM promotions; DELETE FROM gallery;');
+  db.exec("DELETE FROM sqlite_sequence WHERE name IN ('categories','services','doctors','promotions','gallery')");
 
   const ts = now();
 
@@ -88,6 +102,9 @@ async function seed() {
   const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, active, expiresAt, createdAt, updatedAt)
                                   VALUES (?, ?, ?, ?, ?, ?, ?)`);
   for (const p of promotions) insertPromo.run(p.title, p.description, p.discount, p.active ? 1 : 0, null, ts, ts);
+
+  const insertImage = db.prepare('INSERT INTO gallery (src, alt, tab, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
+  for (const g of gallery) insertImage.run(g.src, g.alt, g.tab, g.order, ts, ts);
 
   // Генерируем хэш пароля администратора
   const password = process.env.ADMIN_PASSWORD || 'admin123';

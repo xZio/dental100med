@@ -18,6 +18,7 @@ import AdminServices from './pages/admin/AdminServices';
 import AdminDoctors from './pages/admin/AdminDoctors';
 import AdminPromotions from './pages/admin/AdminPromotions';
 import AdminAppointments from './pages/admin/AdminAppointments';
+import AdminGallery from './pages/admin/AdminGallery';
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="services"     element={<AdminServices />} />
             <Route path="doctors"      element={<AdminDoctors />} />
             <Route path="promotions"   element={<AdminPromotions />} />
+            <Route path="gallery"      element={<AdminGallery />} />
             <Route path="appointments" element={<AdminAppointments />} />
           </Route>
 

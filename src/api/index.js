@@ -13,6 +13,7 @@ export const api = {
   getServices:    () => request('/services'),
   getDoctors:     () => request('/doctors'),
   getPromotions:  () => request('/promotions'),
+  getGallery:     () => request('/gallery'),
   sendAppointment: (data) =>
     fetch(`${BASE_URL}/appointments`, {
       method: 'POST',

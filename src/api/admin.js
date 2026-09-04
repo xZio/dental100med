@@ -48,6 +48,10 @@ export const adminApi = {
   updatePromotion:  (id, data)=> req(`/promotions/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) }),
   deletePromotion:  (id)      => req(`/promotions/${id}`, { method: 'DELETE', headers: authHeaders() }),
 
+  getGallery:         ()     => req('/gallery'),
+  createGalleryImage: (data) => req('/gallery', { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) }),
+  deleteGalleryImage: (id)   => req(`/gallery/${id}`, { method: 'DELETE', headers: authHeaders() }),
+
   // Файл шлём как multipart — Content-Type проставит браузер сам
   uploadPhoto: (file) => {
     const body = new FormData();

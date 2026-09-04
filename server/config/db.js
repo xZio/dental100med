@@ -57,6 +57,16 @@ export const connectDB = () => {
       updatedAt   TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS gallery (
+      id        INTEGER PRIMARY KEY AUTOINCREMENT,
+      src       TEXT NOT NULL,
+      alt       TEXT NOT NULL DEFAULT '',
+      tab       TEXT NOT NULL DEFAULT 'clinic',
+      "order"   INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS appointments (
       id        INTEGER PRIMARY KEY AUTOINCREMENT,
       name      TEXT NOT NULL,

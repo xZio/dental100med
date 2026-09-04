@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  LayoutDashboard, Stethoscope, UserRound, Tag, CalendarClock,
+  LayoutDashboard, Stethoscope, UserRound, Tag, CalendarClock, Images,
   LogOut, Menu, X, ChevronRight,
 } from 'lucide-react';
 
@@ -11,6 +11,7 @@ const NAV = [
   { to: '/admin/services',     label: 'Услуги',    icon: Stethoscope },
   { to: '/admin/doctors',      label: 'Врачи',     icon: UserRound },
   { to: '/admin/promotions',   label: 'Акции',     icon: Tag },
+  { to: '/admin/gallery',      label: 'Галерея',   icon: Images },
   { to: '/admin/appointments', label: 'Заявки',    icon: CalendarClock },
 ];
 
