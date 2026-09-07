@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect } from '../middleware/auth.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -42,7 +42,7 @@ router.get('/all', protect, (req, res) => {
   }
 });
 
-router.post('/', protect, (req, res) => {
+router.post('/', adminOnly, (req, res) => {
   try {
     const { title, description, discount, active, expiresAt } = req.body;
     if (!title) return res.status(400).json({ message: 'Заголовок обязателен' });
@@ -60,7 +60,7 @@ router.post('/', protect, (req, res) => {
   }
 });
 
-router.put('/:id', protect, (req, res) => {
+router.put('/:id', adminOnly, (req, res) => {
   try {
     const id = Number(req.params.id);
     const current = db.prepare('SELECT * FROM promotions WHERE id = ?').get(id);
@@ -86,7 +86,7 @@ router.put('/:id', protect, (req, res) => {
   }
 });
 
-router.delete('/:id', protect, (req, res) => {
+router.delete('/:id', adminOnly, (req, res) => {
   try {
     db.prepare('DELETE FROM promotions WHERE id = ?').run(Number(req.params.id));
     res.json({ message: 'Акция удалена' });

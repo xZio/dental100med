@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect } from '../middleware/auth.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
   }
 });
 
-router.post('/', protect, (req, res) => {
+router.post('/', adminOnly, (req, res) => {
   try {
     const { name, specialty, experience, description, photo, order,
             photoScale, photoPosX, photoPosY } = req.body;
@@ -39,7 +39,7 @@ router.post('/', protect, (req, res) => {
   }
 });
 
-router.put('/:id', protect, (req, res) => {
+router.put('/:id', adminOnly, (req, res) => {
   try {
     const id = Number(req.params.id);
     const current = db.prepare('SELECT * FROM doctors WHERE id = ?').get(id);
@@ -71,7 +71,7 @@ router.put('/:id', protect, (req, res) => {
   }
 });
 
-router.delete('/:id', protect, (req, res) => {
+router.delete('/:id', adminOnly, (req, res) => {
   try {
     const { changes } = db.prepare('DELETE FROM doctors WHERE id = ?').run(Number(req.params.id));
     if (!changes) return res.status(404).json({ message: 'Врач не найден' });

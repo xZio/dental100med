@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { db, now, mapRow } from '../config/db.js';
 import { uploadDir } from '../config/uploads.js';
-import { protect } from '../middleware/auth.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
   }
 });
 
-router.post('/', protect, (req, res) => {
+router.post('/', adminOnly, (req, res) => {
   try {
     const { src, alt, tab, order } = req.body;
     if (!src) return res.status(400).json({ message: 'Не передано фото' });
@@ -37,7 +37,7 @@ router.post('/', protect, (req, res) => {
   }
 });
 
-router.put('/:id', protect, (req, res) => {
+router.put('/:id', adminOnly, (req, res) => {
   try {
     const id = Number(req.params.id);
     const current = db.prepare('SELECT * FROM gallery WHERE id = ?').get(id);
@@ -61,7 +61,7 @@ router.put('/:id', protect, (req, res) => {
 
 // Вместе со строкой убираем и сам файл — иначе volume зарастает мусором.
 // Трогаем только свои загрузки: фото из /public положены в репозиторий.
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', adminOnly, async (req, res) => {
   try {
     const id = Number(req.params.id);
     const image = db.prepare('SELECT * FROM gallery WHERE id = ?').get(id);

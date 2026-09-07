@@ -41,11 +41,11 @@ export default function App() {
             path="/admin"
             element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}
           >
-            <Route index element={<Dashboard />} />
-            <Route path="services"     element={<AdminServices />} />
-            <Route path="doctors"      element={<AdminDoctors />} />
-            <Route path="promotions"   element={<AdminPromotions />} />
-            <Route path="gallery"      element={<AdminGallery />} />
+            <Route index element={<ProtectedRoute adminOnly><Dashboard /></ProtectedRoute>} />
+            <Route path="services"     element={<ProtectedRoute adminOnly><AdminServices /></ProtectedRoute>} />
+            <Route path="doctors"      element={<ProtectedRoute adminOnly><AdminDoctors /></ProtectedRoute>} />
+            <Route path="promotions"   element={<ProtectedRoute adminOnly><AdminPromotions /></ProtectedRoute>} />
+            <Route path="gallery"      element={<ProtectedRoute adminOnly><AdminGallery /></ProtectedRoute>} />
             <Route path="appointments" element={<AdminAppointments />} />
           </Route>
 

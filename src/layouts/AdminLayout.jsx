@@ -6,17 +6,19 @@ import {
   LogOut, Menu, X, ChevronRight,
 } from 'lucide-react';
 
+// adminOnly — пункты, которых администратор клиники (роль manager) не видит:
+// он занимается только заявками
 const NAV = [
-  { to: '/admin',              label: 'Дашборд',   icon: LayoutDashboard, end: true },
-  { to: '/admin/services',     label: 'Услуги',    icon: Stethoscope },
-  { to: '/admin/doctors',      label: 'Врачи',     icon: UserRound },
-  { to: '/admin/promotions',   label: 'Акции',     icon: Tag },
-  { to: '/admin/gallery',      label: 'Галерея',   icon: Images },
+  { to: '/admin',              label: 'Дашборд',   icon: LayoutDashboard, end: true, adminOnly: true },
+  { to: '/admin/services',     label: 'Услуги',    icon: Stethoscope,     adminOnly: true },
+  { to: '/admin/doctors',      label: 'Врачи',     icon: UserRound,       adminOnly: true },
+  { to: '/admin/promotions',   label: 'Акции',     icon: Tag,             adminOnly: true },
+  { to: '/admin/gallery',      label: 'Галерея',   icon: Images,          adminOnly: true },
   { to: '/admin/appointments', label: 'Заявки',    icon: CalendarClock },
 ];
 
 export default function AdminLayout() {
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -37,7 +39,7 @@ export default function AdminLayout() {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        {NAV.map(({ to, label, icon: Icon, end }) => (
+        {NAV.filter((item) => isAdmin || !item.adminOnly).map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}

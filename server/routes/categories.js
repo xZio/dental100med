@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect } from '../middleware/auth.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/categories — только админ
-router.post('/', protect, (req, res) => {
+router.post('/', adminOnly, (req, res) => {
   try {
     const { name, order } = req.body;
     if (!name) return res.status(400).json({ message: 'Название обязательно' });
@@ -40,7 +40,7 @@ router.post('/', protect, (req, res) => {
 
 // PUT /api/categories/:id — переименовать категорию
 // Если имя изменилось — обновляем поле category у всех услуг
-router.put('/:id', protect, (req, res) => {
+router.put('/:id', adminOnly, (req, res) => {
   try {
     const id = Number(req.params.id);
     const old = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
@@ -69,7 +69,7 @@ router.put('/:id', protect, (req, res) => {
 
 // DELETE /api/categories/:id — удалить категорию
 // Нельзя удалить, если в ней есть услуги
-router.delete('/:id', protect, (req, res) => {
+router.delete('/:id', adminOnly, (req, res) => {
   try {
     const id = Number(req.params.id);
     const cat = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);

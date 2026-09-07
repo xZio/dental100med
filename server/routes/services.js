@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect } from '../middleware/auth.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/services — только админ
-router.post('/', protect, (req, res) => {
+router.post('/', adminOnly, (req, res) => {
   try {
     const { name, price, category, order } = req.body;
     if (!name || price == null || !category)
@@ -37,7 +37,7 @@ router.post('/', protect, (req, res) => {
 });
 
 // PUT /api/services/:id — только админ
-router.put('/:id', protect, (req, res) => {
+router.put('/:id', adminOnly, (req, res) => {
   try {
     const current = db.prepare('SELECT * FROM services WHERE id = ?').get(Number(req.params.id));
     if (!current) return res.status(404).json({ message: 'Услуга не найдена' });
@@ -61,7 +61,7 @@ router.put('/:id', protect, (req, res) => {
 });
 
 // DELETE /api/services/:id — только админ
-router.delete('/:id', protect, (req, res) => {
+router.delete('/:id', adminOnly, (req, res) => {
   try {
     const { changes } = db.prepare('DELETE FROM services WHERE id = ?').run(Number(req.params.id));
     if (!changes) return res.status(404).json({ message: 'Услуга не найдена' });

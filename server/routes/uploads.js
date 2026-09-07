@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
 import { uploadDir } from '../config/uploads.js';
-import { protect } from '../middleware/auth.js';
+import { adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -27,7 +27,7 @@ const toWebp = (input) =>
 // octet-stream типом. Настоящая проверка — попытка раскодировать.
 // iPhone снимает в HEIC, который sharp не читает (валится на HEVC-кадрах),
 // поэтому на неудаче декодируем HEIC отдельно и сжимаем повторно.
-router.post('/', protect, upload.single('file'), async (req, res) => {
+router.post('/', adminOnly, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'Файл не получен' });
 
   const type = req.file.mimetype || '';
