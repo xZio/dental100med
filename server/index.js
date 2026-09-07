@@ -46,8 +46,13 @@ app.use('/uploads', express.static(uploadDir, { maxAge: '30d', immutable: true }
 if (isProd) {
   const distPath = path.join(__dirname, '../dist');
   app.use(express.static(distPath));
-  // Все остальные запросы → index.html (React Router)
-  app.get('/{*path}', (_, res) => res.sendFile(path.join(distPath, 'index.html')));
+  // Остальные запросы → index.html (React Router). Но только навигационные:
+  // на «/images/services/therapy.webp» надо отдать 404, а не страницу, иначе
+  // <img> покажет значок битой картинки вместо запасной иконки.
+  app.get('/{*path}', (req, res, next) => {
+    if (path.extname(req.path)) return next();
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
 }
 
 app.listen(PORT, () => {

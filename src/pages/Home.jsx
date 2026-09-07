@@ -7,9 +7,11 @@ import {
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { priceFrom } from '../lib/price.js';
+import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
 import Reviews from '../components/Reviews.jsx';
+import CountUp from '../components/CountUp.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
@@ -146,7 +148,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                   <Icon size={22} className="text-primary-700" />
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-800">{value}</p>
+                <CountUp value={value} className="block text-2xl sm:text-3xl font-bold text-slate-800 tabular-nums" />
                 <p className="text-sm text-slate-500 mt-1">{label}</p>
               </motion.div>
             ))}
@@ -176,17 +178,22 @@ export default function Home() {
                 >
                   <Link
                     to={`/services#${cat.id}`}
-                    className="card p-6 block group hover:-translate-y-1 transition-transform duration-200"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-6 shadow-lg shadow-primary-900/15 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-900/25"
                   >
-                    <div className="w-12 h-12 bg-primary-50 group-hover:bg-primary-100 rounded-xl flex items-center justify-center mb-4 transition-colors">
-                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={24} className="text-primary-700" />
+                    {/* Мягкое пятно света в углу — оживляет плотную заливку */}
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/15 blur-2xl transition-opacity duration-300 group-hover:opacity-70"
+                    />
+                    <div className="relative mb-4 flex h-[76px] w-[76px] items-center justify-center rounded-2xl bg-white/10 transition-transform duration-300 group-hover:scale-105">
+                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={52} className="text-white" />
                     </div>
-                    <h3 className="font-semibold text-slate-800 text-lg mb-1">{cat.label}</h3>
-                    <p className="text-sm text-slate-500 mb-3">{cat.services.length} услуги</p>
-                    <p className="text-primary-700 font-semibold text-sm">
-                      {priceLabel}
+                    <h3 className="relative text-lg font-semibold text-white">{cat.label}</h3>
+                    <p className="relative mt-1 text-sm text-primary-200">
+                      {cat.services.length} {plural(cat.services.length, ['услуга', 'услуги', 'услуг'])}
                     </p>
-                    <div className="mt-3 flex items-center gap-1 text-primary-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="relative mt-3 text-sm font-semibold text-white">{priceLabel}</p>
+                    <div className="relative mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-primary-100 transition-transform duration-300 group-hover:translate-x-1">
                       Смотреть цены <ChevronRight size={15} />
                     </div>
                   </Link>

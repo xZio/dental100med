@@ -1,21 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
- * Значок категории услуг. Если для неё есть картинка
- * /images/services/<slug>.webp — показываем её, иначе рисуем иконку.
- * Так новые картинки достаточно положить в папку, ничего не правя в коде.
+ * Значок категории услуг. Если есть картинка /images/services/<slug>.webp —
+ * показываем её, иначе рисуем иконку. Новую картинку достаточно положить
+ * в папку, править код не нужно.
+ *
+ * Картинку подставляем ТОЛЬКО после того, как она успешно загрузилась:
+ * несуществующий файл сервер отдаёт как страницу (SPA-фолбэк), и <img>
+ * успевает мигнуть значком битого изображения, прежде чем сработает onError.
  */
 export default function ServiceIcon({ slug, icon: Icon, size = 22, className = '' }) {
-  const [failed, setFailed] = useState(false);
+  const [src, setSrc] = useState(null);
 
-  if (slug && !failed) {
+  useEffect(() => {
+    if (!slug) return;
+    const url = `/images/services/${slug}.webp`;
+    const probe = new Image();
+    probe.onload = () => setSrc(url);
+    probe.src = url;
+    return () => { probe.onload = null; };
+  }, [slug]);
+
+  if (src) {
     return (
       <img
-        src={`/images/services/${slug}.webp`}
+        src={src}
         alt=""
         aria-hidden
-        loading="lazy"
-        onError={() => setFailed(true)}
         className={className}
         style={{ width: size, height: size, objectFit: 'contain' }}
       />

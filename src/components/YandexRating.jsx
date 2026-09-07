@@ -2,15 +2,7 @@ import { Star } from 'lucide-react';
 import { reviewsSummary } from '../data/reviews.js';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
-
-const plural = (n, forms) => {
-  const mod100 = n % 100;
-  const mod10 = n % 10;
-  if (mod100 >= 11 && mod100 <= 14) return forms[2];
-  if (mod10 === 1) return forms[0];
-  if (mod10 >= 2 && mod10 <= 4) return forms[1];
-  return forms[2];
-};
+import { plural } from '../lib/plural.js';
 
 /**
  * Карточка-наклейка рейтинга на Яндекс Картах: цифры сервер обновляет раз
