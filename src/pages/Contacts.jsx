@@ -92,7 +92,7 @@ export default function Contacts() {
     description: 'Стоматология ДенталстоМед в Подольске. Адрес: пр. Юных Ленинцев, 82В, ТЦ Максимум. Запись онлайн или по телефону.',
   });
 
-  const { data: services } = useFetch(api.getServices);
+  const { data: categories } = useFetch(api.getCategories);
 
   const [form, setForm] = useState({ name: '', phone: '+7', service: '', date: '', message: '' });
   const [touched, setTouched] = useState({ name: false, phone: false, message: false });
@@ -133,8 +133,10 @@ export default function Contacts() {
     setForm((f) => ({ ...f, name: value }));
   };
 
-  // Услуги для выпадающего списка — из того же прайса, что на сайте
-  const serviceOptions = (services ?? []).map((s) => ({ value: s.name, label: s.name }));
+  // В списке — разделы прайса, а не отдельные позиции: пациент выбирает
+  // направление («Имплантация»), а не строку прайса («Имплантат Astra Tech»).
+  // Порядок тот же, что на странице услуг.
+  const serviceOptions = (categories ?? []).map((c) => ({ value: c.name, label: c.name }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
