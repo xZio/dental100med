@@ -15,6 +15,8 @@ export const api = {
   getDoctors:     () => request('/doctors'),
   getPromotions:  () => request('/promotions'),
   getGallery:     () => request('/gallery'),
+  // 204 — Яндекс не ответил: показываем запасные цифры, а не ошибку
+  getRating:      () => fetch(`${BASE_URL}/rating`).then((res) => (res.status === 204 ? null : res.json())),
   sendAppointment: (data) =>
     fetch(`${BASE_URL}/appointments`, {
       method: 'POST',

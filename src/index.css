@@ -48,3 +48,29 @@
     @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300;
   }
 }
+
+/* Бегущие ленты отзывов. Длительность задаётся переменной --dur на колонке,
+   чтобы соседние колонки ехали с разной скоростью и не выглядели синхронными. */
+@keyframes marquee-v {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(-100% - 0.75rem)); }
+}
+
+@keyframes marquee-h {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% - 0.75rem)); }
+}
+
+.animate-marquee-v { animation: marquee-v var(--dur, 46s) linear infinite; }
+.animate-marquee-h { animation: marquee-h var(--dur, 46s) linear infinite; }
+
+/* Затухание концов колонки — маской по самой колонке, а не оверлеем сверху:
+   стопка повёрнута, и прямой оверлей оставил бы незакрашенные углы. */
+.reviews-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-v, .animate-marquee-h { animation: none; }
+}

@@ -14,6 +14,7 @@ import appointmentsRoutes from './routes/appointments.js';
 import uploadsRoutes      from './routes/uploads.js';
 import galleryRoutes      from './routes/gallery.js';
 import pushRoutes         from './routes/push.js';
+import ratingRoutes       from './routes/rating.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app  = express();
@@ -35,6 +36,7 @@ app.use('/api/appointments', appointmentsRoutes);
 app.use('/api/uploads',      uploadsRoutes);
 app.use('/api/gallery',      galleryRoutes);
 app.use('/api/push',         pushRoutes);
+app.use('/api/rating',       ratingRoutes);
 app.get('/api/health', (_, res) => res.json({ status: 'ok', time: new Date() }));
 
 // Загруженные фото лежат на volume, а не в репозитории
