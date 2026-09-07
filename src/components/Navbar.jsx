@@ -45,7 +45,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
             <img
               src="/images/logo.png"
-              alt="Dental100 — стоматология"
+              alt="ДенталстоМед — стоматология в Подольске"
               className="h-10 w-auto object-contain"
             />
           </Link>
