@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { reachGoal } from './Metrika.jsx';
 import { legal } from '../data/legal.js';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
@@ -57,7 +58,8 @@ export default function Footer() {
                 г. Подольск, пр. Юных Ленинцев, д. 82В, ТЦ Максимум, 2 этаж
               </li>
               <li>
-                <a href="tel:+74959241917" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
+                <a href="tel:+74959241917"
+              onClick={() => reachGoal('call')} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
                   <Phone size={16} className="flex-shrink-0 text-primary-400" />
                   +7 (495) 924-19-17
                 </a>

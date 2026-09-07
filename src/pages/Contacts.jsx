@@ -7,6 +7,7 @@ import { useFetch } from '../hooks/useFetch.js';
 import Select from '../components/ui/Select.jsx';
 import DatePicker from '../components/ui/DatePicker.jsx';
 import { useSEO } from '../hooks/useSEO.js';
+import { reachGoal } from '../components/Metrika.jsx';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -148,6 +149,7 @@ export default function Contacts() {
         message: form.message,
       });
       setSent(true);
+      reachGoal('lead');
     } catch {
       alert('Не удалось отправить заявку. Попробуйте позвонить нам напрямую.');
     } finally {
@@ -319,7 +321,8 @@ export default function Contacts() {
                     <MapPin size={18} className="text-primary-600 mt-0.5 flex-shrink-0" />
                     <span>г. Подольск, пр. Юных Ленинцев, д. 82В, ТЦ Максимум, 2 этаж</span>
                   </div>
-                  <a href="tel:+74959241917" className="flex items-center gap-3 text-sm text-slate-600 hover:text-primary-700 transition-colors">
+                  <a href="tel:+74959241917"
+              onClick={() => reachGoal('call')} className="flex items-center gap-3 text-sm text-slate-600 hover:text-primary-700 transition-colors">
                     <Phone size={18} className="text-primary-600 flex-shrink-0" />
                     +7 (495) 924-19-17
                   </a>

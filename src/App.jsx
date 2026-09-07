@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/admin/ProtectedRoute';
+import Metrika from './components/Metrika';
 
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -25,6 +26,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <Metrika />
         <Routes>
           {/* Публичный сайт */}
           <Route element={<MainLayout />}>

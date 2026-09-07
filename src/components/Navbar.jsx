@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { reachGoal } from './Metrika.jsx';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 
@@ -71,6 +72,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <a
               href="tel:+74959241917"
+              onClick={() => reachGoal('call')}
               className="hidden sm:flex items-center gap-2 text-sm font-semibold text-primary-700 hover:text-primary-800 transition-colors"
             >
               <Phone size={16} />
@@ -111,6 +113,7 @@ export default function Navbar() {
             <div className="pt-2 pb-1 border-t border-slate-100 mt-1 flex flex-col gap-2">
               <a
                 href="tel:+74959241917"
+              onClick={() => reachGoal('call')}
                 className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-primary-700"
               >
                 <Phone size={16} />
