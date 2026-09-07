@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { legal } from '../data/legal.js';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 export default function Footer() {
@@ -92,7 +93,12 @@ export default function Footer() {
 
         <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">© {new Date().getFullYear()} Dental100. Все права защищены.</p>
-          <p className="text-xs text-slate-500">Лицензия №ЛО-50-01-012345</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link to="/privacy" className="text-xs text-slate-500 hover:text-white transition-colors">
+              Политика конфиденциальности
+            </Link>
+            <p className="text-xs text-slate-500">Лицензия № {legal.license.number}</p>
+          </div>
         </div>
       </div>
     </footer>

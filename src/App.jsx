@@ -10,6 +10,7 @@ import Gallery from './pages/Gallery';
 import About from './pages/About';
 import Contacts from './pages/Contacts';
 
+import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/admin/Login';
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/about" element={<About />} />
             <Route path="/contacts" element={<Contacts />} />
+            <Route path="/privacy" element={<Privacy />} />
           </Route>
 
           {/* Админка */}

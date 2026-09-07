@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
@@ -300,7 +301,10 @@ export default function Contacts() {
                   </button>
 
                   <p className="text-xs text-slate-400 text-center">
-                    Нажимая кнопку, вы соглашаетесь на обработку персональных данных
+                    Нажимая кнопку, вы соглашаетесь на{' '}
+                    <Link to="/privacy" className="underline hover:text-primary-600 transition-colors">
+                      обработку персональных данных
+                    </Link>
                   </p>
                 </form>
               )}
