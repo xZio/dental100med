@@ -35,7 +35,7 @@ export const removeSubscription = (endpoint) =>
  * Уведомление о новой заявке всем подписанным устройствам.
  * Никогда не бросает: заявка уже в базе, и падать из-за уведомления ей незачем.
  */
-export const notifyNewAppointment = async ({ name, phone, message }) => {
+export const notifyNewAppointment = async ({ name, phone, service, message }) => {
   if (!configure()) return;
 
   // Число новых — чтобы service worker выставил значок на иконке
@@ -43,7 +43,7 @@ export const notifyNewAppointment = async ({ name, phone, message }) => {
 
   const payload = JSON.stringify({
     title: 'Новая заявка',
-    body: [name, phone, message].filter(Boolean).join(' · '),
+    body: [name, phone, service || message].filter(Boolean).join(' · '),
     url: '/admin/appointments',
     badge: count,
   });

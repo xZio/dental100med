@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/index.js';
+import { useFetch } from '../hooks/useFetch.js';
+import Select from '../components/ui/Select.jsx';
+import DatePicker from '../components/ui/DatePicker.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 
 const fadeUp = {
@@ -86,7 +89,9 @@ export default function Contacts() {
     description: 'Стоматология ДенталстоМед в Подольске. Адрес: пр. Юных Ленинцев, 82В, ТЦ Максимум. Запись онлайн или по телефону.',
   });
 
-  const [form, setForm] = useState({ name: '', phone: '+7', message: '' });
+  const { data: services } = useFetch(api.getServices);
+
+  const [form, setForm] = useState({ name: '', phone: '+7', service: '', date: '', message: '' });
   const [touched, setTouched] = useState({ name: false, phone: false, message: false });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -125,6 +130,9 @@ export default function Contacts() {
     setForm((f) => ({ ...f, name: value }));
   };
 
+  // Услуги для выпадающего списка — из того же прайса, что на сайте
+  const serviceOptions = (services ?? []).map((s) => ({ value: s.name, label: s.name }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     touchAll();
@@ -134,6 +142,8 @@ export default function Contacts() {
       await api.sendAppointment({
         name: form.name,
         phone: form.phone,
+        service: form.service,
+        date: form.date,
         message: form.message,
       });
       setSent(true);
@@ -146,7 +156,7 @@ export default function Contacts() {
 
   const handleReset = () => {
     setSent(false);
-    setForm({ name: '', phone: '+7', message: '' });
+    setForm({ name: '', phone: '+7', service: '', date: '', message: '' });
     setTouched({ name: false, phone: false, message: false });
   };
 
@@ -234,6 +244,27 @@ export default function Contacts() {
                       </p>
                     )}
                   </Field>
+
+                  {/* Услуга и дата — необязательные: заявку принимаем и без них */}
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <Field label="Услуга">
+                      <Select
+                        id="service"
+                        value={form.service}
+                        options={serviceOptions}
+                        placeholder="Выберите услугу"
+                        onChange={(value) => setForm((f) => ({ ...f, service: value }))}
+                      />
+                    </Field>
+
+                    <Field label="Желаемая дата">
+                      <DatePicker
+                        id="date"
+                        value={form.date}
+                        onChange={(value) => setForm((f) => ({ ...f, date: value }))}
+                      />
+                    </Field>
+                  </div>
 
                   {/* Сообщение */}
                   <Field

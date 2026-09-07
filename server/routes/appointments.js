@@ -9,19 +9,22 @@ const router = Router();
 // POST /api/appointments — публичный, отправка формы с сайта
 router.post('/', (req, res) => {
   try {
-    const { name, phone, message } = req.body;
+    const { name, phone, service, date, message } = req.body;
     if (!name || !phone)
       return res.status(400).json({ message: 'Имя и телефон обязательны' });
 
+    // Дату принимаем только в виде ГГГГ-ММ-ДД — иначе в админке будет каша
+    const visitDate = /^\d{4}-\d{2}-\d{2}$/.test(date ?? '') ? date : '';
+
     const ts = now();
     const { lastInsertRowid } = db
-      .prepare('INSERT INTO appointments (name, phone, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)')
-      .run(name.trim(), phone, message || '', ts, ts);
+      .prepare('INSERT INTO appointments (name, phone, service, date, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(name.trim(), phone, service || '', visitDate, message || '', ts, ts);
 
     res.status(201).json({ message: 'Заявка принята', id: String(lastInsertRowid) });
 
     // Ответ клиенту уже ушёл — уведомления отправляем следом и молча
-    notifyNewAppointment({ name, phone, message });
+    notifyNewAppointment({ name, phone, service, message });
     forwardAppointment({ name, phone, message });
   } catch (err) {
     res.status(500).json({ message: err.message });

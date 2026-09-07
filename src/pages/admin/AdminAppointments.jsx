@@ -3,7 +3,7 @@ import { adminApi } from '../../api/admin';
 import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import DeleteButton from '../../components/admin/DeleteButton';
 import PushToggle from '../../components/admin/PushToggle';
-import { Phone, MessageSquare, Clock } from 'lucide-react';
+import { Phone, MessageSquare, Clock, Stethoscope, CalendarDays } from 'lucide-react';
 
 const STATUS = {
   new:    { label: 'Новая',       cls: 'bg-blue-100 text-blue-700' },
@@ -56,6 +56,13 @@ export default function AdminAppointments() {
       await adminApi.deleteAppointment(id);
       setAppointments((prev) => prev.filter((a) => a._id !== id));
     });
+
+  // Дата визита приходит как ГГГГ-ММ-ДД — показываем по-русски
+  const formatVisitDate = (key) => {
+    const [y, m, d] = key.split('-').map(Number);
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    return `${d} ${months[m - 1]} ${y}`;
+  };
 
   const formatDate = (iso) =>
     new Date(iso).toLocaleString('ru-RU', {
@@ -122,6 +129,23 @@ export default function AdminAppointments() {
                   </div>
                 </div>
               </div>
+
+              {(a.service || a.date) && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-3 text-sm text-gray-600">
+                  {a.service && (
+                    <span className="flex items-center gap-1.5">
+                      <Stethoscope size={13} className="text-gray-400" />
+                      {a.service}
+                    </span>
+                  )}
+                  {a.date && (
+                    <span className="flex items-center gap-1.5">
+                      <CalendarDays size={13} className="text-gray-400" />
+                      {formatVisitDate(a.date)}
+                    </span>
+                  )}
+                </div>
+              )}
 
               {a.message && (
                 <div className="flex items-start gap-2 text-gray-600 text-sm bg-gray-50 rounded-xl px-3 py-2 mb-3">

@@ -82,12 +82,19 @@ export const connectDB = () => {
       id        INTEGER PRIMARY KEY AUTOINCREMENT,
       name      TEXT NOT NULL,
       phone     TEXT NOT NULL,
+      service   TEXT NOT NULL DEFAULT '',
+      -- Дата местная, в виде ГГГГ-ММ-ДД: времени у неё нет, а часовой пояс сдвинул бы день
+      date      TEXT NOT NULL DEFAULT '',
       message   TEXT NOT NULL DEFAULT '',
       status    TEXT NOT NULL DEFAULT 'new',
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );
   `);
+
+  // Услуга и желаемая дата визита — добавлены позже
+  addColumn('appointments', 'service', "TEXT NOT NULL DEFAULT ''");
+  addColumn('appointments', 'date',    "TEXT NOT NULL DEFAULT ''");
 
   // Примечание к позиции прайса («под ключ», «один зубной ряд») — добавлено позже
   addColumn('services', 'note', "TEXT NOT NULL DEFAULT ''");
