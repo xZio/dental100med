@@ -6,19 +6,13 @@ import {
 } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
+import { priceFrom } from '../lib/price.js';
+import { groupByCategory } from '../lib/categories.js';
+import ServiceIcon from '../components/ServiceIcon.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
 // Ключи — русские названия категорий (как в MongoDB)
-const CATEGORY_META = {
-  'Терапия':               { icon: Zap },
-  'Детская стоматология':  { icon: Baby },
-  'Ортопедия':             { icon: Crown },
-  'Хирургия':              { icon: Scissors },
-  'Имплантация':           { icon: Stethoscope },
-  'Ортодонтия':            { icon: AlignJustify },
-};
-
 const stats = [
   { value: '15+', label: 'лет работы', icon: Award },
   { value: '12 000+', label: 'пациентов', icon: Users },
@@ -67,22 +61,10 @@ export default function Home() {
   const { data: doctors }     = useFetch(api.getDoctors);
   const { data: promotions }  = useFetch(api.getPromotions);
   const { data: gallery }     = useFetch(api.getGallery);
+  const { data: categories }  = useFetch(api.getCategories);
 
-  // Группируем услуги по категориям для карточек на главной
-  const serviceCategories = services
-    ? Object.entries(
-        services.reduce((acc, s) => {
-          if (!acc[s.category]) acc[s.category] = [];
-          acc[s.category].push(s);
-          return acc;
-        }, {})
-      ).map(([id, items]) => ({
-        id,
-        label: id,
-        icon: (CATEGORY_META[id] || { icon: Zap }).icon,
-        services: items,
-      }))
-    : [];
+  // Карточки услуг — в порядке прайса, а не по алфавиту
+  const serviceCategories = groupByCategory(services, categories);
 
   return (
     <>
@@ -184,8 +166,7 @@ export default function Home() {
               <div key={i} className="bg-white rounded-2xl p-6 animate-pulse h-40" />
             ))}
             {serviceCategories.map((cat, i) => {
-              const Icon = cat.icon || Zap;
-              const minPrice = Math.min(...cat.services.map((s) => s.price));
+              const priceLabel = priceFrom(cat.services);
               return (
                 <motion.div
                   key={cat.id}
@@ -197,12 +178,12 @@ export default function Home() {
                     className="card p-6 block group hover:-translate-y-1 transition-transform duration-200"
                   >
                     <div className="w-12 h-12 bg-primary-50 group-hover:bg-primary-100 rounded-xl flex items-center justify-center mb-4 transition-colors">
-                      <Icon size={22} className="text-primary-700" />
+                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={24} className="text-primary-700" />
                     </div>
                     <h3 className="font-semibold text-slate-800 text-lg mb-1">{cat.label}</h3>
                     <p className="text-sm text-slate-500 mb-3">{cat.services.length} услуги</p>
                     <p className="text-primary-700 font-semibold text-sm">
-                      от {minPrice.toLocaleString('ru-RU')} ₽
+                      {priceLabel}
                     </p>
                     <div className="mt-3 flex items-center gap-1 text-primary-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                       Смотреть цены <ChevronRight size={15} />

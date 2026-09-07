@@ -20,14 +20,14 @@ router.get('/', (req, res) => {
 // POST /api/services — только админ
 router.post('/', adminOnly, (req, res) => {
   try {
-    const { name, price, category, order } = req.body;
-    if (!name || price == null || !category)
+    const { name, price, note, category, order } = req.body;
+    if (!name || !price || !category)
       return res.status(400).json({ message: 'Название, цена и категория обязательны' });
 
     const ts = now();
     const { lastInsertRowid } = db
-      .prepare('INSERT INTO services (name, price, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)')
-      .run(name.trim(), Number(price), category, Number(order) || 0, ts, ts);
+      .prepare('INSERT INTO services (name, price, note, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(name.trim(), String(price).trim(), note || '', category, Number(order) || 0, ts, ts);
 
     const service = db.prepare('SELECT * FROM services WHERE id = ?').get(lastInsertRowid);
     res.status(201).json(mapRow(service));
@@ -42,11 +42,12 @@ router.put('/:id', adminOnly, (req, res) => {
     const current = db.prepare('SELECT * FROM services WHERE id = ?').get(Number(req.params.id));
     if (!current) return res.status(404).json({ message: 'Услуга не найдена' });
 
-    const { name, price, category, order } = req.body;
-    db.prepare('UPDATE services SET name = ?, price = ?, category = ?, "order" = ?, updatedAt = ? WHERE id = ?')
+    const { name, price, note, category, order } = req.body;
+    db.prepare('UPDATE services SET name = ?, price = ?, note = ?, category = ?, "order" = ?, updatedAt = ? WHERE id = ?')
       .run(
         name?.trim() ?? current.name,
-        price == null ? current.price : Number(price),
+        price == null ? current.price : String(price).trim(),
+        note ?? current.note,
         category ?? current.category,
         order == null ? current.order : Number(order),
         now(),

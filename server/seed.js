@@ -2,44 +2,54 @@ import 'dotenv/config';
 import { db, connectDB, now } from './config/db.js';
 
 const categories = [
-  { name: 'Терапия',               order: 1 },
-  { name: 'Детская стоматология',  order: 2 },
-  { name: 'Ортопедия',             order: 3 },
-  { name: 'Хирургия',              order: 4 },
-  { name: 'Имплантация',           order: 5 },
-  { name: 'Ортодонтия',            order: 6 },
+  { name: 'Консультация и диагностика',    order: 1 },
+  { name: 'Лечение зубов — терапия',       order: 2 },
+  { name: 'Реставрация',                   order: 3 },
+  { name: 'Гигиена и профилактика',        order: 4 },
+  { name: 'Детская стоматология',          order: 5 },
+  { name: 'Протезирование — ортопедия',    order: 6 },
+  { name: 'Виниры',                        order: 7 },
+  { name: 'Имплантация',                   order: 8 },
+  { name: 'Хирургия',                      order: 9 },
+  { name: 'Брекеты и элайнеры',            order: 10 },
 ];
 
 const services = [
-  // Терапия
-  { category: 'Терапия', order: 1, name: 'Консультация стоматолога', price: 1000 },
-  { category: 'Терапия', order: 2, name: 'Лечение кариеса (1 поверхность)', price: 10300 },
-  { category: 'Терапия', order: 3, name: 'Лечение кариеса (2 поверхности)', price: 12500 },
-  { category: 'Терапия', order: 4, name: 'Профессиональная чистка зубов', price: 7000 },
-  { category: 'Терапия', order: 5, name: 'Отбеливание зубов', price: 18000 },
-  // Детская
-  { category: 'Детская стоматология', order: 1, name: 'Консультация детского стоматолога', price: 1000 },
-  { category: 'Детская стоматология', order: 2, name: 'Лечение кариеса молочного зуба', price: 7370 },
-  { category: 'Детская стоматология', order: 3, name: 'Удаление молочного зуба', price: 3500 },
-  { category: 'Детская стоматология', order: 4, name: 'Герметизация фиссур', price: 4200 },
-  // Ортопедия
-  { category: 'Ортопедия', order: 1, name: 'Коронка металлокерамическая', price: 27000 },
-  { category: 'Ортопедия', order: 2, name: 'Коронка циркониевая', price: 37000 },
-  { category: 'Ортопедия', order: 3, name: 'Съёмный протез (акриловый)', price: 35000 },
-  { category: 'Ортопедия', order: 4, name: 'Виниры', price: 25000 },
-  // Хирургия
-  { category: 'Хирургия', order: 1, name: 'Удаление простого зуба', price: 5000 },
-  { category: 'Хирургия', order: 2, name: 'Удаление сложного зуба', price: 9000 },
-  { category: 'Хирургия', order: 3, name: 'Удаление зуба мудрости', price: 12000 },
-  // Имплантация
-  { category: 'Имплантация', order: 1, name: 'Имплант Straumann (под ключ)', price: 135000 },
-  { category: 'Имплантация', order: 2, name: 'Имплант Nobel Biocare', price: 120000 },
-  { category: 'Имплантация', order: 3, name: 'Имплант отечественный', price: 65000 },
-  // Ортодонтия
-  { category: 'Ортодонтия', order: 1, name: 'Брекеты металлические (1 челюсть)', price: 85000 },
-  { category: 'Ортодонтия', order: 2, name: 'Брекеты керамические (1 челюсть)', price: 110000 },
-  { category: 'Ортодонтия', order: 3, name: 'Элайнеры (полный курс)', price: 150000 },
+  { category: 'Консультация и диагностика', order: 1, name: 'Первичная консультация', price: 'бесплатно', note: '' },
+  { category: 'Консультация и диагностика', order: 2, name: 'Консультация с планом лечения', price: '3 500 ₽', note: 'стоматолог, хирург, ортопед, терапевт' },
+  { category: 'Консультация и диагностика', order: 3, name: 'Цифровая радиовизиография', price: '550 ₽', note: '' },
+  { category: 'Консультация и диагностика', order: 4, name: 'Панорамный снимок (ОПТГ)', price: 'от 2 000 ₽', note: '' },
+  { category: 'Консультация и диагностика', order: 5, name: 'Компьютерная томография (КТ)', price: '4 000 ₽', note: '' },
+  { category: 'Консультация и диагностика', order: 6, name: 'Телерентгенограмма (ТРГ)', price: '2 000 ₽', note: '' },
+  { category: 'Лечение зубов — терапия', order: 1, name: 'Лечение кариеса (пломба)', price: 'от 10 270 ₽', note: '' },
+  { category: 'Лечение зубов — терапия', order: 2, name: 'Эндодонтическое лечение (корневые каналы)', price: 'от 11 500 ₽', note: '' },
+  { category: 'Реставрация', order: 1, name: 'Эстетическая реставрация композитом', price: 'от 12 000 ₽', note: '' },
+  { category: 'Гигиена и профилактика', order: 1, name: 'Профессиональная гигиена полости рта', price: '7 000 ₽', note: 'стандартная' },
+  { category: 'Гигиена и профилактика', order: 2, name: 'Снятие отложений скейлером (1 зуб)', price: '500 ₽', note: 'до 6 зубов' },
+  { category: 'Гигиена и профилактика', order: 3, name: 'Аппарат Air-Flow (1 зуб)', price: '500 ₽', note: 'до 6 зубов' },
+  { category: 'Детская стоматология', order: 1, name: 'Лечение кариеса молочного зуба', price: 'от 6 570 ₽', note: '' },
+  { category: 'Детская стоматология', order: 2, name: 'Эндодонтическое лечение молочного зуба', price: 'от 12 000 ₽', note: '' },
+  { category: 'Детская стоматология', order: 3, name: 'Эстетическая реставрация', price: 'от 8 000 ₽', note: '' },
+  { category: 'Детская стоматология', order: 4, name: 'Удаление молочного зуба', price: 'от 1 900 ₽', note: '' },
+  { category: 'Протезирование — ортопедия', order: 1, name: 'Металлокерамическая коронка', price: 'от 27 000 ₽', note: '' },
+  { category: 'Протезирование — ортопедия', order: 2, name: 'Цельнокерамическая коронка (EMAX)', price: 'от 37 000 ₽', note: '' },
+  { category: 'Протезирование — ортопедия', order: 3, name: 'Коронка на диоксиде циркония', price: 'от 37 000 ₽', note: '' },
+  { category: 'Протезирование — ортопедия', order: 4, name: 'Керамическая вкладка', price: '37 000 ₽', note: 'под ключ' },
+  { category: 'Виниры', order: 1, name: 'Керамический винир', price: '37 000 ₽', note: 'под ключ' },
+  { category: 'Имплантация', order: 1, name: 'Имплантат Astra Tech (Швеция)', price: '65 000 ₽', note: 'без учёта коронки' },
+  { category: 'Имплантация', order: 2, name: 'Имплантат Dentium (Ю. Корея)', price: '43 000 ₽', note: 'без учёта коронки' },
+  { category: 'Хирургия', order: 1, name: 'Удаление зуба', price: 'от 5 400 ₽', note: '' },
+  { category: 'Хирургия', order: 2, name: 'Удаление зуба мудрости', price: 'от 11 300 ₽', note: '' },
+  { category: 'Хирургия', order: 3, name: 'Синуслифтинг (операция)', price: 'от 23 380 ₽', note: '' },
+  { category: 'Хирургия', order: 4, name: 'Закрытый кюретаж карманов (1 зуб)', price: '2 640 – 3 500 ₽', note: '' },
+  { category: 'Хирургия', order: 5, name: 'Открытый кюретаж карманов (1 зуб)', price: '5 400 ₽', note: '' },
+  { category: 'Брекеты и элайнеры', order: 1, name: 'Консультация ортодонта', price: '1 500 ₽', note: 'детская до 12 лет — 1 000 ₽' },
+  { category: 'Брекеты и элайнеры', order: 2, name: 'Брекет-система металлическая', price: 'от 75 300 ₽', note: 'один зубной ряд' },
+  { category: 'Брекеты и элайнеры', order: 3, name: 'Брекет-система эстетическая', price: 'от 100 000 ₽', note: 'один зубной ряд' },
+  { category: 'Брекеты и элайнеры', order: 4, name: 'Лечение на съёмных аппаратах', price: 'от 14 000 ₽', note: '' },
+  { category: 'Брекеты и элайнеры', order: 5, name: 'Лечение на элайнерах', price: 'от 200 000 ₽', note: '' },
 ];
+
 
 const doctors = [
   { order: 1, name: 'Ивина Елена Владимировна',        specialty: 'Врач стоматолог-терапевт, основательница клиники', experience: 'В стоматологии с 1997 года', photo: '/images/doctors/ivina.webp',        description: 'Реставрация фронтальных зубов, эндодонтическое лечение. Сертифицированный специалист Kerr и 3M ESPE, ведёт взрослый и детский приём.' },
@@ -95,8 +105,8 @@ function seed() {
   const insertCategory = db.prepare('INSERT INTO categories (name, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?)');
   for (const c of categories) insertCategory.run(c.name, c.order, ts, ts);
 
-  const insertService = db.prepare('INSERT INTO services (name, price, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
-  for (const s of services) insertService.run(s.name, s.price, s.category, s.order, ts, ts);
+  const insertService = db.prepare('INSERT INTO services (name, price, note, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)');
+  for (const s of services) insertService.run(s.name, s.price, s.note, s.category, s.order, ts, ts);
 
   const insertDoctor = db.prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", createdAt, updatedAt)
                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);

@@ -6,16 +6,8 @@ import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonRow, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
-
-// Ключи — русские названия категорий (как в MongoDB)
-const CATEGORY_ICONS = {
-  'Терапия':               '🦷',
-  'Детская стоматология':  '👶',
-  'Ортопедия':             '👑',
-  'Хирургия':              '⚕️',
-  'Имплантация':           '🔩',
-  'Ортодонтия':            '😁',
-};
+import { groupByCategory } from '../lib/categories.js';
+import ServiceIcon from '../components/ServiceIcon.jsx';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -34,22 +26,10 @@ export default function Services() {
   const [search, setSearch] = useState('');
 
   const { data: services, loading, error } = useFetch(api.getServices);
+  const { data: categoryList } = useFetch(api.getCategories);
 
-  // Группируем услуги по категориям
-  const categories = useMemo(() => {
-    if (!services) return [];
-    const map = {};
-    services.forEach(s => {
-      if (!map[s.category]) map[s.category] = [];
-      map[s.category].push(s);
-    });
-    return Object.entries(map).map(([id, items]) => ({
-      id,
-      label: id,
-      icon: CATEGORY_ICONS[id] || '🦷',
-      services: items,
-    }));
-  }, [services]);
+  // Разделы прайса — в том же порядке, что задан в админке
+  const categories = useMemo(() => groupByCategory(services, categoryList), [services, categoryList]);
 
   const filtered = useMemo(() => {
     let cats = activeCategory === 'all' ? categories : categories.filter(c => c.id === activeCategory);
@@ -103,9 +83,10 @@ export default function Services() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat.id ? 'bg-primary-700 text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat.id ? 'bg-primary-700 text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
               >
-                {cat.icon} {cat.label}
+                <ServiceIcon slug={cat.slug} icon={cat.icon} size={16} />
+                {cat.label}
               </button>
             ))}
           </div>
@@ -134,15 +115,20 @@ export default function Services() {
               {filtered.map((cat, i) => (
                 <motion.div key={cat.id} id={cat.id} {...fadeUp} transition={{ duration: 0.4, delay: i * 0.05 }} className="card overflow-hidden">
                   <div className="bg-primary-50 px-6 py-4 flex items-center gap-3">
-                    <span className="text-2xl">{cat.icon}</span>
+                    <ServiceIcon slug={cat.slug} icon={cat.icon} size={26} className="text-primary-700" />
                     <h2 className="text-lg font-bold text-primary-800">{cat.label}</h2>
                   </div>
                   <div className="divide-y divide-slate-100">
                     {cat.services.map(service => (
                       <div key={service._id} className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
-                        <span className="text-slate-700 text-sm sm:text-base">{service.name}</span>
+                        <div className="min-w-0">
+                          <span className="text-slate-700 text-sm sm:text-base">{service.name}</span>
+                          {service.note && (
+                            <span className="block text-slate-400 text-xs mt-0.5">{service.note}</span>
+                          )}
+                        </div>
                         <span className="text-primary-700 font-semibold whitespace-nowrap text-sm sm:text-base flex-shrink-0">
-                          {service.price.toLocaleString('ru-RU')} ₽
+                          {service.price}
                         </span>
                       </div>
                     ))}

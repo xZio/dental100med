@@ -27,7 +27,9 @@ export const connectDB = () => {
     CREATE TABLE IF NOT EXISTS services (
       id        INTEGER PRIMARY KEY AUTOINCREMENT,
       name      TEXT NOT NULL,
-      price     REAL NOT NULL,
+      -- Строка, а не число: в прайсе есть «от 10 270 ₽», «2 640 – 3 500 ₽» и «бесплатно»
+      price     TEXT NOT NULL,
+      note      TEXT NOT NULL DEFAULT '',
       category  TEXT NOT NULL,
       "order"   INTEGER NOT NULL DEFAULT 0,
       createdAt TEXT NOT NULL,
@@ -86,6 +88,9 @@ export const connectDB = () => {
       updatedAt TEXT NOT NULL
     );
   `);
+
+  // Примечание к позиции прайса («под ключ», «один зубной ряд») — добавлено позже
+  addColumn('services', 'note', "TEXT NOT NULL DEFAULT ''");
 
   // Кадр фото врача — добавлен позже, поэтому не в CREATE TABLE
   addColumn('doctors', 'photoScale', 'REAL NOT NULL DEFAULT 1.22');

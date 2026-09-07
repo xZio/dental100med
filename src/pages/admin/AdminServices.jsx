@@ -4,7 +4,7 @@ import Modal from '../../components/admin/Modal';
 import DeleteButton from '../../components/admin/DeleteButton';
 import { Plus, Pencil, Trash2, FolderCog, GripVertical, Check, X } from 'lucide-react';
 
-const EMPTY_SERVICE = { name: '', category: '', price: '', order: 0 };
+const EMPTY_SERVICE = { name: '', category: '', price: '', note: '', order: 0 };
 
 export default function AdminServices() {
   const [services,   setServices]   = useState([]);
@@ -51,7 +51,7 @@ export default function AdminServices() {
     setEditingService(null); setServiceError(''); setServiceModal(true);
   };
   const openEditService = (s) => {
-    setServiceForm({ name: s.name, category: s.category, price: s.price, order: s.order });
+    setServiceForm({ name: s.name, category: s.category, price: s.price, note: s.note ?? '', order: s.order });
     setEditingService(s); setServiceError(''); setServiceModal(true);
   };
 
@@ -59,7 +59,7 @@ export default function AdminServices() {
     e.preventDefault();
     setSavingService(true); setServiceError('');
     try {
-      const data = { ...serviceForm, price: Number(serviceForm.price), order: Number(serviceForm.order) };
+      const data = { ...serviceForm, order: Number(serviceForm.order) };
       if (editingService) await adminApi.updateService(editingService._id, data);
       else                await adminApi.createService(data);
       await loadAll();
@@ -172,7 +172,7 @@ export default function AdminServices() {
                         <tr key={s._id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-3 text-sm text-gray-800">{s.name}</td>
                           <td className="px-6 py-3 text-sm font-semibold text-teal-700 whitespace-nowrap">
-                            {s.price.toLocaleString('ru-RU')} ₽
+                            {s.price}
                           </td>
                           <td className="px-4 py-3 text-right whitespace-nowrap">
                             <button onClick={() => openEditService(s)} className="p-1.5 text-gray-400 hover:text-teal-600 transition-colors">
@@ -217,16 +217,26 @@ export default function AdminServices() {
                 ))}
               </select>
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Примечание</label>
+              <input
+                value={serviceForm.note}
+                onChange={(e) => setServiceForm({ ...serviceForm, note: e.target.value })}
+                placeholder="под ключ, один зубной ряд…"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Цена (₽)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Цена</label>
                 <input
-                  type="number" min="0"
                   value={serviceForm.price}
                   onChange={(e) => setServiceForm({ ...serviceForm, price: e.target.value })}
+                  placeholder="от 10 270 ₽"
                   className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                   required
                 />
+                <p className="text-xs text-gray-400 mt-1">Как в прайсе: «7 000 ₽», «от 5 400 ₽», «бесплатно»</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Порядок</label>

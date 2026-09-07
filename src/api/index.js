@@ -11,6 +11,7 @@ async function request(path) {
 
 export const api = {
   getServices:    () => request('/services'),
+  getCategories:  () => request('/categories'),
   getDoctors:     () => request('/doctors'),
   getPromotions:  () => request('/promotions'),
   getGallery:     () => request('/gallery'),
