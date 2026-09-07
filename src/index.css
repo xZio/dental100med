@@ -74,3 +74,117 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee-v, .animate-marquee-h { animation: none; }
 }
+
+/* ── Карта клиники (Яндекс.Карты JS API) ─────────────────────────────────── */
+
+/* Приглушаем подложку, чтобы метка и интерфейс сайта читались поверх неё */
+.clinic-map [class*="-ground-pane"] {
+  filter: grayscale(0.4) saturate(0.85) brightness(1.04);
+}
+
+.clinic-map [class*="-zoom__plus"],
+.clinic-map [class*="-zoom__minus"] {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 20px -10px rgba(15, 42, 76, 0.5) !important;
+}
+.clinic-map [class*="-zoom__icon"] {
+  color: #1c63d4 !important;
+}
+
+/* Метка — знак клиники в белом круге */
+.clinic-pin {
+  position: absolute;
+  left: -20px;
+  top: -48px;
+  width: 40px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.clinic-pin__body {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #2478e7;
+  box-shadow: 0 10px 22px -8px rgba(36, 120, 231, 0.8);
+  transition: transform 0.25s ease;
+}
+.clinic-pin:hover .clinic-pin__body {
+  transform: scale(1.1);
+}
+.clinic-pin__body img {
+  width: 26px;
+  height: auto;
+}
+.clinic-pin__tip {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 9px;
+  height: 9px;
+  background: #2478e7;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 1px;
+}
+
+/* Балун — своя карточка вместо стандартной */
+.clinic-balloon {
+  position: absolute;
+  min-width: 230px;
+  max-width: 300px;
+  padding: 16px 40px 16px 18px;
+  background: #fff;
+  border: 2px solid #2478e7;
+  border-radius: 16px;
+  box-shadow: 0 24px 50px -20px rgba(15, 42, 76, 0.5);
+}
+.clinic-balloon__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1e293b;
+}
+.clinic-balloon__body {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #475569;
+}
+.clinic-balloon__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  color: #2478e7;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.clinic-balloon__close:hover {
+  background: rgba(36, 120, 231, 0.1);
+}
+.clinic-balloon__tail {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-right: 2px solid #2478e7;
+  border-bottom: 2px solid #2478e7;
+  transform: translateX(-50%) rotate(45deg);
+}
+/* Гасим стандартную обёртку балуна — свою карточку рисуем сами */
+.clinic-map [class*="-balloon__tail"],
+.clinic-map [class*="-balloon__layout"],
+.clinic-map [class*="-balloon__content"] {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}

@@ -3,6 +3,7 @@ import { reviewsSummary } from '../data/reviews.js';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { plural } from '../lib/plural.js';
+import GoodPlaceBadge from './GoodPlaceBadge.jsx';
 
 /**
  * Карточка-наклейка рейтинга на Яндекс Картах: цифры сервер обновляет раз
@@ -26,7 +27,7 @@ export default function YandexRating({ className = '' }) {
       className={`inline-flex -rotate-2 items-stretch gap-5 rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-lg shadow-slate-200/60 transition-transform duration-300 hover:rotate-0 ${className}`}
     >
       <div className="flex flex-col items-center justify-center">
-        <span className="text-3xl font-extrabold leading-none text-slate-700">{rating}</span>
+        <span className="text-[34px] font-black leading-none text-[#4d4d4d]">{rating}</span>
         <div className="mt-1.5 flex gap-0.5" aria-hidden>
           {Array.from({ length: 5 }).map((_, i) => (
             <Star key={i} size={13} className="fill-[#FFCC00] text-[#FFCC00]" />
@@ -40,7 +41,10 @@ export default function YandexRating({ className = '' }) {
       <span className="w-px shrink-0 bg-slate-200" aria-hidden />
 
       <div className="flex flex-col justify-center gap-1">
-        <span className="text-[15px] font-bold text-slate-800">{reviewsSummary.award}</span>
+        <span className="inline-flex items-center gap-2">
+          <GoodPlaceBadge className="h-6 w-[42px] flex-shrink-0" />
+          <span className="text-[15px] font-bold text-slate-800">{reviewsSummary.award}</span>
+        </span>
         <span className="text-[13px] text-slate-500">
           {reviews} {reviewsWord} на {reviewsSummary.source}
         </span>

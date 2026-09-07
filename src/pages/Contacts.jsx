@@ -6,6 +6,7 @@ import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import Select from '../components/ui/Select.jsx';
 import DatePicker from '../components/ui/DatePicker.jsx';
+import ClinicMap from '../components/ClinicMap.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 import { reachGoal } from '../components/Metrika.jsx';
 
@@ -345,17 +346,10 @@ export default function Contacts() {
                 </ul>
               </div>
 
-              <div className="card overflow-hidden h-64 p-0">
-                <iframe
-                  title="Карта клиники ДенталстоМед"
-                  src="https://yandex.ru/map-widget/v1/?ll=37.567411%2C55.484551&z=17&ol=biz&oid=159190759541"
-                  width="100%"
-                  height="100%"
-                  className="border-0 w-full h-full"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
+              <ClinicMap
+                address="Подольск, пр-т Юных Ленинцев, 82В, ТЦ «Максимум», 2 этаж"
+                className="h-64"
+              />
               <a
                 href="https://yandex.ru/maps/?text=Подольск+проспект+Юных+Ленинцев+82В"
                 target="_blank"
