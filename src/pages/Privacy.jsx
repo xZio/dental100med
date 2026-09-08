@@ -35,21 +35,15 @@ export default function Privacy() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp}>
-            <p className="text-primary-300 text-sm font-medium mb-2">Документы</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Политика конфиденциальности</h1>
-            <p className="text-primary-200 text-base sm:text-lg max-w-2xl">
-              Как {legal.shortName} обрабатывает и защищает персональные данные пациентов и посетителей сайта.
-            </p>
-          </motion.div>
-        </div>
+      <section className="panel-blue page-hero">
+        <span className="eyebrow">Документы</span>
+        <h1>Политика конфиденциальности</h1>
+        <p>Как {legal.shortName} обрабатывает и защищает персональные данные пациентов и посетителей сайта.</p>
       </section>
 
-      <section className="bg-white">
-        <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-          <p className="text-sm text-slate-400">Редакция от {legal.privacyUpdated}</p>
+      <section className="section-pad">
+        <article className="card mx-auto max-w-3xl px-6 py-10 sm:px-10 md:py-14">
+          <p className="text-sm text-muted">Редакция от {legal.privacyUpdated}</p>
 
           <H2>1. Общие положения</H2>
           <P>

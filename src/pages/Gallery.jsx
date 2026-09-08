@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
+import { useSEO } from '../hooks/useSEO.js';
 
 const TABS = [
   { id: 'clinic', label: 'Наша клиника' },
@@ -30,23 +31,15 @@ function Lightbox({ photos, startIndex, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d3a57]/90 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors"
-      >
+      <button onClick={onClose} className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20" aria-label="Закрыть">
         <X size={24} />
       </button>
-
-      <button
-        onClick={(e) => { e.stopPropagation(); prev(); }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors"
-      >
+      <button onClick={(e) => { e.stopPropagation(); prev(); }} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20" aria-label="Предыдущее фото">
         <ChevronLeft size={24} />
       </button>
-
       <motion.img
         key={index}
         initial={{ opacity: 0, scale: 0.95 }}
@@ -54,18 +47,13 @@ function Lightbox({ photos, startIndex, onClose }) {
         transition={{ duration: 0.2 }}
         src={photos[index].src}
         alt={photos[index].alt}
-        className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+        className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
-
-      <button
-        onClick={(e) => { e.stopPropagation(); next(); }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors"
-      >
+      <button onClick={(e) => { e.stopPropagation(); next(); }} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20" aria-label="Следующее фото">
         <ChevronRight size={24} />
       </button>
-
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-white/60">
         {index + 1} / {photos.length}
       </div>
     </motion.div>
@@ -73,6 +61,11 @@ function Lightbox({ photos, startIndex, onClose }) {
 }
 
 export default function Gallery() {
+  useSEO({
+    title: 'Галерея',
+    description: 'Фотографии клиники ДенталстоМед в Подольске и примеры выполненных работ.',
+  });
+
   const [activeTab, setActiveTab] = useState('clinic');
   const [lightbox, setLightbox] = useState(null);
   const { data: images } = useFetch(api.getGallery);
@@ -83,81 +76,62 @@ export default function Gallery() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="text-primary-300 text-sm font-medium mb-2">Посмотрите сами</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Галерея</h1>
-            <p className="text-primary-200 text-base sm:text-lg max-w-xl">
-              Фотографии нашей клиники и примеры выполненных работ.
-            </p>
-          </motion.div>
-        </div>
+      <section className="panel-blue page-hero">
+        <span className="eyebrow">06 / Посмотрите сами</span>
+        <h1>Галерея</h1>
+        <p>Фотографии нашей клиники и примеры выполненных работ.</p>
       </section>
 
-      <section className="bg-slate-50 py-10 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Tabs */}
-          <div className="flex gap-2 mb-8">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-primary-700 text-white shadow-md'
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                }`}
-              >
-                {tab.label}
-                <span className="ml-2 text-xs opacity-70">({tab.photos.length})</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Grid */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
-          >
-            {currentTab?.photos.map((photo, i) => (
-              <motion.button
-                key={photo._id}
-                initial={{ opacity: 0, scale: 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.04 }}
-                onClick={() => setLightbox(i)}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-slate-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                  <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-sm font-medium bg-black/40 px-3 py-1 rounded-full">
-                    Открыть
-                  </span>
-                </div>
-              </motion.button>
-            ))}
-          </motion.div>
+      <section className="section-pad">
+        <div className="mb-8 flex flex-wrap gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-5 py-2.5 rounded-full text-[13px] font-medium transition-colors ${
+                activeTab === tab.id ? 'bg-blue text-white' : 'bg-white/80 text-ink border border-blue/20 hover:bg-white'
+              }`}
+            >
+              {tab.label}
+              <span className="ml-2 text-xs opacity-70">{tab.photos.length}</span>
+            </button>
+          ))}
         </div>
+
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4"
+        >
+          {currentTab?.photos.map((photo, i) => (
+            <button
+              key={photo._id}
+              type="button"
+              onClick={() => setLightbox(i)}
+              className="group relative aspect-square overflow-hidden rounded-[20px] bg-[#cce9f2] transition-shadow duration-300 hover:shadow-lg hover:shadow-blue/20"
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <span className="absolute inset-0 flex items-center justify-center bg-ink/0 transition-colors duration-300 group-hover:bg-ink/25">
+                <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  Открыть
+                </span>
+              </span>
+            </button>
+          ))}
+        </motion.div>
       </section>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox !== null && (
-          <Lightbox
-            photos={currentTab?.photos ?? []}
-            startIndex={lightbox}
-            onClose={() => setLightbox(null)}
-          />
+          <Lightbox photos={currentTab?.photos ?? []} startIndex={lightbox} onClose={() => setLightbox(null)} />
         )}
       </AnimatePresence>
     </>

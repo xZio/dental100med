@@ -1,102 +1,78 @@
-import { motion } from 'framer-motion';
-import { Shield, Award, Users, Stethoscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ArrowUpRight, Smile } from 'lucide-react';
+import { api } from '../api/index.js';
+import { useFetch } from '../hooks/useFetch.js';
+import { useSEO } from '../hooks/useSEO.js';
+import { legal } from '../data/legal.js';
+import { plural } from '../lib/plural.js';
 
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45 },
-};
-
-const milestones = [
-  { year: '2008', text: 'Открытие клиники в Подольске' },
-  { year: '2012', text: 'Установка цифрового рентгена и 3D-томографа' },
-  { year: '2016', text: 'Получение лицензии на имплантологию' },
-  { year: '2020', text: 'Расширение — открытие детского кабинета' },
-  { year: '2024', text: 'Более 12 000 вылеченных пациентов' },
-];
-
+/**
+ * Страница «О клинике». Факты только проверяемые: год основания, состав
+ * команды из базы, лицензия со скана. Никаких выдуманных вех.
+ */
 export default function About() {
+  useSEO({
+    title: 'О клинике',
+    description: 'ДенталстоМед — семейная стоматология в Подольске с 2008 года. Команда, принципы, лицензия.',
+  });
+
+  const { data: doctors } = useFetch(api.getDoctors);
+  const physicians = (doctors ?? []).filter((d) => /^врач/i.test(d.specialty)).length || 7;
+
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="text-primary-300 text-sm font-medium mb-2">Наша история</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">О клинике</h1>
-            <p className="text-primary-200 text-base sm:text-lg max-w-xl">
-              С 2008 года помогаем жителям Подольска сохранять здоровье и красоту улыбки.
-            </p>
-          </motion.div>
-        </div>
+      <section className="panel-blue page-hero">
+        <span className="eyebrow">02 / Давайте знакомиться</span>
+        <h1>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h1>
+        <p>С 2008 года помогаем жителям Подольска сохранять здоровье и красоту улыбки.</p>
       </section>
 
-      <section className="bg-slate-50 py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          {/* Main info */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <motion.div {...fadeUp}>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4">
-                Семейная клиника с 15-летней историей
-              </h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Dental100 — это стоматологическая клиника в Подольске, которой доверяют целые семьи. Мы работаем с детьми от 1 года и пациентами любого возраста.
-              </p>
-              <p className="text-slate-600 leading-relaxed">
-                Наш принцип: лечить только то, что нужно. Никакого навязывания услуг. Честный диагноз, прозрачный план лечения и реальные цены.
-              </p>
-            </motion.div>
-
-            <motion.div {...fadeUp} transition={{ duration: 0.45, delay: 0.1 }} className="grid grid-cols-2 gap-4">
-              {[
-                { icon: Award, label: '15+ лет', sub: 'на рынке' },
-                { icon: Users, label: '12 000+', sub: 'пациентов' },
-                { icon: Stethoscope, label: '7 врачей', sub: 'высшей категории' },
-                { icon: Shield, label: 'Гарантия', sub: 'на все работы' },
-              ].map(({ icon: Icon, label, sub }) => (
-                <div key={label} className="card p-5 text-center">
-                  <Icon size={24} className="text-primary-600 mx-auto mb-2" />
-                  <p className="font-bold text-slate-800 text-lg">{label}</p>
-                  <p className="text-slate-500 text-xs">{sub}</p>
-                </div>
-              ))}
-            </motion.div>
+      <section className="section-pad">
+        <div className="grid items-start gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-[15px] leading-[1.8] text-[#3d6a83]">
+              Мы — ДенталстоМед. Семейная клиника в Подольске, где за каждой улыбкой видят человека: его историю, переживания и ожидания.
+            </p>
+            <p className="mt-4 text-[15px] leading-[1.8] text-[#3d6a83]">
+              Наш принцип — лечить только то, что нужно. Внимательно выслушаем, понятно расскажем о лечении и вместе выберем подходящий путь. Честный диагноз, прозрачный план лечения и понятные цены.
+            </p>
+            <p className="mt-4 text-[15px] leading-[1.8] text-[#3d6a83]">
+              Принимаем взрослых и детей — чтобы приходить к стоматологу было спокойно всей семьёй.
+            </p>
+            <Link to="/doctors" className="text-button mt-8">Познакомиться с командой <ArrowUpRight /></Link>
           </div>
 
-          {/* Timeline */}
-          <motion.div {...fadeUp}>
-            <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center">Наш путь</h2>
-            <div className="relative">
-              <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-primary-100 -translate-x-1/2" />
-              <div className="space-y-6">
-                {milestones.map(({ year, text }, i) => (
-                  <motion.div
-                    key={year}
-                    {...fadeUp}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className={`flex items-center gap-4 md:gap-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                  >
-                    <div className={`flex-1 ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'} pl-10 md:pl-0`}>
-                      <div className="card p-4 inline-block">
-                        <p className="text-primary-700 font-bold text-lg">{year}</p>
-                        <p className="text-slate-600 text-sm">{text}</p>
-                      </div>
-                    </div>
-                    <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-primary-700 rounded-full -translate-x-1/2 border-2 border-white shadow" />
-                    <div className="flex-1 hidden md:block" />
-                  </motion.div>
-                ))}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { value: 'с 2008', label: 'заботимся об улыбках' },
+              { value: `${physicians} ${plural(physicians, ['врач', 'врача', 'врачей'])}`, label: 'одна команда' },
+              { value: 'Вся семья', label: 'взрослые и дети' },
+              { value: 'Лицензия', label: `№ ${legal.license.number}` },
+            ].map(({ value, label }) => (
+              <div key={label} className="card p-6">
+                <p className="text-2xl font-semibold tracking-tight text-ink">{value}</p>
+                <p className="mt-1.5 text-xs text-muted">{label}</p>
               </div>
-            </div>
-          </motion.div>
+            ))}
+          </div>
+        </div>
 
-          {/* CTA */}
-          <motion.div {...fadeUp} className="text-center">
-            <Link to="/contacts" className="btn-primary text-base px-8 py-4">
-              Записаться на приём
-            </Link>
-          </motion.div>
+        <div className="about mt-14 !gap-10 px-8 py-10 md:px-14">
+          <div className="about-visual">
+            <img src="/images/clinic/clinic-01.jpg" alt="Врач клиники ДенталстоМед с маленькой пациенткой" loading="lazy" width="590" height="700" />
+            <div className="photo-caption"><span>Там, где вам рады</span><Smile strokeWidth={1.6} /></div>
+          </div>
+          <div className="about-copy">
+            <span className="eyebrow">Юридическая информация</span>
+            <h2 className="!text-[28px]">{legal.fullName}</h2>
+            <p>ИНН {legal.inn} · ОГРН {legal.ogrn}</p>
+            <p>{legal.address}</p>
+            <p>
+              Лицензия на медицинскую деятельность № {legal.license.number} от {legal.license.date}, {legal.license.term}.
+              Лицензирующий орган — {legal.license.issuer}.
+            </p>
+            <Link className="text-button" to="/contacts">Записаться на приём <ArrowUpRight /></Link>
+          </div>
         </div>
       </section>
     </>

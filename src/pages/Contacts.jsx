@@ -168,25 +168,19 @@ export default function Contacts() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="text-primary-300 text-sm font-medium mb-2">Мы рядом</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Контакты</h1>
-            <p className="text-primary-200 text-base sm:text-lg max-w-lg">
-              Запишитесь онлайн или позвоните — ответим быстро.
-            </p>
-          </motion.div>
-        </div>
+      <section className="panel-blue page-hero">
+        <span className="eyebrow">05 / До встречи в клинике</span>
+        <h1>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h1>
+        <p>Запишитесь онлайн или позвоните — ответим быстро.</p>
       </section>
 
-      <section className="bg-slate-50 py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <section className="section-pad">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
 
             {/* Form */}
             <motion.div {...fadeUp} className="card p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-6">Онлайн-запись</h2>
+              <h2 className="mb-6 text-2xl font-semibold tracking-tight text-ink">Онлайн-запись</h2>
 
               {sent ? (
                 <div className="flex flex-col items-center text-center py-8 gap-3">

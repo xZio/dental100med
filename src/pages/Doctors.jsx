@@ -1,92 +1,57 @@
-import { motion } from 'framer-motion';
-import { Stethoscope } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonCard, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45 },
-};
+const pad2 = (n) => String(n).padStart(2, '0');
 
 export default function Doctors() {
   useSEO({
     title: 'Наши врачи',
-    description: 'Опытные стоматологи клиники ДенталстоМед в Подольске. Терапевты, хирурги, ортодонты, имплантологи.',
+    description: 'Врачи стоматологии ДенталстоМед в Подольске: терапевты, ортопеды, ортодонт, стоматолог общей практики.',
   });
 
   const { data: doctors, loading, error } = useFetch(api.getDoctors);
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="text-primary-300 text-sm font-medium mb-2">Профессионалы своего дела</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Наши врачи</h1>
-            <p className="text-primary-200 text-base sm:text-lg max-w-xl">
-              Регулярно проходят обучение и повышение квалификации в России и за рубежом.
-            </p>
-          </motion.div>
-        </div>
+      <section className="panel-blue page-hero">
+        <span className="eyebrow">03 / В надёжных руках</span>
+        <h1>Люди, которым<br />доверяют улыбки.</h1>
+        <p>Опыт, внимание и любовь к своему делу. Знакомьтесь с командой клиники.</p>
       </section>
 
-      <section className="bg-slate-50 py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="section-pad">
+        {loading && (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        )}
 
-          {/* Скелетон загрузки */}
-          {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-            </div>
-          )}
+        {error && <ErrorMessage message={error} />}
 
-          {/* Ошибка */}
-          {error && <ErrorMessage message={error} />}
-
-          {/* Данные */}
-          {doctors && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {doctors.map((doc, i) => (
-                <motion.div
-                  key={doc._id}
-                  {...fadeUp}
-                  transition={{ duration: 0.45, delay: i * 0.1 }}
-                  className="card p-6"
-                >
-                  <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200 mb-4 flex-shrink-0 relative">
-                    {doc.photo ? (
-                      <img
-                        src={doc.photo}
-                        alt={doc.name}
-                        className="w-full h-full object-cover"
-                      style={framingStyle(doc)}
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement.querySelector('.fallback-icon').style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div
-                      className="fallback-icon absolute inset-0 items-center justify-center"
-                      style={{ display: doc.photo ? 'none' : 'flex' }}
-                    >
-                      <Stethoscope size={34} className="text-primary-700" />
-                    </div>
+        {doctors && (
+          <div className="grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {doctors.map((doc, i) => {
+              const [surname, ...given] = doc.name.split(' ');
+              return (
+                <article key={doc._id} className="doctor-card !flex-none">
+                  <div className="doctor-portrait">
+                    <span className="doctor-number">{pad2(i + 1)} /</span>
+                    {doc.photo && <img src={doc.photo} alt={doc.name} loading="lazy" style={framingStyle(doc)} />}
                   </div>
-                  <h2 className="font-bold text-slate-800 text-lg leading-snug">{doc.name}</h2>
-                  <p className="text-primary-600 text-sm font-semibold mt-1">{doc.specialty}</p>
-                  <p className="text-slate-400 text-xs mt-1 mb-3">{doc.experience}</p>
-                  <p className="text-slate-500 text-sm leading-relaxed">{doc.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
+                  <h2 className="mt-5 text-xl font-semibold leading-tight tracking-tight text-ink">
+                    {surname}<span className="block">{given.join(' ')}</span>
+                  </h2>
+                  <p className="mt-2 text-[13px] font-medium text-blue">{doc.specialty}</p>
+                  {doc.experience && <p className="mt-1 text-xs text-muted">{doc.experience}</p>}
+                  {doc.description && <p className="mt-3 text-sm leading-relaxed text-[#3d6a83]">{doc.description}</p>}
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
     </>
   );
