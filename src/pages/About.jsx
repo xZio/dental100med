@@ -22,7 +22,7 @@ export default function About() {
   return (
     <>
       <section className="panel-blue page-hero">
-        <span className="eyebrow">02 / Давайте знакомиться</span>
+        <span className="eyebrow">Давайте знакомиться</span>
         <h1>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h1>
         <p>С 2008 года помогаем жителям Подольска сохранять здоровье и красоту улыбки.</p>
       </section>

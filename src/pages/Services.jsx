@@ -41,7 +41,7 @@ export default function Services() {
   return (
     <>
       <section className="panel-blue page-hero">
-        <span className="eyebrow">01 / Прозрачные цены</span>
+        <span className="eyebrow">Прозрачные цены</span>
         <h1>Услуги и цены</h1>
         <p>Актуальный прайс-лист. Окончательная стоимость — после осмотра врача.</p>
       </section>
@@ -88,12 +88,11 @@ export default function Services() {
           {!loading && !error && (
             <div className="space-y-5">
               {filtered.length === 0 && <p className="py-10 text-center text-muted">Ничего не найдено</p>}
-              {filtered.map((cat, i) => (
+              {filtered.map((cat) => (
                 <div key={cat.id} id={cat.id} className="card overflow-hidden">
                   <div className="flex items-center gap-4 bg-gradient-to-r from-[#3e91bd] to-[#2f7fae] px-6 py-4 text-snow">
                     <ServiceIcon slug={cat.slug} icon={cat.icon} size={44} className="flex-shrink-0 text-white" />
                     <div>
-                      <span className="block text-[10px] tracking-[1px] text-[#bfdfef]">{String(i + 1).padStart(2, '0')} /</span>
                       <h2 className="text-lg font-semibold tracking-tight">{cat.label}</h2>
                     </div>
                   </div>

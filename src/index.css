@@ -89,6 +89,7 @@
 .header { height: 102px; margin: 0 42px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #d0f7ff33; position: relative; }
 .brand { display: flex; align-items: center; gap: 9px; white-space: nowrap; font-size: 23px; font-weight: 700; letter-spacing: -1.1px; line-height: 1.2; }
 .brand > svg { width: 43px; height: 49px; flex-shrink: 0; }
+.brand > img { height: 44px; width: auto; display: block; }
 .brand-med { font-weight: 400; }
 .brand small { display: block; font-size: 7.5px; font-weight: 500; letter-spacing: 2px; margin-top: 6px; }
 .desktop-nav { display: flex; gap: 29px; font-size: 12px; }
@@ -144,8 +145,8 @@
 .hero-intro { position: relative; z-index: 2; text-align: center; padding-top: 37px; }
 .hero-intro p { margin-top: 15px; line-height: 1.45; font-size: 16px; color: #d5eef7; }
 .hero-intro strong { font-weight: 550; color: var(--white); }
-.hero-stage { height: 560px; max-width: 1220px; margin: 0 auto; position: relative; }
-.hero-headline { position: absolute; left: calc(50% - 395px); top: 34px; z-index: 1; transform: rotate(-2deg); }
+.hero-stage { height: 620px; max-width: 1220px; margin: 0 auto; position: relative; }
+.hero-headline { position: absolute; left: calc(50% - 395px); top: 24px; z-index: 1; transform: rotate(-2deg); }
 .hero-headline h1 { font-family: Arial, 'Segoe UI', sans-serif; font-size: 171px; line-height: .8; letter-spacing: -13px; font-weight: 900; }
 .hero-headline h1 > span { font-size: 188px; line-height: .9; }
 .hero-headline > .handwritten { position: absolute; top: -32px; left: -10px; transform: rotate(-11deg); z-index: 3; font-size: 44px; text-shadow: 0 3px 15px #297db466; }
@@ -185,11 +186,11 @@
 .service-card { display: flex; flex-direction: column; min-height: 212px; text-align: left; position: relative; isolation: isolate; overflow: hidden; border-radius: 20px; background: linear-gradient(145deg, #3e91bd, #2f7fae); color: #f0fbff; padding: 24px; transition: transform .25s, box-shadow .25s; }
 .service-card::after { content: ''; position: absolute; width: 170px; height: 170px; background: #89edfa; filter: blur(60px); opacity: .2; right: -65px; top: -35px; z-index: -1; }
 .service-card:hover { transform: translateY(-5px); box-shadow: 0 14px 30px #18537725; }
-.service-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.service-top { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 22px; }
 .service-top > span { font-size: 10px; color: #bfdfef; letter-spacing: 1px; }
 .service-card h3 { font-size: 22px; font-weight: 550; letter-spacing: -.6px; }
 .service-description { font-size: 11px; color: #d0e8f4; margin-top: 8px; }
-.service-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 27px; }
+.service-bottom { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 27px; }
 .service-bottom > span { font-size: 11px; font-weight: 500; letter-spacing: .1px; }
 .service-bottom > .circle { width: 31px; height: 31px; border-color: #b5e2f366; }
 .service-bottom svg { width: 13px; height: 13px; }
@@ -273,6 +274,7 @@
 .footer { padding: 43px 42px 24px; }
 .footer .brand { font-size: 22px; }
 .footer .brand > svg { height: 42px; width: 38px; }
+.footer .brand > img { height: 36px; }
 .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 35px; }
 .footer-top > div { display: flex; gap: 27px; font-size: 11px; }
 .to-top { font-size: 10px; }
@@ -281,17 +283,17 @@
 
 /* ── Адаптив ─────────────────────────────────────────────────────────────── */
 @media (min-width: 1440px) {
-  .hero-stage { height: 590px; } .hero-art { width: 476px; } .hero-headline { top: 48px; left: calc(50% - 424px); }
+  .hero-stage { height: 650px; } .hero-art { width: 476px; } .hero-headline { top: 36px; left: calc(50% - 424px); }
   .section-pad { padding-left: 80px; padding-right: 80px; } .hero-bottom { margin-top: 24px; } .hero-intro { padding-top: 44px; }
   .hero-headline h1 { font-size: 185px; } .hero-headline h1 > span { font-size: 200px; }
 }
 @media (min-width: 1700px) {
-  .hero-stage { height: 650px; } .hero-art { width: 520px; }
-  .hero-headline h1 { font-size: 210px; } .hero-headline h1 > span { font-size: 225px; } .hero-headline { left: calc(50% - 474px); top: 60px; }
+  .hero-stage { height: 715px; } .hero-art { width: 520px; }
+  .hero-headline h1 { font-size: 210px; } .hero-headline h1 > span { font-size: 225px; } .hero-headline { left: calc(50% - 474px); top: 46px; }
   .hero-seal { right: 0; } .hero-note-left { left: 0; } .hero-bottom { padding-bottom: 45px; }
 }
 @media (max-width: 1150px) {
-  .header { margin: 0 30px; gap: 20px; } .desktop-nav { gap: 20px; font-size: 11px; } .brand { font-size: 20px; } .brand > svg { width: 36px; } .brand small { font-size: 6px; }
+  .header { margin: 0 30px; gap: 20px; } .desktop-nav { gap: 20px; font-size: 11px; } .brand { font-size: 20px; } .brand > svg { width: 36px; } .brand > img { height: 38px; } .brand small { font-size: 6px; }
   .header-contact > a { font-size: 14px; } .header-contact > span { font-size: 9px; }
   .section-pad { padding: 65px 38px; } .page-hero { padding-left: 38px; padding-right: 38px; } .hero-bottom { margin-left: 35px; margin-right: 35px; } .hero-scroll > span:first-child { display: none; }
   .hero-note-left { left: 5%; } .hero-seal { right: 3%; top: 94px; } .hero-headline { left: calc(50% - 358px); }
@@ -310,7 +312,7 @@
   .menu-toggle > span { height: 1px; background: currentColor; width: 16px; transition: transform .2s; }
   .menu-toggle[aria-expanded=true] > span:first-child { transform: translateY(3px) rotate(45deg); }
   .menu-toggle[aria-expanded=true] > span:last-child { transform: translateY(-3px) rotate(-45deg); }
-  .hero-intro { padding-top: 33px; } .hero-stage { height: 520px; } .hero-headline { left: calc(50% - 300px); top: 51px; }
+  .hero-intro { padding-top: 33px; } .hero-stage { height: 575px; } .hero-headline { left: calc(50% - 300px); top: 40px; }
   .hero-headline h1 { font-size: 133px; letter-spacing: -9px; } .hero-headline h1 > span { font-size: 149px; }
   .hero-art { width: 399px; left: calc(50% - 124px); } .hero-headline > .handwritten { font-size: 37px; top: -34px; }
   .hero-seal { height: 90px; width: 90px; top: 238px; right: 4%; } .seal-smile { height: 33px; width: 33px; left: 28px; top: 28px; }
@@ -336,10 +338,10 @@
   html { scroll-padding-top: 14px; }
   .page-shell { margin: 6px auto; padding: 0 6px; } .site-header { left: 6px; right: 6px; }
   .hero { border-radius: 26px; padding-top: 79px; } .page-hero { padding: 108px 20px 48px; } .page-hero h1 { font-size: 34px; letter-spacing: -1.4px; }
-  .header { height: 79px; margin: 0 23px; gap: 15px; } .brand { font-size: 21px; letter-spacing: -1px; gap: 7px; } .brand > svg { height: 40px; width: 35px; } .brand small { font-size: 6.5px; letter-spacing: 1.45px; margin-top: 5px; }
+  .header { height: 79px; margin: 0 23px; gap: 15px; } .brand { font-size: 21px; letter-spacing: -1px; gap: 7px; } .brand > svg { height: 40px; width: 35px; } .brand > img { height: 34px; } .brand small { font-size: 6.5px; letter-spacing: 1.45px; margin-top: 5px; }
   .header-contact { display: none; } .menu-toggle { margin-left: auto; width: 35px; height: 35px; } .mobile-nav { top: 86px; }
   .hero-intro { padding-top: 31px; } .hero-intro .eyebrow { font-size: 7.3px; letter-spacing: 1.7px; } .hero-intro p { font-size: 12px; margin-top: 14px; line-height: 1.5; }
-  .hero-stage { height: 462px; max-width: 430px; margin-top: 9px; } .hero-headline { left: calc(50% - 154px); top: 49px; transform: rotate(-3deg); }
+  .hero-stage { height: 505px; max-width: 430px; margin-top: 9px; } .hero-headline { left: calc(50% - 154px); top: 40px; transform: rotate(-3deg); }
   .hero-headline h1 { font-size: 76px; letter-spacing: -5.5px; line-height: .85; } .hero-headline h1 > span { font-size: 80px; letter-spacing: -5px; line-height: .9; }
   .hero-headline > .handwritten { font-size: 32px; left: 2px; top: -26px; letter-spacing: -1px; }
   .hero-art { width: 294px; left: calc(50% - 133px); bottom: -1px; } .hero-aura { height: 280px; width: 450px; bottom: -5px; filter: blur(4px); }
@@ -382,7 +384,7 @@
   .medical-note { font-size: 9px; letter-spacing: .3px; line-height: 1.7; margin-top: 24px; }
 }
 @media (max-width: 370px) {
-  .header { margin: 0 18px; } .brand { font-size: 19px; } .hero-stage { height: 425px; } .hero-headline { left: calc(50% - 136px); top: 45px; }
+  .header { margin: 0 18px; } .brand { font-size: 19px; } .brand > img { height: 30px; } .hero-stage { height: 462px; } .hero-headline { left: calc(50% - 136px); top: 38px; }
   .hero-headline h1 { font-size: 65px; } .hero-headline h1 > span { font-size: 82px; letter-spacing: -5px; } .hero-art { width: 269px; left: calc(50% - 124px); }
   .hero-headline > .handwritten { font-size: 27px; } .hero-seal { top: 150px; right: 3%; } .hero-bottom { margin-left: 20px; margin-right: 20px; gap: 12px; } .hero-bottom-copy p { font-size: 10px; } .hero-cta { font-size: 11px; }
   .section-pad { padding-left: 17px; padding-right: 17px; } .section-heading h2 { font-size: 30px; } .service-card h3 { font-size: 15px; } .service-card { padding: 15px 12px; } .service-bottom > span { font-size: 8px; } .service-description { font-size: 8px; }

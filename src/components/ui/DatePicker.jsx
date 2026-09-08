@@ -47,21 +47,21 @@ export default function DatePicker({ id, value, onChange, invalid }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className={`flex w-full items-center justify-between gap-3 rounded-xl border bg-white px-4 py-3 text-left text-sm transition focus:outline-none focus:ring-2 ${
-          invalid ? 'border-red-400 focus:ring-red-200' : 'border-slate-200 focus:ring-primary-300 hover:border-primary-300'
+        className={`flex w-full items-center justify-between gap-3 rounded-[14px] border bg-white/90 px-4 py-3 text-left text-sm text-ink transition focus:outline-none focus:ring-2 ${
+          invalid ? 'border-red-400 focus:ring-red-200' : 'border-[#c9e3ee] focus:border-blue focus:ring-blue/25 hover:border-blue/60'
         }`}
       >
-        <span className={value ? 'text-slate-700' : 'text-slate-400'}>
+        <span className={value ? 'text-ink' : 'text-muted/80'}>
           {value ? formatDate(value) : 'Выберите дату'}
         </span>
-        <CalendarDays size={18} className="flex-shrink-0 text-primary-600" />
+        <CalendarDays size={18} className="flex-shrink-0 text-blue" />
       </button>
 
       {open && (
         <div
           role="dialog"
           aria-label="Выбор даты"
-          className="absolute left-0 top-[calc(100%+8px)] z-30 w-[310px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl"
+          className="absolute left-0 top-[calc(100%+8px)] z-30 w-[310px] rounded-[18px] border border-[#c9e3ee] bg-white p-4 shadow-xl shadow-blue/10"
         >
           <div className="mb-3 flex items-center justify-between">
             <button
@@ -69,18 +69,18 @@ export default function DatePicker({ id, value, onChange, invalid }) {
               onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() - 1, 1))}
               disabled={!canGoBack}
               aria-label="Предыдущий месяц"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-ink transition-colors hover:bg-ice disabled:pointer-events-none disabled:opacity-30"
             >
               <ChevronLeft size={18} />
             </button>
-            <span className="text-sm font-semibold text-slate-800">
+            <span className="text-sm font-semibold text-ink">
               {MONTHS[cursor.getMonth()]} {cursor.getFullYear()}
             </span>
             <button
               type="button"
               onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() + 1, 1))}
               aria-label="Следующий месяц"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-ink transition-colors hover:bg-ice"
             >
               <ChevronRight size={18} />
             </button>
@@ -88,7 +88,7 @@ export default function DatePicker({ id, value, onChange, invalid }) {
 
           <div className="mb-1 grid grid-cols-7 gap-1">
             {WEEKDAYS.map((w) => (
-              <span key={w} className="py-1 text-center text-[11px] font-semibold uppercase text-slate-400">{w}</span>
+              <span key={w} className="py-1 text-center text-[11px] font-semibold uppercase text-muted">{w}</span>
             ))}
           </div>
 
@@ -108,12 +108,12 @@ export default function DatePicker({ id, value, onChange, invalid }) {
                   aria-current={isToday ? 'date' : undefined}
                   className={`h-9 rounded-lg text-sm font-medium transition-colors ${
                     selected
-                      ? 'bg-primary-700 text-white'
+                      ? 'bg-blue text-white'
                       : past
-                        ? 'cursor-not-allowed text-slate-300'
+                        ? 'cursor-not-allowed text-[#b7cfdb]'
                         : isToday
-                          ? 'text-primary-700 ring-1 ring-inset ring-primary-300 hover:bg-primary-50'
-                          : 'text-slate-700 hover:bg-slate-100'
+                          ? 'text-blue ring-1 ring-inset ring-blue/40 hover:bg-ice'
+                          : 'text-ink hover:bg-ice'
                   }`}
                 >
                   {d.getDate()}

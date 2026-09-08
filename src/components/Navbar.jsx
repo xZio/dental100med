@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { reachGoal } from './Metrika.jsx';
-import ToothIcon from './ToothIcon.jsx';
 
 const navLinks = [
   { to: '/services', label: 'Услуги и цены' },
@@ -38,11 +37,8 @@ export default function Navbar() {
     <div className="site-header">
       <header className="header">
         <Link to="/" className="brand" aria-label="ДенталстоМед — на главную">
-          <ToothIcon />
-          <span>
-            Денталсто<span className="brand-med">Мед</span>
-            <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>
-          </span>
+          {/* Свой логотип: тот же знак и шрифт, что в logo.png, только надпись белая — под синюю шапку */}
+          <img src="/images/logo-white.png" alt="ДенталстоМед — стоматология в Подольске" width="785" height="132" />
         </Link>
 
         <nav className="desktop-nav" aria-label="Основная навигация">

@@ -77,7 +77,7 @@ export default function Gallery() {
   return (
     <>
       <section className="panel-blue page-hero">
-        <span className="eyebrow">06 / Посмотрите сами</span>
+        <span className="eyebrow">Посмотрите сами</span>
         <h1>Галерея</h1>
         <p>Фотографии нашей клиники и примеры выполненных работ.</p>
       </section>

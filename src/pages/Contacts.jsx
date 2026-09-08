@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ArrowUpRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import Select from '../components/ui/Select.jsx';
@@ -65,7 +65,7 @@ function Field({ label, required, error, touched, children }) {
   const showError = touched && error;
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-700 mb-1">
+      <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[1.4px] text-muted">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
@@ -80,8 +80,8 @@ function Field({ label, required, error, touched, children }) {
 }
 
 function inputClass(touched, error) {
-  const base = 'w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 transition';
-  if (!touched) return `${base} border-slate-200 focus:ring-primary-300`;
+  const base = 'w-full rounded-[14px] border bg-white/90 px-4 py-3 text-sm text-ink placeholder:text-muted/70 transition focus:outline-none focus:ring-2';
+  if (!touched) return `${base} border-[#c9e3ee] focus:border-blue focus:ring-blue/25`;
   if (error) return `${base} border-red-400 focus:ring-red-200 bg-red-50`;
   return `${base} border-emerald-400 focus:ring-emerald-200`;
 }
@@ -169,7 +169,7 @@ export default function Contacts() {
   return (
     <>
       <section className="panel-blue page-hero">
-        <span className="eyebrow">05 / До встречи в клинике</span>
+        <span className="eyebrow">До встречи в клинике</span>
         <h1>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h1>
         <p>Запишитесь онлайн или позвоните — ответим быстро.</p>
       </section>
@@ -185,8 +185,8 @@ export default function Contacts() {
               {sent ? (
                 <div className="flex flex-col items-center text-center py-8 gap-3">
                   <CheckCircle size={48} className="text-emerald-500" />
-                  <h3 className="text-xl font-bold text-slate-800">Заявка отправлена!</h3>
-                  <p className="text-slate-500 text-sm">
+                  <h3 className="text-xl font-semibold tracking-tight text-ink">Заявка отправлена!</h3>
+                  <p className="text-sm text-muted">
                     Мы свяжемся с вами в течение 30 минут для подтверждения записи.
                   </p>
                   <button onClick={handleReset} className="btn-outline mt-2">
@@ -281,7 +281,7 @@ export default function Contacts() {
                       maxLength={500}
                       className={`${inputClass(touched.message, errors.message)} resize-none`}
                     />
-                    <p className={`text-xs mt-1 text-right ${form.message.length > 450 ? 'text-orange-500' : 'text-slate-400'}`}>
+                    <p className={`mt-1 text-right text-xs ${form.message.length > 450 ? 'text-orange-500' : 'text-muted'}`}>
                       {form.message.length} / 500
                     </p>
                   </Field>
@@ -289,19 +289,14 @@ export default function Contacts() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="button button-blue w-full disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {loading ? 'Отправляем...' : (
-                      <>
-                        <Send size={17} />
-                        Записаться на приём
-                      </>
-                    )}
+                    {loading ? 'Отправляем…' : 'Записаться на приём'} <ArrowUpRight />
                   </button>
 
-                  <p className="text-xs text-slate-400 text-center">
+                  <p className="text-center text-xs text-muted">
                     Нажимая кнопку, вы соглашаетесь на{' '}
-                    <Link to="/privacy" className="underline hover:text-primary-600 transition-colors">
+                    <Link to="/privacy" className="underline transition-colors hover:text-blue">
                       обработку персональных данных
                     </Link>
                   </p>
@@ -312,30 +307,30 @@ export default function Contacts() {
             {/* Info */}
             <motion.div {...fadeUp} transition={{ duration: 0.45, delay: 0.1 }} className="flex flex-col gap-5">
               <div className="card p-6">
-                <h3 className="font-bold text-slate-800 mb-4">Как нас найти</h3>
+                <h3 className="mb-4 font-semibold tracking-tight text-ink">Как нас найти</h3>
                 <div className="space-y-3">
-                  <div className="flex items-start gap-3 text-sm text-slate-600">
-                    <MapPin size={18} className="text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex items-start gap-3 text-sm text-[#3d6a83]">
+                    <MapPin size={18} className="mt-0.5 flex-shrink-0 text-blue" />
                     <span>г. Подольск, пр. Юных Ленинцев, д. 82В, ТЦ Максимум, 2 этаж</span>
                   </div>
                   <a href="tel:+74959241917"
-              onClick={() => reachGoal('call')} className="flex items-center gap-3 text-sm text-slate-600 hover:text-primary-700 transition-colors">
-                    <Phone size={18} className="text-primary-600 flex-shrink-0" />
+              onClick={() => reachGoal('call')} className="flex items-center gap-3 text-sm text-[#3d6a83] transition-colors hover:text-ink">
+                    <Phone size={18} className="flex-shrink-0 text-blue" />
                     +7 (495) 924-19-17
                   </a>
-                  <a href="mailto:dental100med@yandex.ru" className="flex items-center gap-3 text-sm text-slate-600 hover:text-primary-700 transition-colors">
-                    <Mail size={18} className="text-primary-600 flex-shrink-0" />
+                  <a href="mailto:dental100med@yandex.ru" className="flex items-center gap-3 text-sm text-[#3d6a83] transition-colors hover:text-ink">
+                    <Mail size={18} className="flex-shrink-0 text-blue" />
                     dental100med@yandex.ru
                   </a>
                 </div>
               </div>
 
               <div className="card p-6">
-                <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <Clock size={18} className="text-primary-600" />
+                <h3 className="mb-4 flex items-center gap-2 font-semibold tracking-tight text-ink">
+                  <Clock size={18} className="text-blue" />
                   Режим работы
                 </h3>
-                <ul className="space-y-2 text-sm text-slate-600">
+                <ul className="space-y-2 text-sm text-[#3d6a83]">
                   <li className="flex justify-between"><span>Понедельник – Пятница</span><span className="font-medium">9:00 – 21:00</span></li>
                   <li className="flex justify-between"><span>Суббота</span><span className="font-medium">9:00 – 19:00</span></li>
                   <li className="flex justify-between"><span>Воскресенье</span><span className="font-medium">10:00 – 17:00</span></li>
@@ -350,7 +345,7 @@ export default function Contacts() {
                 href="https://yandex.ru/maps/?text=Подольск+проспект+Юных+Ленинцев+82В"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-600 text-sm hover:underline flex items-center gap-1"
+                className="flex items-center gap-1 text-sm text-blue hover:underline"
               >
                 <MapPin size={14} />
                 Открыть в Яндекс Картах

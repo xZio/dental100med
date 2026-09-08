@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Check, Clock, MapPin, Plus, Smile } from 'lucide-react';
+import { ArrowUpRight, Check, Clock, MapPin, Smile } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
-import { priceFrom } from '../lib/price.js';
 import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
 import { reviewsSummary } from '../data/reviews.js';
@@ -13,8 +11,6 @@ import Reviews from '../components/Reviews.jsx';
 import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
-
-const pad2 = (n) => String(n).padStart(2, '0');
 
 /** Печать «С заботой о вас · с 2008 года» — текст по кругу, как на макете. */
 function Seal() {
@@ -74,10 +70,7 @@ function Hero() {
         <Link className="button button-light hero-cta" to="/contacts">
           Записаться на приём <ArrowUpRight />
         </Link>
-        <a href="#services" className="hero-scroll">
-          <span>ПОЗНАКОМИМСЯ БЛИЖЕ</span>
-          <span className="circle">↓</span>
-        </a>
+        <span aria-hidden="true" />
       </div>
     </section>
   );
@@ -99,14 +92,11 @@ function TrustStrip({ rating }) {
 }
 
 function ServicesSection({ categories }) {
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? categories : categories.slice(0, 6);
-
   return (
     <section className="services section-pad" id="services">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">01 / Забота в деталях</span>
+          <span className="eyebrow">Забота в деталях</span>
           <h2>Для здоровья.<br /><span className="soft-text">Для красоты. Для вас.</span></h2>
         </div>
         <p>Всё, что нужно вашей улыбке,<br />в одной клинике. Найдём решение<br />и объясним каждый шаг.</p>
@@ -116,18 +106,13 @@ function ServicesSection({ categories }) {
         {categories.length === 0 && Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="service-card animate-pulse opacity-60" />
         ))}
-        {visible.map((cat, i) => (
+        {categories.map((cat) => (
           <Link key={cat.id} to={`/services#${cat.id}`} className="service-card">
             <div className="service-top">
-              <span>{pad2(i + 1)} /</span>
-              <ServiceIcon slug={cat.slug} icon={cat.icon} size={47} className="text-[#c9f3f8]" />
+              <ServiceIcon slug={cat.slug} icon={cat.icon} size={76} className="text-[#c9f3f8]" />
             </div>
             <h3>{cat.label}</h3>
-            <p className="service-description">
-              {cat.services.length} {plural(cat.services.length, ['услуга', 'услуги', 'услуг'])}
-            </p>
             <div className="service-bottom">
-              <span>{priceFrom(cat.services)}</span>
               <span className="circle"><ArrowUpRight /></span>
             </div>
           </Link>
@@ -136,16 +121,7 @@ function ServicesSection({ categories }) {
 
       <div className="services-bottom">
         <p>Начните со знакомства — подберём подходящего специалиста.</p>
-        {categories.length > 6 && (
-          <button
-            type="button"
-            className="text-button"
-            aria-expanded={showAll}
-            onClick={() => setShowAll((v) => !v)}
-          >
-            {showAll ? 'Свернуть направления −' : <>Все {categories.length} направлений <Plus /></>}
-          </button>
-        )}
+        <Link to="/services" className="text-button">Все услуги и цены <ArrowUpRight /></Link>
       </div>
     </section>
   );
@@ -170,7 +146,7 @@ function AboutPanel({ doctorsCount }) {
       </div>
 
       <div className="about-copy">
-        <span className="eyebrow">02 / Давайте знакомиться</span>
+        <span className="eyebrow">Давайте знакомиться</span>
         <h2>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h2>
         <p>Мы — ДенталстоМед. Семейная клиника в Подольске, где за каждой улыбкой видят человека. Его историю, переживания и ожидания.</p>
         <p>Внимательно выслушаем, понятно расскажем о лечении и вместе выберем подходящий путь. Чтобы приходить к стоматологу было спокойно.</p>
@@ -184,78 +160,36 @@ function AboutPanel({ doctorsCount }) {
   );
 }
 
-/** Лента врачей с прокруткой по три карточки и счётчиком «01 — 03 / 07». */
-function DoctorsSlider({ doctors }) {
-  const track = useRef(null);
-  const [range, setRange] = useState({ start: 1, end: 3, prev: true, next: false });
-  const total = doctors.length;
-
-  const update = () => {
-    const el = track.current;
-    const card = el?.firstElementChild;
-    if (!el || !card) return;
-    const gap = parseFloat(getComputedStyle(el).gap) || 0;
-    const step = card.getBoundingClientRect().width + gap;
-    const start = Math.round(el.scrollLeft / step);
-    const visible = Math.max(1, Math.floor((el.clientWidth + gap + 0.5) / step));
-    setRange({
-      start: start + 1,
-      end: Math.min(start + visible, total),
-      prev: el.scrollLeft <= 3,
-      next: el.scrollLeft + el.clientWidth >= el.scrollWidth - 3,
-    });
-  };
-
-  useEffect(() => {
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [total]);
-
-  const slide = (dir) => {
-    const el = track.current;
-    const card = el?.firstElementChild;
-    if (!el || !card) return;
-    const gap = parseFloat(getComputedStyle(el).gap) || 0;
-    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: 'smooth' });
-  };
-
+/** Три врача карточками, как было раньше; полный состав — на странице команды. */
+function DoctorsPreview({ doctors }) {
   return (
     <section className="doctors section-pad" id="doctors">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">03 / В надёжных руках</span>
+          <span className="eyebrow">В надёжных руках</span>
           <h2>Люди, которым<br /><span className="soft-text">доверяют улыбки.</span></h2>
         </div>
-        <div className="doctor-controls">
-          <button type="button" className="circle" onClick={() => slide(-1)} disabled={range.prev} aria-label="Предыдущие врачи">←</button>
-          <button type="button" className="circle" onClick={() => slide(1)} disabled={range.next} aria-label="Следующие врачи">→</button>
-        </div>
+        <p>Опыт, внимание и любовь<br />к своему делу.</p>
       </div>
 
-      <div className="doctors-track" ref={track} onScroll={update} tabIndex={0} role="region" aria-label="Врачи клиники">
-        {doctors.map((doc, i) => {
-          const [surname, ...given] = doc.name.split(' ');
-          return (
-            <article key={doc._id} className="doctor-card">
-              <div className="doctor-portrait">
-                <span className="doctor-number">{pad2(i + 1)} /</span>
-                <img src={doc.photo} alt={doc.name} loading="lazy" style={framingStyle(doc)} />
-                <Link to="/doctors" className="circle" aria-label={`Подробнее: ${doc.name}`}><ArrowUpRight /></Link>
-              </div>
-              <Link to="/doctors" aria-label={`О враче: ${doc.name}`}>
-                <h3>{surname}<span>{given.join(' ')}</span></h3>
-                <p>{doc.specialty}</p>
-              </Link>
-            </article>
-          );
-        })}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {doctors.slice(0, 3).map((doc) => (
+          <Link key={doc._id} to="/doctors" className="card flex items-start gap-4 p-6 transition-transform duration-300 hover:-translate-y-1">
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl bg-[#cce9f2]">
+              {doc.photo && <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading="lazy" />}
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-[17px] font-semibold leading-snug tracking-tight text-ink">{doc.name}</h3>
+              <p className="mt-1 text-[13px] font-medium text-blue">{doc.specialty}</p>
+              {doc.experience && <p className="mt-1 text-xs text-muted">{doc.experience}</p>}
+            </div>
+          </Link>
+        ))}
       </div>
 
       <div className="doctors-bottom">
-        <span>Опыт, внимание и любовь к своему делу.</span>
-        <span aria-live="polite">{pad2(range.start)} — {pad2(range.end)} / {pad2(total)}</span>
+        <span>Полный состав команды — на странице врачей.</span>
+        <Link to="/doctors" className="text-button !text-[11px]">Все врачи <ArrowUpRight /></Link>
       </div>
     </section>
   );
@@ -265,7 +199,7 @@ function ContactPanel() {
   return (
     <section className="contact section-pad" id="contacts">
       <div className="contact-title">
-        <span className="eyebrow">05 / До встречи в клинике</span>
+        <span className="eyebrow">До встречи в клинике</span>
         <h2>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h2>
         <p>Сделайте первый шаг. А мы позаботимся<br />о том, чтобы он был комфортным.</p>
         <Link className="button button-light" to="/contacts">Записаться на приём <ArrowUpRight /></Link>
@@ -309,7 +243,7 @@ export default function Home() {
   const { data: rating } = useFetch(api.getRating);
 
   const serviceCategories = groupByCategory(services, categories);
-  // В ленте — только врачи; ассистент и администратор есть на странице команды
+  // На главной — только врачи; ассистент и администратор есть на странице команды
   const physicians = (doctors ?? []).filter((d) => /^врач/i.test(d.specialty));
 
   return (
@@ -318,7 +252,7 @@ export default function Home() {
       <TrustStrip rating={rating?.rating ?? reviewsSummary.rating} />
       <ServicesSection categories={serviceCategories} />
       <AboutPanel doctorsCount={physicians.length || 7} />
-      {physicians.length > 0 && <DoctorsSlider doctors={physicians} />}
+      {physicians.length > 0 && <DoctorsPreview doctors={physicians} />}
       <Reviews />
       <ContactPanel />
     </>

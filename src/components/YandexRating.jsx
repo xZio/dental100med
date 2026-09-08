@@ -24,7 +24,7 @@ export default function YandexRating({ className = '' }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Рейтинг ${rating} из 5 на Яндекс Картах, ${reviews} ${reviewsWord} — открыть отзывы`}
-      className={`inline-flex -rotate-2 items-stretch gap-5 rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-lg shadow-slate-200/60 transition-transform duration-300 hover:rotate-0 ${className}`}
+      className={`inline-flex -rotate-2 items-stretch gap-5 rounded-[18px] border border-[#c9e3ee] bg-white px-6 py-4 shadow-lg shadow-blue/10 transition-transform duration-300 hover:rotate-0 ${className}`}
     >
       <div className="flex flex-col items-center justify-center">
         <span className="text-[34px] font-black leading-none text-[#4d4d4d]">{rating}</span>
@@ -33,19 +33,19 @@ export default function YandexRating({ className = '' }) {
             <Star key={i} size={13} className="fill-[#FFCC00] text-[#FFCC00]" />
           ))}
         </div>
-        <span className="mt-1.5 text-xs text-slate-500">
+        <span className="mt-1.5 text-xs text-muted">
           {ratings} {plural(ratings, ['оценка', 'оценки', 'оценок'])}
         </span>
       </div>
 
-      <span className="w-px shrink-0 bg-slate-200" aria-hidden />
+      <span className="w-px shrink-0 bg-[#c9e3ee]" aria-hidden />
 
       <div className="flex flex-col justify-center gap-1">
         <span className="inline-flex items-center gap-2">
           <GoodPlaceBadge className="h-6 w-[42px] flex-shrink-0" />
-          <span className="text-[15px] font-bold text-slate-800">{reviewsSummary.award}</span>
+          <span className="text-[15px] font-bold text-ink">{reviewsSummary.award}</span>
         </span>
-        <span className="text-[13px] text-slate-500">
+        <span className="text-[13px] text-muted">
           {reviews} {reviewsWord} на {reviewsSummary.source}
         </span>
       </div>

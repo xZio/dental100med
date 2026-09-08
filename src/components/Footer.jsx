@@ -1,18 +1,13 @@
 import { Link } from 'react-router-dom';
 import { legal } from '../data/legal.js';
-import ToothIcon from './ToothIcon.jsx';
 
 /** Подвал из макета: бренд, ссылки, реквизиты и обязательная медицинская пометка. */
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-top">
-        <Link className="brand" to="/">
-          <ToothIcon />
-          <span>
-            Денталсто<span className="brand-med">Мед</span>
-            <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>
-          </span>
+        <Link className="brand" to="/" aria-label="ДенталстоМед — на главную">
+          <img src="/images/logo.png" alt="ДенталстоМед" width="785" height="132" loading="lazy" />
         </Link>
         <div>
           <Link to="/services">Услуги</Link>

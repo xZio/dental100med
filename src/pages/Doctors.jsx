@@ -4,8 +4,6 @@ import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonCard, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 
-const pad2 = (n) => String(n).padStart(2, '0');
-
 export default function Doctors() {
   useSEO({
     title: 'Наши врачи',
@@ -17,7 +15,7 @@ export default function Doctors() {
   return (
     <>
       <section className="panel-blue page-hero">
-        <span className="eyebrow">03 / В надёжных руках</span>
+        <span className="eyebrow">В надёжных руках</span>
         <h1>Люди, которым<br />доверяют улыбки.</h1>
         <p>Опыт, внимание и любовь к своему делу. Знакомьтесь с командой клиники.</p>
       </section>
@@ -32,24 +30,20 @@ export default function Doctors() {
         {error && <ErrorMessage message={error} />}
 
         {doctors && (
-          <div className="grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {doctors.map((doc, i) => {
-              const [surname, ...given] = doc.name.split(' ');
-              return (
-                <article key={doc._id} className="doctor-card !flex-none">
-                  <div className="doctor-portrait">
-                    <span className="doctor-number">{pad2(i + 1)} /</span>
-                    {doc.photo && <img src={doc.photo} alt={doc.name} loading="lazy" style={framingStyle(doc)} />}
-                  </div>
-                  <h2 className="mt-5 text-xl font-semibold leading-tight tracking-tight text-ink">
-                    {surname}<span className="block">{given.join(' ')}</span>
-                  </h2>
-                  <p className="mt-2 text-[13px] font-medium text-blue">{doc.specialty}</p>
-                  {doc.experience && <p className="mt-1 text-xs text-muted">{doc.experience}</p>}
-                  {doc.description && <p className="mt-3 text-sm leading-relaxed text-[#3d6a83]">{doc.description}</p>}
-                </article>
-              );
-            })}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {doctors.map((doc) => (
+              <article key={doc._id} className="card p-6">
+                <div className="mb-4 h-24 w-24 overflow-hidden rounded-2xl bg-[#cce9f2]">
+                  {doc.photo && (
+                    <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading="lazy" />
+                  )}
+                </div>
+                <h2 className="text-lg font-semibold leading-snug tracking-tight text-ink">{doc.name}</h2>
+                <p className="mt-1 text-sm font-medium text-blue">{doc.specialty}</p>
+                {doc.experience && <p className="mt-1 text-xs text-muted">{doc.experience}</p>}
+                {doc.description && <p className="mt-3 text-sm leading-relaxed text-[#3d6a83]">{doc.description}</p>}
+              </article>
+            ))}
           </div>
         )}
       </section>
