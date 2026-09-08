@@ -36,14 +36,23 @@ new-chat/outputs/dental-icons/`.
 
 ## 2. Иконки блока «Почему выбирают нас» (4 штуки)
 
-Класть в `public/images/features/<имя>.webp`.
+Класть в `public/images/features/<имя>.webp`: `guarantee`, `no-queue`,
+`equipment`, `family`.
 
-| Блок | Файл | Промпт (объект) |
-|---|---|---|
-| Гарантия качества | `guarantee.webp` | `A 3D shield with a check mark, glossy blue and white` |
-| Без очередей | `no-queue.webp` | `A 3D wall clock with rounded body and a small calendar card behind it` |
-| Современное оборудование | `equipment.webp` | `A 3D dental chair unit, simplified and toy-like, with a small lamp arm` |
-| Семейная клиника | `family.webp` | `Three 3D tooth characters of different sizes standing together like a family` |
+```
+Нарисуй лист с 4 плоскими иконками в один ряд, в точно таком же стиле, как
+набор иконок услуг: белые line-иконки одинаковой толщины линии, скруглённые
+концы, один акцентный элемент бирюзовым #14b8a6, без объёма и теней,
+прозрачный фон.
+
+Иконки:
+1. Гарантия качества — щит с галочкой
+2. Без очередей — часы и небольшая карточка календаря
+3. Современное оборудование — стоматологическая установка с лампой, упрощённо
+4. Семейная клиника — три зуба разного размера рядом, как семья
+
+Размер листа 1024×256.
+```
 
 ## 3. Картинка для главного экрана (hero)
 
@@ -82,8 +91,8 @@ new-chat/outputs/dental-icons/`.
 
 | Где | Файл | Промпт |
 |---|---|---|
-| Блок записи / CTA | `cta.webp` | `Abstract soft gradient background, pale blue to white, with subtle smooth wave shapes and a few blurred light bokeh circles, very light and airy, no objects, no text. Horizontal 21:9` |
-| Блок «О клинике» | `about.webp` | `Abstract background of soft rounded organic shapes in pale blue and teal on white, extremely subtle, low contrast, suitable as a background behind dark text. Horizontal 16:9` |
+| Блок записи / CTA | `cta.webp` | `Абстрактный фон: мягкий градиент от очень светлого голубого к белому, плавные волнообразные формы, несколько размытых световых пятен. Очень светлый и воздушный, без предметов и текста. Горизонтальный, 21:9` |
+| Блок «О клинике» | `about.webp` | `Абстрактный фон из мягких округлых форм в бледно-голубом и бирюзовом на белом. Очень деликатный, низкий контраст — поверх пойдёт тёмный текст. Горизонтальный, 16:9` |
 
 ---
 
