@@ -29,8 +29,8 @@ router.post('/', adminOnly, (req, res) => {
                                      photoScale, photoPosX, photoPosY, createdAt, updatedAt)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .run(name.trim(), specialty, experience || '', description || '', photo || '', Number(order) || 0,
-           Number(photoScale) || 1.22, photoPosX == null ? 50 : Number(photoPosX),
-           Number(photoPosY) || 0, ts, ts);
+           Number(photoScale) || 1, photoPosX == null ? 50 : Number(photoPosX),
+           photoPosY == null ? 50 : Number(photoPosY), ts, ts);
 
     const doctor = db.prepare('SELECT * FROM doctors WHERE id = ?').get(lastInsertRowid);
     res.status(201).json(mapRow(doctor));

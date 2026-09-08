@@ -1,108 +1,38 @@
 import { Link } from 'react-router-dom';
-import { reachGoal } from './Metrika.jsx';
 import { legal } from '../data/legal.js';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import ToothIcon from './ToothIcon.jsx';
 
+/** Подвал из макета: бренд, ссылки, реквизиты и обязательная медицинская пометка. */
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="mb-4">
-              <div className="inline-block bg-white rounded-xl px-3 py-2">
-                <img
-                  src="/images/logo.png"
-                  alt="ДенталстоМед"
-                  className="h-9 w-auto object-contain"
-                />
-              </div>
-              <p className="text-slate-400 text-xs mt-2">Стоматология в Подольске</p>
-            </div>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Современная семейная стоматологическая клиника. Лечим с заботой о каждом пациенте.
-            </p>
-          </div>
-
-          {/* Navigation */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Навигация</h3>
-            <ul className="space-y-2">
-              {[
-                { to: '/', label: 'Главная' },
-                { to: '/services', label: 'Услуги и цены' },
-                { to: '/doctors', label: 'Врачи' },
-                { to: '/gallery', label: 'Галерея' },
-                { to: '/about', label: 'О клинике' },
-                { to: '/contacts', label: 'Контакты' },
-              ].map((l) => (
-                <li key={l.to}>
-                  <Link
-                    to={l.to}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contacts */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Контакты</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-slate-400">
-                <MapPin size={16} className="mt-0.5 flex-shrink-0 text-primary-400" />
-                г. Подольск, пр. Юных Ленинцев, д. 82В, ТЦ Максимум, 2 этаж
-              </li>
-              <li>
-                <a href="tel:+74959241917"
-              onClick={() => reachGoal('call')} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
-                  <Phone size={16} className="flex-shrink-0 text-primary-400" />
-                  +7 (495) 924-19-17
-                </a>
-              </li>
-              <li>
-                <a href="mailto:dental100med@yandex.ru" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
-                  <Mail size={16} className="flex-shrink-0 text-primary-400" />
-                  dental100med@yandex.ru
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Hours */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Режим работы</h3>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li className="flex items-center gap-2">
-                <Clock size={15} className="text-primary-400" />
-                Пн–Пт: 9:00 – 21:00
-              </li>
-              <li className="flex items-center gap-2">
-                <Clock size={15} className="text-primary-400" />
-                Сб: 9:00 – 19:00
-              </li>
-              <li className="flex items-center gap-2">
-                <Clock size={15} className="text-primary-400" />
-                Вс: 10:00 – 17:00
-              </li>
-            </ul>
-          </div>
+    <footer className="footer">
+      <div className="footer-top">
+        <Link className="brand" to="/">
+          <ToothIcon />
+          <span>
+            Денталсто<span className="brand-med">Мед</span>
+            <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>
+          </span>
+        </Link>
+        <div>
+          <Link to="/services">Услуги</Link>
+          <Link to="/doctors">Врачи</Link>
+          <Link to="/gallery">Галерея</Link>
+          <Link to="/about">О клинике</Link>
+          <Link to="/contacts">Контакты</Link>
         </div>
-
-        <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-500">© {new Date().getFullYear()} Dental100. Все права защищены.</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <Link to="/privacy" className="text-xs text-slate-500 hover:text-white transition-colors">
-              Политика конфиденциальности
-            </Link>
-            <p className="text-xs text-slate-500">Лицензия № {legal.license.number}</p>
-          </div>
-        </div>
+        <a className="to-top" href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          Наверх ↑
+        </a>
       </div>
+
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} ДенталстоМед</span>
+        <span>{legal.shortName} · ИНН {legal.inn} · Лицензия № {legal.license.number}</span>
+        <Link to="/privacy">Конфиденциальность</Link>
+      </div>
+
+      <p className="medical-note">Имеются противопоказания. Необходима консультация специалиста.</p>
     </footer>
   );
 }

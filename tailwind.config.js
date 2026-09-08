@@ -7,6 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Палитра сайта (по макету): тёмно-синий текст, синий панелей,
+        // ледяной фон, бирюзовый акцент, приглушённый текст
+        ink:   '#124a6a',
+        blue:  '#287db6',
+        ice:   '#e8f7fb',
+        cyan:  '#88edf0',
+        snow:  '#f0fbff',
+        muted: '#628697',
+        shell: '#e6f1f5',
+        // Старая шкала — её ещё используют внутренние страницы и админка
         primary: {
           50:  '#eff8ff',
           100: '#dbeffe',
@@ -14,10 +24,10 @@ export default {
           300: '#93d0fb',
           400: '#60b5f7',
           500: '#3b97f2',
-          600: '#2478e7',
-          700: '#1c63d4',
-          800: '#1d4fac',
-          900: '#1d4388',
+          600: '#287db6',
+          700: '#276f9f',
+          800: '#1d5a84',
+          900: '#124a6a',
         },
         accent: {
           400: '#34d399',
@@ -26,7 +36,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'Segoe UI', 'Arial', 'sans-serif'],
+        hand: ['Caveat', 'Segoe Print', 'cursive'],
       },
       screens: {
         xs: '375px',

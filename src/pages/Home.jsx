@@ -1,58 +1,301 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  Phone, ChevronRight, Shield, Clock, Star, Users, Award, Smile,
-  Stethoscope, Baby, Crown, Scissors, Zap, AlignJustify, Tag
-} from 'lucide-react';
+import { ArrowUpRight, Check, Clock, MapPin, Plus, Smile } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { priceFrom } from '../lib/price.js';
 import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
+import { reviewsSummary } from '../data/reviews.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
+import ToothIcon from '../components/ToothIcon.jsx';
 import Reviews from '../components/Reviews.jsx';
-import CountUp from '../components/CountUp.jsx';
+import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
-// Ключи — русские названия категорий (как в MongoDB)
-const stats = [
-  { value: '15+', label: 'лет работы', icon: Award },
-  { value: '12 000+', label: 'пациентов', icon: Users },
-  { value: '7', label: 'врачей', icon: Stethoscope },
-  { value: '98%', label: 'довольных', icon: Smile },
-];
+const pad2 = (n) => String(n).padStart(2, '0');
 
-const advantages = [
-  {
-    icon: Shield,
-    title: 'Гарантия качества',
-    text: 'Даём письменную гарантию на все виды лечения и протезирования.',
-  },
-  {
-    icon: Clock,
-    title: 'Без очередей',
-    text: 'Принимаем строго по записи — ваше время ценно.',
-  },
-  {
-    icon: Star,
-    title: 'Современное оборудование',
-    text: 'Цифровой рентген, лазер, 3D-томограф — лечим точно и безболезненно.',
-  },
-  {
-    icon: Smile,
-    title: 'Семейная клиника',
-    text: 'Принимаем детей от 1 года. Создаём комфортную атмосферу для всей семьи.',
-  },
-];
+/** Печать «С заботой о вас · с 2008 года» — текст по кругу, как на макете. */
+function Seal() {
+  return (
+    <Link className="hero-seal" to="/about" aria-label="Семейная стоматология с 2008 года">
+      <svg className="seal-text" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <path id="circle-text" d="M60,60m-45,0a45,45 0 1,1 90,0a45,45 0 1,1-90,0" />
+        </defs>
+        <text>
+          <textPath href="#circle-text" textLength="279">С ЗАБОТОЙ О ВАС · С 2008 ГОДА · </textPath>
+        </text>
+      </svg>
+      <Smile className="seal-smile" strokeWidth={1.2} />
+    </Link>
+  );
+}
 
+function Hero() {
+  return (
+    <section className="hero" id="top" aria-label="ДенталстоМед">
+      <div className="hero-intro">
+        <span className="eyebrow"><i className="status-dot" /> Стоматология в Подольске</span>
+        <p>Здоровье вашей улыбки.<br /><strong>С заботой о вас и ваших близких.</strong></p>
+      </div>
 
-const fadeUp = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
+      <div className="hero-stage">
+        <div className="hero-headline">
+          <span className="handwritten">С любовью</span>
+          <h1>К вашей<br /><span>улыбке.</span></h1>
+        </div>
+        <div className="hero-aura" aria-hidden="true" />
+        <img
+          className="hero-art"
+          src="/images/hero-art.webp"
+          alt="Объёмные белые зубы, голубой стакан со щёткой и бирюзовое сердечко"
+          fetchPriority="high"
+          width="1122"
+          height="1402"
+        />
+        <div className="hero-note hero-note-left">
+          <span className="mini-line" />
+          <p>Большая забота<br />о каждой улыбке</p>
+          <span className="tiny">ДЛЯ ВЗРОСЛЫХ И ДЕТЕЙ</span>
+        </div>
+        <Seal />
+        <span className="floating-pearl pearl-one" aria-hidden="true" />
+        <span className="floating-pearl pearl-two" aria-hidden="true" />
+        <div className="hero-floor" aria-hidden="true" />
+      </div>
+
+      <div className="hero-bottom">
+        <div className="hero-bottom-copy">
+          <p>Здесь начинается ваша<br /> здоровая и красивая улыбка.</p>
+          <span>От первого знакомства до результата</span>
+        </div>
+        <Link className="button button-light hero-cta" to="/contacts">
+          Записаться на приём <ArrowUpRight />
+        </Link>
+        <a href="#services" className="hero-scroll">
+          <span>ПОЗНАКОМИМСЯ БЛИЖЕ</span>
+          <span className="circle">↓</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function TrustStrip({ rating }) {
+  return (
+    <div className="trust-strip">
+      <span><ToothIcon strokeWidth={1.8} /> Для всей семьи</span>
+      <span><Check strokeWidth={1.8} /> План лечения без сюрпризов</span>
+      <span><Clock strokeWidth={1.8} /> Приём по записи</span>
+      <a href={reviewsSummary.url} target="_blank" rel="noopener noreferrer">
+        <b className="yandex-mark">Я</b> {rating}{' '}
+        <span className="stars" aria-label="5 из 5">★★★★★</span>{' '}
+        <span className="rating-label">на Яндекс Картах</span> ↗
+      </a>
+    </div>
+  );
+}
+
+function ServicesSection({ categories }) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? categories : categories.slice(0, 6);
+
+  return (
+    <section className="services section-pad" id="services">
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow">01 / Забота в деталях</span>
+          <h2>Для здоровья.<br /><span className="soft-text">Для красоты. Для вас.</span></h2>
+        </div>
+        <p>Всё, что нужно вашей улыбке,<br />в одной клинике. Найдём решение<br />и объясним каждый шаг.</p>
+      </div>
+
+      <div className="service-grid">
+        {categories.length === 0 && Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="service-card animate-pulse opacity-60" />
+        ))}
+        {visible.map((cat, i) => (
+          <Link key={cat.id} to={`/services#${cat.id}`} className="service-card">
+            <div className="service-top">
+              <span>{pad2(i + 1)} /</span>
+              <ServiceIcon slug={cat.slug} icon={cat.icon} size={47} className="text-[#c9f3f8]" />
+            </div>
+            <h3>{cat.label}</h3>
+            <p className="service-description">
+              {cat.services.length} {plural(cat.services.length, ['услуга', 'услуги', 'услуг'])}
+            </p>
+            <div className="service-bottom">
+              <span>{priceFrom(cat.services)}</span>
+              <span className="circle"><ArrowUpRight /></span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="services-bottom">
+        <p>Начните со знакомства — подберём подходящего специалиста.</p>
+        {categories.length > 6 && (
+          <button
+            type="button"
+            className="text-button"
+            aria-expanded={showAll}
+            onClick={() => setShowAll((v) => !v)}
+          >
+            {showAll ? 'Свернуть направления −' : <>Все {categories.length} направлений <Plus /></>}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function AboutPanel({ doctorsCount }) {
+  return (
+    <section className="about section-pad" id="about">
+      <div className="about-visual">
+        <img
+          src="/images/clinic/clinic-01.jpg"
+          alt="Врач клиники ДенталстоМед с маленькой пациенткой после приёма"
+          loading="lazy"
+          width="590"
+          height="700"
+        />
+        <div className="photo-caption">
+          <span>Там, где вам рады</span>
+          <Smile strokeWidth={1.6} />
+        </div>
+        <span className="photo-sticker">Забота,<br />которую чувствуешь ♡</span>
+      </div>
+
+      <div className="about-copy">
+        <span className="eyebrow">02 / Давайте знакомиться</span>
+        <h2>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h2>
+        <p>Мы — ДенталстоМед. Семейная клиника в Подольске, где за каждой улыбкой видят человека. Его историю, переживания и ожидания.</p>
+        <p>Внимательно выслушаем, понятно расскажем о лечении и вместе выберем подходящий путь. Чтобы приходить к стоматологу было спокойно.</p>
+        <div className="about-facts">
+          <div><strong>с 2008</strong><span>заботимся об улыбках</span></div>
+          <div><strong>{doctorsCount} {plural(doctorsCount, ['врач', 'врача', 'врачей'])}</strong><span>одна команда</span></div>
+        </div>
+        <Link className="text-button" to="/doctors">Познакомиться с командой <ArrowUpRight /></Link>
+      </div>
+    </section>
+  );
+}
+
+/** Лента врачей с прокруткой по три карточки и счётчиком «01 — 03 / 07». */
+function DoctorsSlider({ doctors }) {
+  const track = useRef(null);
+  const [range, setRange] = useState({ start: 1, end: 3, prev: true, next: false });
+  const total = doctors.length;
+
+  const update = () => {
+    const el = track.current;
+    const card = el?.firstElementChild;
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(el).gap) || 0;
+    const step = card.getBoundingClientRect().width + gap;
+    const start = Math.round(el.scrollLeft / step);
+    const visible = Math.max(1, Math.floor((el.clientWidth + gap + 0.5) / step));
+    setRange({
+      start: start + 1,
+      end: Math.min(start + visible, total),
+      prev: el.scrollLeft <= 3,
+      next: el.scrollLeft + el.clientWidth >= el.scrollWidth - 3,
+    });
+  };
+
+  useEffect(() => {
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [total]);
+
+  const slide = (dir) => {
+    const el = track.current;
+    const card = el?.firstElementChild;
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(el).gap) || 0;
+    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: 'smooth' });
+  };
+
+  return (
+    <section className="doctors section-pad" id="doctors">
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow">03 / В надёжных руках</span>
+          <h2>Люди, которым<br /><span className="soft-text">доверяют улыбки.</span></h2>
+        </div>
+        <div className="doctor-controls">
+          <button type="button" className="circle" onClick={() => slide(-1)} disabled={range.prev} aria-label="Предыдущие врачи">←</button>
+          <button type="button" className="circle" onClick={() => slide(1)} disabled={range.next} aria-label="Следующие врачи">→</button>
+        </div>
+      </div>
+
+      <div className="doctors-track" ref={track} onScroll={update} tabIndex={0} role="region" aria-label="Врачи клиники">
+        {doctors.map((doc, i) => {
+          const [surname, ...given] = doc.name.split(' ');
+          return (
+            <article key={doc._id} className="doctor-card">
+              <div className="doctor-portrait">
+                <span className="doctor-number">{pad2(i + 1)} /</span>
+                <img src={doc.photo} alt={doc.name} loading="lazy" style={framingStyle(doc)} />
+                <Link to="/doctors" className="circle" aria-label={`Подробнее: ${doc.name}`}><ArrowUpRight /></Link>
+              </div>
+              <Link to="/doctors" aria-label={`О враче: ${doc.name}`}>
+                <h3>{surname}<span>{given.join(' ')}</span></h3>
+                <p>{doc.specialty}</p>
+              </Link>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="doctors-bottom">
+        <span>Опыт, внимание и любовь к своему делу.</span>
+        <span aria-live="polite">{pad2(range.start)} — {pad2(range.end)} / {pad2(total)}</span>
+      </div>
+    </section>
+  );
+}
+
+function ContactPanel() {
+  return (
+    <section className="contact section-pad" id="contacts">
+      <div className="contact-title">
+        <span className="eyebrow">05 / До встречи в клинике</span>
+        <h2>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h2>
+        <p>Сделайте первый шаг. А мы позаботимся<br />о том, чтобы он был комфортным.</p>
+        <Link className="button button-light" to="/contacts">Записаться на приём <ArrowUpRight /></Link>
+      </div>
+      <div className="contact-details">
+        <a className="contact-phone" href="tel:+74959241917" onClick={() => reachGoal('call')}>
+          +7 (495) 924-19-17 <ArrowUpRight size={24} />
+        </a>
+        <a className="contact-email" href="mailto:dental100med@yandex.ru">dental100med@yandex.ru</a>
+        <div className="contact-address">
+          <MapPin />
+          <div>
+            <h3>Подольск, пр. Юных Ленинцев, 82В</h3>
+            <p>ТЦ «Максимум», 2 этаж</p>
+            <a href="https://yandex.ru/maps/org/dentalstomed/159190759541/" target="_blank" rel="noopener noreferrer">Построить маршрут ↗</a>
+          </div>
+        </div>
+        <div className="contact-hours">
+          <Clock />
+          <div>
+            <div><span>Понедельник — пятница</span><b>9:00–21:00</b></div>
+            <div><span>Суббота</span><b>9:00–19:00</b></div>
+            <div><span>Воскресенье</span><b>10:00–17:00</b></div>
+          </div>
+        </div>
+      </div>
+      <span className="contact-decoration" aria-hidden="true">♡</span>
+    </section>
+  );
+}
 
 export default function Home() {
   useSEO({
@@ -60,353 +303,24 @@ export default function Home() {
     description: 'Семейная стоматологическая клиника ДенталстоМед в Подольске. Лечение, имплантация, ортодонтия. Запись онлайн.',
   });
 
-  const { data: services }    = useFetch(api.getServices);
-  const { data: doctors }     = useFetch(api.getDoctors);
-  const { data: promotions }  = useFetch(api.getPromotions);
-  const { data: gallery }     = useFetch(api.getGallery);
-  const { data: categories }  = useFetch(api.getCategories);
+  const { data: services } = useFetch(api.getServices);
+  const { data: categories } = useFetch(api.getCategories);
+  const { data: doctors } = useFetch(api.getDoctors);
+  const { data: rating } = useFetch(api.getRating);
 
-  // Карточки услуг — в порядке прайса, а не по алфавиту
   const serviceCategories = groupByCategory(services, categories);
+  // В ленте — только врачи; ассистент и администратор есть на странице команды
+  const physicians = (doctors ?? []).filter((d) => /^врач/i.test(d.specialty));
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-72 h-72 rounded-full bg-white blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-primary-300 blur-3xl" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:py-36">
-          <div className="max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6"
-            >
-              <Star size={14} className="text-yellow-300" />
-              ДенталстоМед — стоматология в Подольске с 2008 года
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
-            >
-              Красивая улыбка —<br />
-              <span className="text-primary-200">это просто</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-5 text-base sm:text-lg text-primary-100 leading-relaxed max-w-xl"
-            >
-              Лечим зубы быстро, безболезненно и по разумным ценам. Семейная клиника в ТЦ Максимум — врачи высшей категории.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-8 flex flex-col xs:flex-row gap-3"
-            >
-              <Link
-                to="/contacts"
-                className="bg-white text-primary-800 hover:bg-primary-50 font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95 inline-flex items-center justify-center gap-2"
-              >
-                Записаться на приём
-                <ChevronRight size={18} />
-              </Link>
-              <a
-                href="tel:+74959241917"
-                className="border-2 border-white/40 hover:border-white text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 inline-flex items-center justify-center gap-2 backdrop-blur-sm"
-              >
-                <Phone size={18} />
-                Позвонить нам
-              </a>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {stats.map(({ value, label, icon: Icon }, i) => (
-              <motion.div
-                key={label}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Icon size={22} className="text-primary-700" />
-                </div>
-                <CountUp value={value} className="block text-2xl sm:text-3xl font-bold text-slate-800 tabular-nums" />
-                <p className="text-sm text-slate-500 mt-1">{label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services */}
-      <section className="bg-slate-50 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
-            <h2 className="section-title">Наши услуги</h2>
-            <p className="section-subtitle">Полный спектр стоматологической помощи для всей семьи</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {serviceCategories.length === 0 && Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse h-40" />
-            ))}
-            {serviceCategories.map((cat, i) => {
-              const priceLabel = priceFrom(cat.services);
-              return (
-                <motion.div
-                  key={cat.id}
-                  {...fadeUp}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                >
-                  <Link
-                    to={`/services#${cat.id}`}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-6 shadow-lg shadow-primary-900/15 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-900/25"
-                  >
-                    {/* Мягкое пятно света в углу — оживляет плотную заливку */}
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/15 blur-2xl transition-opacity duration-300 group-hover:opacity-70"
-                    />
-                    <div className="relative mb-4 transition-transform duration-300 group-hover:scale-105">
-                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={92} className="text-white" />
-                    </div>
-                    <h3 className="relative text-lg font-semibold text-white">{cat.label}</h3>
-                    <p className="relative mt-1 text-sm text-primary-200">
-                      {cat.services.length} {plural(cat.services.length, ['услуга', 'услуги', 'услуг'])}
-                    </p>
-                    <p className="relative mt-3 text-sm font-semibold text-white">{priceLabel}</p>
-                    <div className="relative mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-primary-100 transition-transform duration-300 group-hover:translate-x-1">
-                      Смотреть цены <ChevronRight size={15} />
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <motion.div {...fadeUp} className="text-center mt-10">
-            <Link to="/services" className="btn-primary">
-              Все услуги и цены
-              <ChevronRight size={18} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Advantages */}
-      <section className="bg-white py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
-            <h2 className="section-title">Почему выбирают нас</h2>
-            <p className="section-subtitle">Мы делаем всё, чтобы визит к стоматологу был комфортным</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {advantages.map(({ icon: Icon, title, text }, i) => (
-              <motion.div
-                key={title}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center p-6"
-              >
-                <div className="w-14 h-14 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Icon size={26} className="text-primary-700" />
-                </div>
-                <h3 className="font-semibold text-slate-800 text-lg mb-2">{title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{text}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Doctors preview */}
-      <section className="bg-slate-50 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
-            <h2 className="section-title">Наши врачи</h2>
-            <p className="section-subtitle">Опытные специалисты с постоянным повышением квалификации</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {!doctors && Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse flex gap-4">
-                <div className="w-16 h-16 bg-slate-200 rounded-2xl flex-shrink-0" />
-                <div className="flex-1 space-y-2 pt-1">
-                  <div className="h-4 bg-slate-200 rounded w-3/4" />
-                  <div className="h-3 bg-slate-200 rounded w-1/2" />
-                </div>
-              </div>
-            ))}
-            {(doctors || []).slice(0, 3).map((doc, i) => (
-              <motion.div
-                key={doc._id}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="card p-6 flex items-start gap-4"
-              >
-                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200 flex-shrink-0 relative">
-                  {doc.photo ? (
-                    <img
-                      src={doc.photo}
-                      alt={doc.name}
-                      className="w-full h-full object-cover"
-                      style={framingStyle(doc)}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement.querySelector('.fb').style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div className="fb absolute inset-0 items-center justify-center" style={{ display: doc.photo ? 'none' : 'flex' }}>
-                    <Stethoscope size={22} className="text-primary-700" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-800 leading-snug">{doc.name}</h3>
-                  <p className="text-primary-600 text-sm font-medium mt-0.5">{doc.specialty}</p>
-                  <p className="text-slate-400 text-xs mt-1">{doc.experience}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div {...fadeUp} className="text-center mt-8">
-            <Link to="/doctors" className="btn-outline">
-              Все врачи <ChevronRight size={18} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Promotions */}
-      {promotions && promotions.length > 0 && (
-        <section className="bg-white py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
-              <h2 className="section-title">Акции и спецпредложения</h2>
-              <p className="section-subtitle">Выгодные предложения для наших пациентов</p>
-            </motion.div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {promotions.map((promo, i) => (
-                <motion.div
-                  key={promo._id}
-                  {...fadeUp}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="card p-6 border-l-4 border-l-primary-500 flex flex-col gap-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
-                      <Tag size={18} className="text-primary-600" />
-                    </div>
-                    {promo.discount && (
-                      <span className="bg-primary-600 text-white text-sm font-bold px-3 py-1 rounded-full">
-                        {promo.discount}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-slate-800 text-lg">{promo.title}</h3>
-                  {promo.description && (
-                    <p className="text-slate-500 text-sm leading-relaxed flex-1">{promo.description}</p>
-                  )}
-                  {promo.expiresAt && (
-                    <p className="text-xs text-slate-400">
-                      До {new Date(promo.expiresAt).toLocaleDateString('ru-RU')}
-                    </p>
-                  )}
-                  <Link to="/contacts" className="mt-auto text-primary-600 text-sm font-medium hover:text-primary-800 flex items-center gap-1 transition-colors">
-                    Записаться <ChevronRight size={14} />
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Gallery Preview */}
-      <section className="bg-white py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp} className="text-center mb-10 md:mb-14">
-            <h2 className="section-title">Наша клиника</h2>
-            <p className="section-subtitle">Современный интерьер, комфорт и профессиональное оборудование</p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-            {(gallery ?? []).filter((p) => p.tab === 'clinic').slice(0, 6).map((photo, i) => (
-              <motion.div
-                key={photo._id}
-                {...fadeUp}
-                transition={{ duration: 0.4, delay: i * 0.07 }}
-                className={`overflow-hidden rounded-xl bg-slate-100 ${i === 0 ? 'sm:col-span-2 sm:row-span-2' : ''}`}
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  className={`w-full object-cover ${i === 0 ? 'h-56 sm:h-72 md:h-96' : 'h-36 sm:h-44'} hover:scale-105 transition-transform duration-500`}
-                  loading="lazy"
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div {...fadeUp} className="text-center mt-8">
-            <Link to="/gallery" className="btn-outline">
-              Смотреть всю галерею <ChevronRight size={18} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Отзывы пациентов — стена с Яндекс Карт */}
+      <Hero />
+      <TrustStrip rating={rating?.rating ?? reviewsSummary.rating} />
+      <ServicesSection categories={serviceCategories} />
+      <AboutPanel doctorsCount={physicians.length || 7} />
+      {physicians.length > 0 && <DoctorsSlider doctors={physicians} />}
       <Reviews />
-
-      {/* CTA Banner */}
-      <section className="bg-primary-700 text-white py-14 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div {...fadeUp}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Запишитесь на бесплатную консультацию
-            </h2>
-            <p className="text-primary-200 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-              Осмотр и составление плана лечения — бесплатно. Позвоните или оставьте заявку онлайн.
-            </p>
-            <div className="flex flex-col xs:flex-row gap-3 justify-center">
-              <Link
-                to="/contacts"
-                className="bg-white text-primary-800 hover:bg-primary-50 font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 shadow-lg inline-flex items-center justify-center gap-2"
-              >
-                Онлайн-запись
-              </Link>
-              <a
-                href="tel:+74959241917"
-                className="border-2 border-white/40 hover:border-white text-white font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 inline-flex items-center justify-center gap-2"
-              >
-                <Phone size={18} />
-                +7 (495) 924-19-17
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <ContactPanel />
     </>
   );
 }

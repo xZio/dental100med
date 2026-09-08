@@ -100,9 +100,11 @@ export const connectDB = () => {
   addColumn('services', 'note', "TEXT NOT NULL DEFAULT ''");
 
   // Кадр фото врача — добавлен позже, поэтому не в CREATE TABLE
-  addColumn('doctors', 'photoScale', 'REAL NOT NULL DEFAULT 1.22');
+  // По умолчанию — «без кадра»: фото врачей уже квадратные и с лицом по центру,
+  // а зум от верхнего края срезал бы подбородок
+  addColumn('doctors', 'photoScale', 'REAL NOT NULL DEFAULT 1');
   addColumn('doctors', 'photoPosX',  'REAL NOT NULL DEFAULT 50');
-  addColumn('doctors', 'photoPosY',  'REAL NOT NULL DEFAULT 0');
+  addColumn('doctors', 'photoPosY',  'REAL NOT NULL DEFAULT 50');
 
   console.log(`SQLite подключена: ${dbPath}`);
 };

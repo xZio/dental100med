@@ -1,4 +1,5 @@
-export const DEFAULT_FRAMING = { photoScale: 1.22, photoPosX: 50, photoPosY: 0 };
+// «Без кадра»: фото как есть, лицо по центру. Зум и сдвиг задаёт админ в PhotoFramer.
+export const DEFAULT_FRAMING = { photoScale: 1, photoPosX: 50, photoPosY: 50 };
 
 /**
  * Единый рендер кадра: и фото на сайте, и превью в админке считают его этой
