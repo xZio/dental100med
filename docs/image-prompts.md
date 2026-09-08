@@ -1,9 +1,9 @@
 # Промпты для генерации картинок (ChatGPT / GPT Image)
 
-Единый стиль для всего сайта: **мягкий глянцевый 3D-рендер, объекты будто из
-матового стекла и керамики, подсветка сине-бирюзовая**. От Денталии отличаемся
-намеренно: там объекты стоят на сплошном синем квадрате, у нас — на прозрачном
-фоне с мягкой тенью, силуэт чуть более округлый и «игрушечный».
+Единый стиль иконок: **плоские line-иконки**, белая линия одинаковой толщины,
+скруглённые концы, один смысловой акцент бирюзовым, без объёма, теней
+и градиентов. От Денталии отличаемся намеренно: у них 3D-объекты на синем
+квадрате, у нас — плоская графика на прозрачном фоне.
 
 Палитра сайта: основной синий `#2478e7`, тёмный `#1c63d4`, светлый фон `#eff8ff`,
 бирюзовый акцент `#14b8a6`, белый `#ffffff`.
@@ -11,38 +11,28 @@
 ## Общая приписка ко всем промптам (добавлять в конец)
 
 ```
-Style: soft glossy 3D render, matte ceramic and frosted-glass materials, smooth
-rounded shapes, subtle blue rim light, soft ambient occlusion shadow beneath the
-object. Color palette strictly: white #ffffff, blue #2478e7, deep blue #1c63d4,
-teal accent #14b8a6, pale blue #eff8ff. Centered single object, 3/4 top-down
-view, consistent lighting from top-left across the whole set. Transparent
-background (PNG with alpha), no text, no logos, no watermark, no drop shadow on
-the edges of the canvas. Square 1:1, 1024x1024.
+Стиль: современные плоские line-иконки, толщина линии одинаковая по всему
+набору, скруглённые концы линий, мягкие геометричные формы без мелких деталей.
+Основной цвет линий — белый. Один смысловой акцент залит бирюзовым #14b8a6.
+Никакого объёма, теней, градиентов, обводок и текста. Фон полностью прозрачный
+(PNG с альфа-каналом).
 ```
+
+Иконки белые, потому что лежат на синих плитках услуг; на светлых местах сайта
+под них подложен синий кружок.
 
 ---
 
-## 1. Иконки разделов прайса (10 штук)
+## 1. Иконки разделов прайса — ГОТОВО
 
-Класть в `public/images/services/<имя>.webp`, квадратные. Имя файла указано
-в скобках — оно должно совпадать точь-в-точь, иначе картинка не подхватится.
+Сделаны 08.09.2026 в плоском стиле: белая линия одинаковой толщины, один
+бирюзовый акцент (#14b8a6), без объёма. Лежат в `public/images/services/`
+и подхватываются автоматически. Исходники — `Documents/Codex/2026-09-08/
+new-chat/outputs/dental-icons/`.
 
-| Раздел | Файл | Промпт (объект) |
-|---|---|---|
-| Консультация и диагностика | `diagnostics.webp` | `A 3D dental mirror and a small X-ray film showing a tooth, arranged together` |
-| Лечение зубов — терапия | `therapy.webp` | `A clean healthy 3D molar tooth with a glossy white surface and a tiny blue shield in front of it` |
-| Реставрация | `restoration.webp` | `A 3D tooth being polished, with a soft sparkle and a small composite syringe beside it` |
-| Гигиена и профилактика | `hygiene.webp` | `A 3D electric toothbrush and a floating water droplet with tiny bubbles` |
-| Детская стоматология | `kids.webp` | `A friendly smiling 3D cartoon tooth character with rosy cheeks, waving` |
-| Протезирование — ортопедия | `prosthetics.webp` | `A 3D dental crown floating above a prepared tooth stump, ceramic material` |
-| Виниры | `veneers.webp` | `Three thin glossy 3D ceramic veneer shells in a row, slightly overlapping` |
-| Имплантация | `implantation.webp` | `A 3D dental implant: titanium screw post with a white ceramic crown on top` |
-| Хирургия | `surgery.webp` | `A 3D dental forceps tool and a tooth, arranged neatly side by side` |
-| Брекеты и элайнеры | `orthodontics.webp` | `A transparent 3D aligner tray and a small bracket with an archwire beside it` |
-
-**Как просить у ChatGPT:** отправить одним сообщением объект + общую приписку.
-Лучше генерировать по одной, начиная с `implantation` — она получается
-эталонной, дальше просить «в том же стиле и освещении, что и предыдущая».
+Промпт, которым они сделаны, — в `dental-icons-prompt.txt` рядом с исходниками.
+Если понадобится дорисовать иконку к новому разделу, просить «в том же стиле,
+что и набор» и приложить любую готовую.
 
 ## 2. Иконки блока «Почему выбирают нас» (4 штуки)
 
@@ -59,17 +49,27 @@ the edges of the canvas. Square 1:1, 1024x1024.
 
 Класть в `public/images/hero.webp`, горизонтальная 16:9 или 3:2.
 
-```
-A bright modern dental clinic interior, warm and welcoming, soft daylight from
-large windows, clean white and light blue surfaces, a dental chair softly out of
-focus in the background, plants near the window, no people, no text, no logos.
-Photorealistic, shallow depth of field, calm and airy mood, blue-teal accents
-matching #2478e7 and #14b8a6. Horizontal 3:2, high detail.
-```
+К запросу приложить реальные снимки клиники из `public/images/clinic/`:
+`clinic-01.jpg`, `clinic-04.jpg`, `clinic-08.jpg`, `clinic-12.jpg`.
 
-Нужен вариант «с людьми» — добавить: `a friendly female dentist in a light blue
-uniform talking with a patient, both seen from behind or in soft focus, faces
-not identifiable`.
+```
+Вот реальные фотографии стоматологической клиники. Сделай на их основе одно
+фотореалистичное горизонтальное изображение для главного экрана сайта.
+
+Что сохранить: тип и расстановку оборудования, ощущение небольшой уютной
+семейной клиники, светлый кабинет с дневным светом из окна.
+
+Что изменить: цветовую гамму — вместо салатово-зелёных стен спокойные светлые
+тона, белый и очень светлый серо-голубой, акценты синего #2478e7 и бирюзового
+#14b8a6; аккуратный современный ремонт, чистые поверхности, ровный мягкий свет.
+
+Кадр: интерьер кабинета от двери, стоматологическое кресло чуть в стороне
+и слегка не в фокусе, справа свободное пространство — туда ляжет текст.
+Людей и лиц нет, вывесок и надписей нет.
+
+Формат 1536×1024, фотореализм, малая глубина резкости, спокойное светлое
+настроение.
+```
 
 > Осторожно: снимок не должен выглядеть как реальное фото именно этой клиники —
 > у нас есть настоящие фото интерьера в галерее, а сгенерированный кадр
