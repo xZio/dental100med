@@ -185,8 +185,8 @@ export default function Home() {
                       aria-hidden
                       className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/15 blur-2xl transition-opacity duration-300 group-hover:opacity-70"
                     />
-                    <div className="relative mb-4 flex h-[76px] w-[76px] items-center justify-center rounded-2xl bg-white/10 transition-transform duration-300 group-hover:scale-105">
-                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={52} className="text-white" />
+                    <div className="relative mb-4 transition-transform duration-300 group-hover:scale-105">
+                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={92} className="text-white" />
                     </div>
                     <h3 className="relative text-lg font-semibold text-white">{cat.label}</h3>
                     <p className="relative mt-1 text-sm text-primary-200">

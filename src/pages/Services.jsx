@@ -83,11 +83,8 @@ export default function Services() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat.id ? 'bg-primary-700 text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat.id ? 'bg-primary-700 text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
               >
-                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-600">
-                  <ServiceIcon slug={cat.slug} icon={cat.icon} size={14} className="text-white" />
-                </span>
                 {cat.label}
               </button>
             ))}
@@ -116,11 +113,9 @@ export default function Services() {
               )}
               {filtered.map((cat, i) => (
                 <motion.div key={cat.id} id={cat.id} {...fadeUp} transition={{ duration: 0.4, delay: i * 0.05 }} className="card overflow-hidden">
-                  <div className="bg-primary-50 px-6 py-4 flex items-center gap-3">
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-600">
-                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={26} className="text-white" />
-                    </span>
-                    <h2 className="text-lg font-bold text-primary-800">{cat.label}</h2>
+                  <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4 flex items-center gap-4">
+                    <ServiceIcon slug={cat.slug} icon={cat.icon} size={44} className="flex-shrink-0 text-white" />
+                    <h2 className="text-lg font-bold text-white">{cat.label}</h2>
                   </div>
                   <div className="divide-y divide-slate-100">
                     {cat.services.map(service => (
