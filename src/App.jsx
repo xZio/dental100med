@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 import Metrika from './components/Metrika';
@@ -15,7 +15,6 @@ import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
 import AdminServices from './pages/admin/AdminServices';
 import AdminDoctors from './pages/admin/AdminDoctors';
 import AdminPromotions from './pages/admin/AdminPromotions';
@@ -45,7 +44,8 @@ export default function App() {
             path="/admin"
             element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}
           >
-            <Route index element={<ProtectedRoute adminOnly><Dashboard /></ProtectedRoute>} />
+            {/* Дашборда нет: админ попадает в услуги, приёмная — в заявки (adminOnly перенаправит) */}
+            <Route index element={<ProtectedRoute adminOnly><Navigate to="/admin/services" replace /></ProtectedRoute>} />
             <Route path="services"     element={<ProtectedRoute adminOnly><AdminServices /></ProtectedRoute>} />
             <Route path="doctors"      element={<ProtectedRoute adminOnly><AdminDoctors /></ProtectedRoute>} />
             <Route path="promotions"   element={<ProtectedRoute adminOnly><AdminPromotions /></ProtectedRoute>} />

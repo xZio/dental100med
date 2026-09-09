@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  LayoutDashboard, Stethoscope, UserRound, Tag, CalendarClock, Images,
+  Stethoscope, UserRound, Tag, CalendarClock, Images,
   LogOut, Menu, X, ChevronRight,
 } from 'lucide-react';
 
 // adminOnly — пункты, которых администратор клиники (роль manager) не видит:
 // он занимается только заявками
 const NAV = [
-  { to: '/admin',              label: 'Дашборд',   icon: LayoutDashboard, end: true, adminOnly: true },
   { to: '/admin/services',     label: 'Услуги',    icon: Stethoscope,     adminOnly: true },
   { to: '/admin/doctors',      label: 'Врачи',     icon: UserRound,       adminOnly: true },
   { to: '/admin/promotions',   label: 'Акции',     icon: Tag,             adminOnly: true },
