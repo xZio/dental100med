@@ -82,6 +82,10 @@ function Hero({ promos }) {
 function ServicesSection({ categories }) {
   return (
     <section className="services section-pad" id="services">
+      {/* Пятна палитры под стеклянными карточками — стеклу нужно что-то размывать */}
+      <div className="glass-blobs services-blobs" aria-hidden="true">
+        <span className="b1" /><span className="b2" /><span className="b3" />
+      </div>
       <div className="section-heading">
         <div>
           <span className="eyebrow">Забота в деталях</span>
