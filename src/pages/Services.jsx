@@ -82,9 +82,7 @@ export default function Services() {
               {filtered.map((cat) => (
                 <div key={cat.id} id={cat.id} className="glass-card">
                   <div className="flex items-center gap-4 px-6 py-5">
-                    <span className="glass-card-icon">
-                      <ServiceIcon slug={cat.slug} icon={cat.icon} size={30} className="text-white" />
-                    </span>
+                    <ServiceIcon slug={cat.slug} icon={cat.icon} size={64} className="flex-shrink-0 text-blue" />
                     <h2 className="text-lg font-semibold tracking-tight text-ink">{cat.label}</h2>
                   </div>
                   <div className="divide-y divide-white/70 border-t border-white/70">

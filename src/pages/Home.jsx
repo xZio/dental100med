@@ -107,7 +107,7 @@ function ServicesSection({ categories }) {
         {categories.map((cat) => (
           <Link key={cat.id} to={`/services#${cat.id}`} className="service-card">
             <div className="service-top">
-              <ServiceIcon slug={cat.slug} icon={cat.icon} size={76} className="text-[#c9f3f8]" />
+              <ServiceIcon slug={cat.slug} icon={cat.icon} size={96} className="text-[#c9f3f8]" />
             </div>
             <h3>{cat.label}</h3>
             <div className="service-bottom">
