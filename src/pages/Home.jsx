@@ -68,7 +68,6 @@ function Hero({ promos }) {
       <div className="hero-bottom">
         <div className="hero-bottom-copy">
           <p>Здесь начинается ваша<br /> здоровая и красивая улыбка.</p>
-          <span>От первого знакомства до результата</span>
         </div>
         <Link className="button button-light hero-cta" to="/contacts">
           Записаться на приём <ArrowUpRight />
