@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Smile } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
@@ -64,7 +64,6 @@ export default function About() {
         <div className="about mt-14 !gap-10 px-8 py-10 md:px-14">
           <div className="about-visual">
             <img src="/images/clinic/interior-02.webp" alt="Лечебный кабинет клиники ДенталстоМед" loading="lazy" width="590" height="700" />
-            <div className="photo-caption"><span>Там, где вам рады</span><Smile strokeWidth={1.6} /></div>
           </div>
           <div className="about-copy">
             <span className="eyebrow">Юридическая информация</span>

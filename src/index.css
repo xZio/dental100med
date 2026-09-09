@@ -226,9 +226,6 @@
 .about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; background: linear-gradient(130deg, #276f9f, #338abd); color: #edfaff; border-radius: 28px; overflow: hidden; }
 .about-visual { position: relative; padding: 8px 12px 19px 6px; }
 .about-visual > img { width: 100%; height: 466px; object-fit: cover; border-radius: 180px 180px 20px 20px; filter: saturate(.65); }
-.photo-caption { position: absolute; bottom: 4px; left: 29px; right: 0; background: #caedf6; color: #245770; border-radius: 13px; padding: 17px 22px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; transform: rotate(-3deg); }
-.photo-caption > svg { width: 31px; height: 31px; }
-.photo-sticker { position: absolute; right: -43px; top: 16px; display: flex; width: 137px; height: 137px; align-items: center; justify-content: center; border-radius: 50%; background: #8ee6eb; color: #216483; font-family: 'Caveat', 'Segoe Print', cursive; text-align: center; font-size: 13px; line-height: 1.6; transform: rotate(12deg); box-shadow: 0 10px 25px #084d6626; }
 .about-copy > .eyebrow { color: #bee5f6; margin-bottom: 24px; }
 .about-copy h2 { font-size: 42px; line-height: 1.08; letter-spacing: -1.8px; font-weight: 600; }
 .about-copy h2 .handwritten { font-size: 53px; transform: rotate(-5deg); margin: 6px 0 27px; }
@@ -326,7 +323,7 @@
   .hero-headline h1 { font-size: 145px; } .hero-headline h1 > span { font-size: 158px; }
   .section-heading h2, .page-hero h1 { font-size: 42px; } .service-card { padding: 21px; } .service-card h3 { font-size: 20px; }
   .about { gap: 50px; } .about-copy h2 { font-size: 35px; } .about-copy h2 .handwritten { font-size: 48px; } .about-visual > img { height: 440px; }
-  .photo-sticker { width: 120px; height: 120px; font-size: 12px; right: -27px; } .about-facts { gap: 40px; }
+  .about-facts { gap: 40px; }
   .doctor-portrait { height: 260px; } .doctor-portrait img { width: 195px; height: 195px; } .doctor-portrait::before { width: 222px; height: 222px; } .doctor-card h3 { font-size: 18px; }
   .reviews { gap: 40px; padding-top: 15px; } .reviews-summary h2 { font-size: 32px; }
   .contact { gap: 50px; } .contact-title h2 { font-size: 42px; } .contact-title .handwritten { font-size: 44px; } .contact-phone { font-size: 23px; } .contact-address h3 { font-size: 12px; }
@@ -354,7 +351,7 @@
   .service-top { margin-bottom: 22px; } .service-bottom { padding-top: 15px; } .service-bottom > span { font-size: 10px; }
   .text-button { font-size: 11px; }
   .about { gap: 37px; } .about-copy h2 { font-size: 28px; letter-spacing: -.9px; } .about-copy h2 .handwritten { font-size: 39px; } .about-copy > p { font-size: 11px; } .about-visual > img { height: 420px; }
-  .photo-sticker { width: 104px; height: 104px; right: -23px; top: -11px; font-size: 10px; } .photo-caption { font-size: 12px; padding: 14px 17px; left: 15px; }
+  
   .about-facts { gap: 27px; padding: 19px 0; } .about-facts strong { font-size: 23px; } .about-facts span { font-size: 9px; }
   .doctor-portrait { height: 218px; } .doctor-portrait img { height: 160px; width: 160px; } .doctor-portrait::before { height: 187px; width: 187px; }
   .doctor-card h3 { font-size: 16px; } .doctor-card p { font-size: 10px; } .doctors-track { gap: 13px; } .doctor-card { flex-basis: calc((100% - 26px) / 3); }
@@ -389,8 +386,8 @@
   .services-bottom { margin-top: 20px; }
   .services-bottom > .text-button { font-size: 9px; gap: 8px; padding-top: 0; white-space: nowrap; } .services-bottom > .text-button > svg { width: 13px; height: 13px; }
   .about { grid-template-columns: 1fr; border-radius: 24px; gap: 38px; padding-top: 39px; } .about-visual { max-width: 420px; width: 100%; margin: 0 auto; padding: 5px 8px 14px; }
-  .about-visual > img { height: 365px; border-radius: 150px 150px 18px 18px; object-position: 50% 35%; } .photo-caption { font-size: 14px; bottom: 0; left: 19px; right: 0; padding: 17px 21px; }
-  .photo-sticker { right: 1px; top: -9px; width: 112px; height: 112px; font-size: 11px; } .about-copy > .eyebrow { font-size: 8px; letter-spacing: 1.6px; margin-bottom: 18px; }
+  .about-visual > img { height: 365px; border-radius: 150px 150px 18px 18px; object-position: 50% 35%; }
+  .about-copy > .eyebrow { font-size: 8px; letter-spacing: 1.6px; margin-bottom: 18px; }
   .about-copy h2 { font-size: 34px; letter-spacing: -1.4px; } .about-copy h2 .handwritten { font-size: 46px; margin-top: 10px; margin-bottom: 26px; } .about-copy > p { font-size: 12px; line-height: 1.8; }
   .about-facts { margin-top: 25px; padding-top: 22px; gap: 50px; } .about-facts strong { font-size: 29px; } .about-facts span { font-size: 10px; } .about-copy > .text-button { font-size: 12px; }
   .doctors { padding-bottom: 35px; } .doctors > .section-heading { display: flex; align-items: flex-end; gap: 10px; } .doctors .section-heading h2 { font-size: 31px; }

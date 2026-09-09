@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Clock, MapPin, Smile } from 'lucide-react';
+import { ArrowUpRight, Clock, MapPin } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { plural } from '../lib/plural.js';
@@ -135,11 +135,6 @@ function AboutPanel({ doctorsCount }) {
           width="590"
           height="700"
         />
-        <div className="photo-caption">
-          <span>Там, где вам рады</span>
-          <Smile strokeWidth={1.6} />
-        </div>
-        <span className="photo-sticker">Забота,<br />которую чувствуешь ♡</span>
       </div>
 
       <div className="about-copy">
