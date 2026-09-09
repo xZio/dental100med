@@ -428,6 +428,8 @@
 .glass-blobs .b2 { width: 640px; height: 640px; right: -220px; top: 420px; background: #287db6; opacity: .3; }
 .glass-blobs .b3 { width: 480px; height: 480px; left: 32%; bottom: 100px; background: #b9e4f5; opacity: .7; }
 .glass-card { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(160deg, #ffffff99, #ffffff5c); border: 1px solid #ffffffb8; box-shadow: 0 24px 50px -30px #124a6a80, inset 0 1px 0 #ffffffd9; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+/* Синяя плитка под 3D-иконкой раздела — сама иконка остаётся 64px */
+.glass-card-icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 76px; height: 76px; border-radius: 20px; background: linear-gradient(135deg, #3e91bd, #276f9f); box-shadow: 0 12px 22px -12px #287db6e6, inset 0 1px 0 #ffffff59; }
 .filter-bar { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 6px; border-radius: 22px; background: #ffffff70; border: 1px solid #ffffffb8; box-shadow: 0 16px 34px -26px #124a6a80, inset 0 1px 0 #ffffffd9; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .filter-chip { padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; transition: background .2s, color .2s, box-shadow .2s; }
 .filter-chip:hover { background: #ffffffa6; }
