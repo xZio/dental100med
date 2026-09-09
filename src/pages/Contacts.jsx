@@ -9,6 +9,8 @@ import DatePicker from '../components/ui/DatePicker.jsx';
 import ClinicMap from '../components/ClinicMap.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 import { reachGoal } from '../components/Metrika.jsx';
+import YandexRating from '../components/YandexRating.jsx';
+import Reviews from '../components/Reviews.jsx';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -168,10 +170,13 @@ export default function Contacts() {
 
   return (
     <>
-      <section className="panel-blue page-hero">
-        <span className="eyebrow">До встречи в клинике</span>
-        <h1>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h1>
-        <p>Запишитесь онлайн или позвоните — ответим быстро.</p>
+      <section className="panel-blue page-hero page-hero-split">
+        <div>
+          <span className="eyebrow">До встречи в клинике</span>
+          <h1>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h1>
+          <p>Запишитесь онлайн или позвоните — ответим быстро.</p>
+        </div>
+        <YandexRating className="page-hero-badge" />
       </section>
 
       <section className="section-pad">
@@ -354,6 +359,9 @@ export default function Contacts() {
           </div>
         </div>
       </section>
+
+      {/* Те же отзывы, что на главной */}
+      <Reviews />
     </>
   );
 }

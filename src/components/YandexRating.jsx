@@ -24,7 +24,7 @@ export default function YandexRating({ className = '' }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Рейтинг ${rating} из 5 на Яндекс Картах, ${reviews} ${reviewsWord} — открыть отзывы`}
-      className={`inline-flex -rotate-2 items-stretch gap-5 rounded-[18px] border border-[#c9e3ee] bg-white px-6 py-4 shadow-lg shadow-blue/10 transition-transform duration-300 hover:rotate-0 ${className}`}
+      className={`inline-flex -rotate-2 items-stretch gap-4 rounded-[18px] border border-[#c9e3ee] bg-white px-4 py-4 sm:gap-5 sm:px-6 shadow-lg shadow-blue/10 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:rotate-0 hover:border-blue/40 hover:shadow-xl hover:shadow-blue/20 ${className}`}
     >
       <div className="flex flex-col items-center justify-center">
         <span className="text-[34px] font-black leading-none text-[#4d4d4d]">{rating}</span>

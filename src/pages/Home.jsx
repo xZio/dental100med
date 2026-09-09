@@ -6,6 +6,7 @@ import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
 import Reviews from '../components/Reviews.jsx';
+import YandexRating from '../components/YandexRating.jsx';
 import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
@@ -63,6 +64,8 @@ function Hero({ promos }) {
         <span className="floating-pearl pearl-two" aria-hidden="true" />
         <div className="hero-floor" aria-hidden="true" />
         <HeroPromos promos={promos} />
+        {/* Рейтинг Яндекса — слева под заголовком; на телефоне переезжает под кнопку */}
+        <YandexRating className="hero-rating" />
       </div>
 
       <div className="hero-bottom">
@@ -75,6 +78,9 @@ function Hero({ promos }) {
         <span aria-hidden="true" />
       </div>
       <HeroPromos promos={promos} compact />
+      <div className="hero-rating-compact">
+        <YandexRating />
+      </div>
     </section>
   );
 }
