@@ -38,7 +38,7 @@ export default function Navbar() {
       <header className="header">
         <Link to="/" className="brand" aria-label="ДенталстоМед — на главную">
           {/* Свой знак «яблоко + зуб» (прозрачный PNG), надпись — текстом шрифтом макета */}
-          <img src="/images/logo-mark.png" alt="" width="174" height="112" />
+          <img src="/images/logo-mark.png" alt="" width="348" height="224" />
           <span>
             Денталсто<span className="brand-med">Мед</span>
             <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>

@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-top">
         <Link className="brand" to="/" aria-label="ДенталстоМед — на главную">
-          <img src="/images/logo-mark.png" alt="" width="174" height="112" loading="lazy" />
+          <img src="/images/logo-mark.png" alt="" width="348" height="224" loading="lazy" />
           <span>
             Денталсто<span className="brand-med">Мед</span>
             <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>
