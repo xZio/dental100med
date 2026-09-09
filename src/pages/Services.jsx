@@ -25,10 +25,13 @@ export default function Services() {
 
   return (
     <>
-      <section className="panel-blue page-hero">
-        <span className="eyebrow">Прозрачные цены</span>
-        <h1>Услуги и цены</h1>
-        <p>Актуальный прайс-лист. Окончательная стоимость — после осмотра врача.</p>
+      <section className="panel-blue page-hero page-hero-split">
+        <div>
+          <span className="eyebrow">Прозрачные цены</span>
+          <h1>Услуги и цены</h1>
+          <p>Актуальный прайс-лист. Окончательная стоимость — после осмотра врача.</p>
+        </div>
+        <img className="page-hero-tooth" src="/images/teeth/tooth-joy.webp" alt="" aria-hidden="true" width="600" height="600" />
       </section>
 
       {/* Цветные пятна под стеклянными карточками — иначе стеклу нечего размывать */}

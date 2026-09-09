@@ -76,10 +76,13 @@ export default function Gallery() {
 
   return (
     <>
-      <section className="panel-blue page-hero">
-        <span className="eyebrow">Посмотрите сами</span>
-        <h1>Галерея</h1>
-        <p>Фотографии нашей клиники и примеры выполненных работ.</p>
+      <section className="panel-blue page-hero page-hero-split">
+        <div>
+          <span className="eyebrow">Посмотрите сами</span>
+          <h1>Галерея</h1>
+          <p>Фотографии нашей клиники и примеры выполненных работ.</p>
+        </div>
+        <img className="page-hero-tooth" src="/images/teeth/tooth-smile.webp" alt="" aria-hidden="true" width="600" height="600" />
       </section>
 
       <section className="section-pad">

@@ -14,10 +14,13 @@ export default function Doctors() {
 
   return (
     <>
-      <section className="panel-blue page-hero">
-        <span className="eyebrow">В надёжных руках</span>
-        <h1>Люди, которым<br />доверяют улыбки.</h1>
-        <p>Опыт, внимание и любовь к своему делу. Знакомьтесь с командой клиники.</p>
+      <section className="panel-blue page-hero page-hero-split">
+        <div>
+          <span className="eyebrow">В надёжных руках</span>
+          <h1>Люди, которым<br />доверяют улыбки.</h1>
+          <p>Опыт, внимание и любовь к своему делу. Знакомьтесь с командой клиники.</p>
+        </div>
+        <img className="page-hero-tooth" src="/images/teeth/tooth-happy.webp" alt="" aria-hidden="true" width="600" height="600" />
       </section>
 
       <section className="section-pad">
