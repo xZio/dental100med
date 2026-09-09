@@ -78,9 +78,12 @@ const gallery = [
   { src: '/images/works/work-03.jpg', alt: 'Результат лечения в ДенталстоМед',      tab: 'works', order: 3 },
 ];
 
+// Акции-печати в hero: мелкий текст, крупный текст и куда ведёт. Те же три,
+// что сейчас у Денталии, — заготовка, клиника поменяет через админку.
 const promotions = [
-  { title: 'Бесплатная консультация', description: 'Первичный осмотр и консультация врача — бесплатно', discount: 'Бесплатно', active: true },
-  { title: 'Скидка на чистку зубов', description: 'Профессиональная гигиена полости рта со скидкой', discount: '20%', active: true },
+  { title: 'Консультация всех врачей', discount: 'бесплатно',   link: '/contacts' },
+  { title: 'Панорамный снимок КТ',     discount: '4200 ₽',      link: '/contacts' },
+  { title: 'Брекеты',                  discount: 'в рассрочку', link: '/services#Брекеты и элайнеры' },
 ];
 
 function seed() {
@@ -112,9 +115,9 @@ function seed() {
                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
   for (const d of doctors) insertDoctor.run(d.name, d.specialty, d.experience, d.description, d.photo, d.order, ts, ts);
 
-  const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, active, expiresAt, createdAt, updatedAt)
-                                  VALUES (?, ?, ?, ?, ?, ?, ?)`);
-  for (const p of promotions) insertPromo.run(p.title, p.description, p.discount, p.active ? 1 : 0, null, ts, ts);
+  const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, link, active, expiresAt, createdAt, updatedAt)
+                                  VALUES (?, '', ?, ?, 1, NULL, ?, ?)`);
+  for (const p of promotions) insertPromo.run(p.title, p.discount, p.link, ts, ts);
 
   const insertImage = db.prepare('INSERT INTO gallery (src, alt, tab, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
   for (const g of gallery) insertImage.run(g.src, g.alt, g.tab, g.order, ts, ts);

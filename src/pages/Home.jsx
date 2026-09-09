@@ -10,24 +10,35 @@ import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
-/** Печать «С заботой о вас · с 2008 года» — текст по кругу, как на макете. */
-function Seal() {
+/**
+ * Акции-печати в hero, как у Денталии: до трёх круглых наклеек с сияющей
+ * аурой. Тон — по порядку (бирюза, глубокий синий, лёд), тексты и ссылка —
+ * из админки. На десктопе висят справа от заголовка, на телефоне — под кнопкой.
+ */
+const PROMO_TONES = ['cyan', 'ink', 'ice'];
+
+function HeroPromos({ promos, compact = false }) {
+  if (promos.length === 0) return null;
   return (
-    <Link className="hero-seal" to="/about" aria-label="Семейная стоматология с 2008 года">
-      <svg className="seal-text" viewBox="0 0 120 120" aria-hidden="true">
-        <defs>
-          <path id="circle-text" d="M60,60m-45,0a45,45 0 1,1 90,0a45,45 0 1,1-90,0" />
-        </defs>
-        <text>
-          <textPath href="#circle-text" textLength="279">С ЗАБОТОЙ О ВАС · С 2008 ГОДА · </textPath>
-        </text>
-      </svg>
-      <Smile className="seal-smile" strokeWidth={1.2} />
-    </Link>
+    <div className={compact ? 'hero-promos hero-promos-compact' : 'hero-promos'} aria-label="Акции">
+      {promos.map((promo, i) => {
+        const link = promo.link || '/contacts';
+        return (
+          <Link key={promo._id} to={link} className={`promo-seal promo-seal-${PROMO_TONES[i]}`} title={promo.description || undefined}>
+            <span className="promo-aura" aria-hidden="true" />
+            <span className="promo-body">
+              <span className="promo-title">{promo.title}</span>
+              {promo.discount && <span className="promo-big">{promo.discount}</span>}
+              <span className="promo-cta">{link.startsWith('/contacts') ? 'Записаться' : 'Подробнее'} <ArrowUpRight /></span>
+            </span>
+          </Link>
+        );
+      })}
+    </div>
   );
 }
 
-function Hero() {
+function Hero({ promos }) {
   return (
     <section className="hero" id="top" aria-label="ДенталстоМед">
       <div className="hero-intro">
@@ -48,10 +59,10 @@ function Hero() {
           width="1122"
           height="1402"
         />
-        <Seal />
         <span className="floating-pearl pearl-one" aria-hidden="true" />
         <span className="floating-pearl pearl-two" aria-hidden="true" />
         <div className="hero-floor" aria-hidden="true" />
+        <HeroPromos promos={promos} />
       </div>
 
       <div className="hero-bottom">
@@ -64,6 +75,7 @@ function Hero() {
         </Link>
         <span aria-hidden="true" />
       </div>
+      <HeroPromos promos={promos} compact />
     </section>
   );
 }
@@ -215,14 +227,17 @@ export default function Home() {
   const { data: services } = useFetch(api.getServices);
   const { data: categories } = useFetch(api.getCategories);
   const { data: doctors } = useFetch(api.getDoctors);
+  const { data: promotions } = useFetch(api.getPromotions);
 
   const serviceCategories = groupByCategory(services, categories);
   // На главной — только врачи; ассистент и администратор есть на странице команды
   const physicians = (doctors ?? []).filter((d) => /^врач/i.test(d.specialty));
+  // Печатей в hero не больше трёх — сервер тоже режет, но на всякий случай
+  const promos = (promotions ?? []).slice(0, 3);
 
   return (
     <>
-      <Hero />
+      <Hero promos={promos} />
       <ServicesSection categories={serviceCategories} />
       <AboutPanel doctorsCount={physicians.length || 7} />
       {physicians.length > 0 && <DoctorsPreview doctors={physicians} />}

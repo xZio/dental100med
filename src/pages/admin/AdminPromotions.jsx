@@ -4,7 +4,8 @@ import Modal from '../../components/admin/Modal';
 import { Plus, Pencil, Tag } from 'lucide-react';
 import DeleteButton from '../../components/admin/DeleteButton';
 
-const EMPTY = { title: '', description: '', discount: '', active: true, expiresAt: '' };
+const EMPTY = { title: '', description: '', discount: '', link: '/contacts', active: true, expiresAt: '' };
+const MAX_ACTIVE = 3;
 
 export default function AdminPromotions() {
   const [promos, setPromos] = useState([]);
@@ -14,6 +15,7 @@ export default function AdminPromotions() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
   const load = () => adminApi.getPromotions().then(setPromos).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
@@ -22,7 +24,7 @@ export default function AdminPromotions() {
 
   const openAdd  = () => { setForm(EMPTY); setEditing(null); setError(''); setModal(true); };
   const openEdit = (p) => {
-    setForm({ title: p.title, description: p.description, discount: p.discount, active: p.active, expiresAt: toDateInput(p.expiresAt) });
+    setForm({ title: p.title, description: p.description, discount: p.discount, link: p.link || '/contacts', active: p.active, expiresAt: toDateInput(p.expiresAt) });
     setEditing(p); setError(''); setModal(true);
   };
   const closeModal = () => setModal(false);
@@ -50,10 +52,18 @@ export default function AdminPromotions() {
     await load();
   };
 
+  // Четвёртую активную сервер не пропустит — покажем его ответ над списком
   const toggleActive = async (p) => {
-    await adminApi.updatePromotion(p._id, { active: !p.active });
-    load();
+    setNotice('');
+    try {
+      await adminApi.updatePromotion(p._id, { active: !p.active });
+      load();
+    } catch (err) {
+      setNotice(err.message);
+    }
   };
+
+  const activeCount = promos.filter((p) => p.active).length;
 
   if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
 
@@ -62,7 +72,7 @@ export default function AdminPromotions() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Акции</h1>
-          <p className="text-gray-500 text-sm mt-1">{promos.length} акций</p>
+          <p className="text-gray-500 text-sm mt-1">На сайте {activeCount} из {MAX_ACTIVE} · всего {promos.length}</p>
         </div>
         <button
           onClick={openAdd}
@@ -71,6 +81,8 @@ export default function AdminPromotions() {
           <Plus size={16} /> Добавить
         </button>
       </div>
+
+      {notice && <p className="mb-4 text-sm text-red-500">{notice}</p>}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {promos.map((p) => (
@@ -112,15 +124,19 @@ export default function AdminPromotions() {
         <Modal title={editing ? 'Редактировать акцию' : 'Новая акция'} onClose={closeModal}>
           <form onSubmit={handleSave} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Название</label>
-              <input value={form.title} onChange={f('title')} required className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Мелкий текст (напр. «Консультация всех врачей»)</label>
+              <input value={form.title} onChange={f('title')} required maxLength={40} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Скидка (напр. 20% или 500 ₽)</label>
-              <input value={form.discount} onChange={f('discount')} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Крупный текст (напр. «бесплатно», «4200 ₽», «в рассрочку»)</label>
+              <input value={form.discount} onChange={f('discount')} maxLength={20} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Куда ведёт (страница сайта, напр. /contacts или /services)</label>
+              <input value={form.link} onChange={f('link')} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Подсказка при наведении (необязательно)</label>
               <textarea value={form.description} onChange={f('description')} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
             </div>
             <div>

@@ -105,6 +105,8 @@ export const connectDB = () => {
   addColumn('doctors', 'photoScale', 'REAL NOT NULL DEFAULT 1');
   addColumn('doctors', 'photoPosX',  'REAL NOT NULL DEFAULT 50');
   addColumn('doctors', 'photoPosY',  'REAL NOT NULL DEFAULT 50');
+  // Акции-печати в hero ведут на страницу сайта (запись или раздел услуг)
+  addColumn('promotions', 'link', "TEXT NOT NULL DEFAULT '/contacts'");
 
   console.log(`SQLite подключена: ${dbPath}`);
 };
