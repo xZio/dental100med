@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { reachGoal } from './Metrika.jsx';
 
 const navLinks = [
+  { to: '/', label: 'Главная', end: true },
   { to: '/services', label: 'Услуги и цены' },
   { to: '/doctors', label: 'Врачи' },
   { to: '/gallery', label: 'Галерея' },
@@ -47,7 +48,7 @@ export default function Navbar() {
 
         <nav className="desktop-nav" aria-label="Основная навигация">
           {navLinks.map((link) => (
-            <NavLink key={link.to} to={link.to}>{link.label}</NavLink>
+            <NavLink key={link.to} to={link.to} end={link.end}>{link.label}</NavLink>
           ))}
         </nav>
 
@@ -72,7 +73,7 @@ export default function Navbar() {
       {open && (
         <nav id="mobile-nav" ref={navRef} className="mobile-nav" aria-label="Мобильная навигация">
           {navLinks.map((link) => (
-            <Link key={link.to} to={link.to}>{link.label}</Link>
+            <NavLink key={link.to} to={link.to} end={link.end}>{link.label}</NavLink>
           ))}
           <a href="tel:+74959241917" onClick={() => reachGoal('call')}>+7 (495) 924-19-17</a>
         </nav>

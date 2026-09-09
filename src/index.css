@@ -95,7 +95,12 @@
 .brand-med { font-weight: 400; }
 .brand small { display: block; font-size: 7.5px; font-weight: 500; letter-spacing: 2px; margin-top: 6px; }
 .desktop-nav { display: flex; gap: 29px; font-size: 12px; }
-.desktop-nav a.active { text-decoration: underline; text-underline-offset: 6px; text-decoration-color: #cdf3ff99; }
+/* Полоска под пунктом: выезжает слева направо при наведении и остаётся под активным */
+.desktop-nav a { position: relative; padding-bottom: 6px; }
+.desktop-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: #cdf3ff; transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.4, 0, .2, 1); }
+.desktop-nav a:hover::after, .desktop-nav a.active::after { transform: scaleX(1); }
+/* Уводим курсор — полоска уходит вправо, а не схлопывается назад */
+.desktop-nav a:not(:hover):not(.active)::after { transform-origin: right; }
 .header-contact { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; white-space: nowrap; }
 .header-contact > a { font-weight: 650; font-size: 16px; letter-spacing: .1px; }
 .header-contact > span { font-size: 10px; color: #cfecf8; }
@@ -107,6 +112,7 @@
 
 .mobile-nav { position: absolute; top: 88px; left: 15px; right: 15px; z-index: 20; background: #e4f6fb; color: #1c5f82; border: 1px solid #d0eff8; border-radius: 16px; padding: 15px; box-shadow: 0 15px 30px #12466833; }
 .mobile-nav > a { display: block; padding: 12px 10px; border-bottom: 1px solid #bedee988; font-size: 14px; }
+.mobile-nav > a.active { color: var(--blue); font-weight: 600; }
 .mobile-nav > a:last-child { border: 0; }
 
 /* ── Общие элементы ──────────────────────────────────────────────────────── */
