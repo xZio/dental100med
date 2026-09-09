@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Check, Clock, MapPin, Smile } from 'lucide-react';
+import { ArrowUpRight, Clock, MapPin, Smile } from 'lucide-react';
 import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
-import { reviewsSummary } from '../data/reviews.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
-import ToothIcon from '../components/ToothIcon.jsx';
 import Reviews from '../components/Reviews.jsx';
 import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
@@ -34,7 +32,6 @@ function Hero() {
     <section className="hero" id="top" aria-label="ДенталстоМед">
       <div className="hero-intro">
         <span className="eyebrow"><i className="status-dot" /> Стоматология в Подольске</span>
-        <p>Здоровье вашей улыбки.<br /><strong>С заботой о вас и ваших близких.</strong></p>
       </div>
 
       <div className="hero-stage">
@@ -51,11 +48,6 @@ function Hero() {
           width="1122"
           height="1402"
         />
-        <div className="hero-note hero-note-left">
-          <span className="mini-line" />
-          <p>Большая забота<br />о каждой улыбке</p>
-          <span className="tiny">ДЛЯ ВЗРОСЛЫХ И ДЕТЕЙ</span>
-        </div>
         <Seal />
         <span className="floating-pearl pearl-one" aria-hidden="true" />
         <span className="floating-pearl pearl-two" aria-hidden="true" />
@@ -73,21 +65,6 @@ function Hero() {
         <span aria-hidden="true" />
       </div>
     </section>
-  );
-}
-
-function TrustStrip({ rating }) {
-  return (
-    <div className="trust-strip">
-      <span><ToothIcon strokeWidth={1.8} /> Для всей семьи</span>
-      <span><Check strokeWidth={1.8} /> План лечения без сюрпризов</span>
-      <span><Clock strokeWidth={1.8} /> Приём по записи</span>
-      <a href={reviewsSummary.url} target="_blank" rel="noopener noreferrer">
-        <b className="yandex-mark">Я</b> {rating}{' '}
-        <span className="stars" aria-label="5 из 5">★★★★★</span>{' '}
-        <span className="rating-label">на Яндекс Картах</span> ↗
-      </a>
-    </div>
   );
 }
 
@@ -120,7 +97,6 @@ function ServicesSection({ categories }) {
       </div>
 
       <div className="services-bottom">
-        <p>Начните со знакомства — подберём подходящего специалиста.</p>
         <Link to="/services" className="text-button">Все услуги и цены <ArrowUpRight /></Link>
       </div>
     </section>
@@ -146,7 +122,6 @@ function AboutPanel({ doctorsCount }) {
       </div>
 
       <div className="about-copy">
-        <span className="eyebrow">Давайте знакомиться</span>
         <h2>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h2>
         <p>Мы — ДенталстоМед. Семейная клиника в Подольске, где за каждой улыбкой видят человека. Его историю, переживания и ожидания.</p>
         <p>Внимательно выслушаем, понятно расскажем о лечении и вместе выберем подходящий путь. Чтобы приходить к стоматологу было спокойно.</p>
@@ -240,7 +215,6 @@ export default function Home() {
   const { data: services } = useFetch(api.getServices);
   const { data: categories } = useFetch(api.getCategories);
   const { data: doctors } = useFetch(api.getDoctors);
-  const { data: rating } = useFetch(api.getRating);
 
   const serviceCategories = groupByCategory(services, categories);
   // На главной — только врачи; ассистент и администратор есть на странице команды
@@ -249,7 +223,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TrustStrip rating={rating?.rating ?? reviewsSummary.rating} />
       <ServicesSection categories={serviceCategories} />
       <AboutPanel doctorsCount={physicians.length || 7} />
       {physicians.length > 0 && <DoctorsPreview doctors={physicians} />}
