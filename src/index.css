@@ -94,7 +94,7 @@
 .site-header .brand > img { filter: drop-shadow(0 0 3px #ffffff73) drop-shadow(0 1px 2px #06284766); }
 .brand-med { font-weight: 400; }
 .brand small { display: block; font-size: 7.5px; font-weight: 500; letter-spacing: 2px; margin-top: 6px; }
-.desktop-nav { display: flex; gap: 29px; font-size: 12px; }
+.desktop-nav { display: flex; gap: 29px; font-size: 14px; }
 /* Полоска под пунктом: выезжает слева направо при наведении и остаётся под активным */
 .desktop-nav a { position: relative; padding-bottom: 6px; }
 .desktop-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: #cdf3ff; transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.4, 0, .2, 1); }
@@ -293,7 +293,7 @@
 .footer .brand > svg { height: 42px; width: 38px; }
 .footer .brand > img { height: 36px; }
 .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 35px; }
-.footer-top > div { display: flex; gap: 27px; font-size: 11px; }
+.footer-top > div { display: flex; gap: 27px; font-size: 13px; }
 .to-top { font-size: 10px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 22px; border-top: 1px solid var(--line); color: #6b8b9b; font-size: 9px; }
 .medical-note { text-align: center; font-size: 10px; letter-spacing: .2px; color: #9fb5c0; margin-top: 26px; }
@@ -310,7 +310,7 @@
   .hero-bottom { padding-bottom: 45px; } .hero-promos { right: -40px; }
 }
 @media (max-width: 1150px) {
-  .header { margin: 0 30px; gap: 20px; } .desktop-nav { gap: 20px; font-size: 11px; } .brand { font-size: 20px; } .brand > svg { width: 36px; } .brand > img { height: 38px; } .brand small { font-size: 6px; }
+  .header { margin: 0 30px; gap: 20px; } .desktop-nav { gap: 20px; font-size: 13px; } .brand { font-size: 20px; } .brand > svg { width: 36px; } .brand > img { height: 38px; } .brand small { font-size: 6px; }
   .header-contact > a { font-size: 14px; } .header-contact > span { font-size: 9px; }
   .section-pad { padding: 65px 38px; } .page-hero { padding-left: 38px; padding-right: 38px; } .hero-bottom { margin-left: 35px; margin-right: 35px; } .hero-scroll > span:first-child { display: none; }
   .hero-stage { height: 620px; } .hero-art { width: 390px; left: calc(50% + 10px); } .hero-headline { left: calc(50% - 358px); top: 35px; }
@@ -350,7 +350,7 @@
   .reviews { gap: 30px; padding-top: 12px; } .reviews-summary h2 { font-size: 28px; }
   .contact { gap: 30px; } .contact-title h2 { font-size: 35px; } .contact-title .handwritten { font-size: 38px; } .contact-phone { font-size: 19px; } .contact-title > p { font-size: 11px; }
   .contact-address { gap: 12px; } .contact-address h3 { font-size: 11px; } .contact-hours { gap: 12px; } .contact-hours > div { font-size: 10px; }
-  .footer { padding: 35px 28px 24px; } .footer .brand { font-size: 19px; } .footer-top > div { gap: 17px; font-size: 10px; }
+  .footer { padding: 35px 28px 24px; } .footer .brand { font-size: 19px; } .footer-top > div { gap: 17px; font-size: 12px; }
 }
 @media (max-width: 650px) {
   html { scroll-padding-top: 14px; }
@@ -395,7 +395,7 @@
   .contact-address, .contact-hours { gap: 14px; } .contact-address h3 { font-size: 12px; line-height: 1.5; } .contact-address p { font-size: 11px; } .contact-address a { font-size: 11px; } .contact-hours > div { font-size: 11px; }
   .contact-decoration { bottom: -35px; left: -15px; font-size: 400px; }
   .footer { padding: 31px 21px 22px; } .footer-top { flex-wrap: wrap; gap: 26px; margin-bottom: 24px; } .footer .brand { font-size: 20px; order: 0; }
-  .footer-top > .to-top { order: 1; margin-left: auto; font-size: 9px; } .footer-top > div { order: 2; width: 100%; justify-content: space-between; font-size: 11px; gap: 15px; }
+  .footer-top > .to-top { order: 1; margin-left: auto; font-size: 9px; } .footer-top > div { order: 2; width: 100%; justify-content: space-between; font-size: 12px; gap: 12px; }
   .footer-bottom { flex-wrap: wrap; justify-content: flex-start; gap: 13px; font-size: 8px; padding-top: 20px; } .footer-bottom > a { margin-left: auto; }
   .medical-note { font-size: 9px; line-height: 1.7; margin-top: 22px; }
 }
