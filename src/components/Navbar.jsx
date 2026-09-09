@@ -37,8 +37,12 @@ export default function Navbar() {
     <div className="site-header">
       <header className="header">
         <Link to="/" className="brand" aria-label="ДенталстоМед — на главную">
-          {/* Свой логотип: тот же знак и шрифт, что в logo.png, только надпись белая — под синюю шапку */}
-          <img src="/images/logo-white.png" alt="ДенталстоМед — стоматология в Подольске" width="785" height="132" />
+          {/* Свой знак «яблоко + зуб» (прозрачный PNG), надпись — текстом шрифтом макета */}
+          <img src="/images/logo-mark.png" alt="" width="174" height="112" />
+          <span>
+            Денталсто<span className="brand-med">Мед</span>
+            <small>СЕМЕЙНАЯ СТОМАТОЛОГИЯ</small>
+          </span>
         </Link>
 
         <nav className="desktop-nav" aria-label="Основная навигация">
