@@ -294,7 +294,7 @@
 .footer .brand > img { height: 36px; }
 .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 35px; }
 .footer-top > div { display: flex; gap: 27px; font-size: 13px; }
-.to-top { font-size: 10px; }
+.to-top { font-size: 13px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 22px; border-top: 1px solid var(--line); color: #6b8b9b; font-size: 9px; }
 .medical-note { text-align: center; font-size: 10px; letter-spacing: .2px; color: #9fb5c0; margin-top: 26px; }
 
@@ -395,7 +395,7 @@
   .contact-address, .contact-hours { gap: 14px; } .contact-address h3 { font-size: 12px; line-height: 1.5; } .contact-address p { font-size: 11px; } .contact-address a { font-size: 11px; } .contact-hours > div { font-size: 11px; }
   .contact-decoration { bottom: -35px; left: -15px; font-size: 400px; }
   .footer { padding: 31px 21px 22px; } .footer-top { flex-wrap: wrap; gap: 26px; margin-bottom: 24px; } .footer .brand { font-size: 20px; order: 0; }
-  .footer-top > .to-top { order: 1; margin-left: auto; font-size: 9px; } .footer-top > div { order: 2; width: 100%; justify-content: space-between; font-size: 12px; gap: 12px; }
+  .footer-top > .to-top { order: 1; margin-left: auto; font-size: 12px; } .footer-top > div { order: 2; width: 100%; justify-content: space-between; font-size: 12px; gap: 12px; }
   .footer-bottom { flex-wrap: wrap; justify-content: flex-start; gap: 13px; font-size: 8px; padding-top: 20px; } .footer-bottom > a { margin-left: auto; }
   .medical-note { font-size: 9px; line-height: 1.7; margin-top: 22px; }
 }
