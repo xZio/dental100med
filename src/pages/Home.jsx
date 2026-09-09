@@ -129,8 +129,8 @@ function AboutPanel({ doctorsCount }) {
     <section className="about section-pad" id="about">
       <div className="about-visual">
         <img
-          src="/images/clinic/interior-01.webp"
-          alt="Лечебный кабинет клиники ДенталстоМед"
+          src="/images/clinic/interior-reception.webp"
+          alt="Ресепшн и зона ожидания клиники ДенталстоМед"
           loading="lazy"
           width="590"
           height="700"
