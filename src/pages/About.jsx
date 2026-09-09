@@ -63,7 +63,7 @@ export default function About() {
 
         <div className="about mt-14 !gap-10 px-8 py-10 md:px-14">
           <div className="about-visual">
-            <img src="/images/clinic/clinic-01.jpg" alt="Врач клиники ДенталстоМед с маленькой пациенткой" loading="lazy" width="590" height="700" />
+            <img src="/images/clinic/interior-02.webp" alt="Лечебный кабинет клиники ДенталстоМед" loading="lazy" width="590" height="700" />
             <div className="photo-caption"><span>Там, где вам рады</span><Smile strokeWidth={1.6} /></div>
           </div>
           <div className="about-copy">
