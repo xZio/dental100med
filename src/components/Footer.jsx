@@ -26,9 +26,8 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} ДенталстоМед</span>
-        <span>{legal.shortName} · ИНН {legal.inn} · Лицензия № {legal.license.number}</span>
-        <Link to="/privacy">Конфиденциальность</Link>
+        <span>© {new Date().getFullYear()} {legal.shortName} · ИНН {legal.inn} · Лицензия № {legal.license.number}</span>
+        <Link to="/privacy">Политика конфиденциальности</Link>
       </div>
 
       <p className="medical-note">Имеются противопоказания. Необходима консультация специалиста.</p>

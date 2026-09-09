@@ -286,7 +286,7 @@
 .footer-top > div { display: flex; gap: 27px; font-size: 11px; }
 .to-top { font-size: 10px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 22px; border-top: 1px solid var(--line); color: #6b8b9b; font-size: 9px; }
-.medical-note { text-align: center; font-size: 14px; letter-spacing: 1.3px; color: #7795a4; margin-top: 30px; }
+.medical-note { text-align: center; font-size: 10px; letter-spacing: .2px; color: #9fb5c0; margin-top: 26px; }
 
 /* ── Адаптив ─────────────────────────────────────────────────────────────── */
 @media (min-width: 1440px) {
@@ -340,7 +340,7 @@
   .reviews { gap: 30px; padding-top: 12px; } .reviews-summary h2 { font-size: 28px; }
   .contact { gap: 30px; } .contact-title h2 { font-size: 35px; } .contact-title .handwritten { font-size: 38px; } .contact-phone { font-size: 19px; } .contact-title > p { font-size: 11px; }
   .contact-address { gap: 12px; } .contact-address h3 { font-size: 11px; } .contact-hours { gap: 12px; } .contact-hours > div { font-size: 10px; }
-  .footer { padding: 35px 28px 24px; } .footer .brand { font-size: 19px; } .footer-top > div { gap: 17px; font-size: 10px; } .medical-note { font-size: 11px; }
+  .footer { padding: 35px 28px 24px; } .footer .brand { font-size: 19px; } .footer-top > div { gap: 17px; font-size: 10px; }
 }
 @media (max-width: 650px) {
   html { scroll-padding-top: 14px; }
@@ -386,8 +386,8 @@
   .contact-decoration { bottom: -35px; left: -15px; font-size: 400px; }
   .footer { padding: 31px 21px 22px; } .footer-top { flex-wrap: wrap; gap: 26px; margin-bottom: 24px; } .footer .brand { font-size: 20px; order: 0; }
   .footer-top > .to-top { order: 1; margin-left: auto; font-size: 9px; } .footer-top > div { order: 2; width: 100%; justify-content: space-between; font-size: 11px; gap: 15px; }
-  .footer-bottom { flex-wrap: wrap; justify-content: flex-start; gap: 13px; font-size: 8px; padding-top: 20px; } .footer-bottom > span:nth-child(2) { order: 2; width: 100%; } .footer-bottom > a { margin-left: auto; }
-  .medical-note { font-size: 9px; letter-spacing: .3px; line-height: 1.7; margin-top: 24px; }
+  .footer-bottom { flex-wrap: wrap; justify-content: flex-start; gap: 13px; font-size: 8px; padding-top: 20px; } .footer-bottom > a { margin-left: auto; }
+  .medical-note { font-size: 9px; line-height: 1.7; margin-top: 22px; }
 }
 @media (max-width: 370px) {
   .header { margin: 0 18px; } .brand { font-size: 19px; } .brand > img { height: 30px; } .hero-stage { height: 475px; } .hero-headline { left: calc(50% - 136px); top: 45px; }
@@ -401,6 +401,27 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .pearl-one, .pearl-two, .promo-aura, .animate-marquee-v, .animate-marquee-h { animation: none !important; }
+}
+
+/* ── Прайс: стеклянные карточки и фильтр разделов ────────────────────────── */
+/* Стекло читается только поверх чего-то цветного — под списком лежат размытые пятна палитры */
+.glass-blobs { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.glass-blobs span { position: absolute; border-radius: 50%; filter: blur(70px); }
+.glass-blobs .b1 { width: 520px; height: 520px; left: -140px; top: 60px; background: #88edf0; opacity: .55; }
+.glass-blobs .b2 { width: 640px; height: 640px; right: -220px; top: 420px; background: #287db6; opacity: .3; }
+.glass-blobs .b3 { width: 480px; height: 480px; left: 32%; bottom: 100px; background: #b9e4f5; opacity: .7; }
+.glass-card { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(160deg, #ffffff99, #ffffff5c); border: 1px solid #ffffffb8; box-shadow: 0 24px 50px -30px #124a6a80, inset 0 1px 0 #ffffffd9; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.glass-card-icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 16px; background: linear-gradient(135deg, #3e91bd, #276f9f); box-shadow: 0 12px 22px -12px #287db6e6, inset 0 1px 0 #ffffff59; }
+.filter-bar { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 6px; border-radius: 22px; background: #ffffff70; border: 1px solid #ffffffb8; box-shadow: 0 16px 34px -26px #124a6a80, inset 0 1px 0 #ffffffd9; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.filter-chip { padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; transition: background .2s, color .2s, box-shadow .2s; }
+.filter-chip:hover { background: #ffffffa6; }
+.filter-chip.is-active { background: var(--blue); color: #fff; box-shadow: 0 12px 24px -12px #287db6e6; }
+@media (max-width: 650px) {
+  .filter-bar { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; border-radius: 18px; }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-chip { padding: 8px 13px; font-size: 12px; }
+  .glass-card { border-radius: 20px; } .glass-card-icon { width: 42px; height: 42px; border-radius: 13px; }
+  .glass-blobs span { filter: blur(50px); }
 }
 
 /* ── Стена отзывов (бегущие колонки) ─────────────────────────────────────── */
