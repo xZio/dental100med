@@ -111,8 +111,9 @@ function seed() {
   const insertService = db.prepare('INSERT INTO services (name, price, note, category, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)');
   for (const s of services) insertService.run(s.name, s.price, s.note, s.category, s.order, ts, ts);
 
-  const insertDoctor = db.prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", createdAt, updatedAt)
-                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+  // Кадр фото задаём явно: у уже существующей базы дефолты колонок могли остаться старыми (1.22 / верх)
+  const insertDoctor = db.prepare(`INSERT INTO doctors (name, specialty, experience, description, photo, "order", photoScale, photoPosX, photoPosY, createdAt, updatedAt)
+                                   VALUES (?, ?, ?, ?, ?, ?, 1, 50, 50, ?, ?)`);
   for (const d of doctors) insertDoctor.run(d.name, d.specialty, d.experience, d.description, d.photo, d.order, ts, ts);
 
   const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, link, active, expiresAt, createdAt, updatedAt)
