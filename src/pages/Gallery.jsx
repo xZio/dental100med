@@ -82,7 +82,7 @@ export default function Gallery() {
           <h1>Галерея</h1>
           <p>Фотографии нашей клиники и примеры выполненных работ.</p>
         </div>
-        <img className="page-hero-tooth" src="/images/teeth/tooth-smile.webp" alt="" aria-hidden="true" width="600" height="600" />
+        <img className="page-hero-tooth" src="/images/teeth/tooth-smile.webp" alt="" aria-hidden="true" width="600" height="600" fetchPriority="high" />
       </section>
 
       <section className="section-pad">
@@ -120,7 +120,7 @@ export default function Gallery() {
                 src={photo.src}
                 alt={photo.alt}
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
+                loading={i < 4 ? 'eager' : 'lazy'}
               />
               <span className="absolute inset-0 flex items-center justify-center bg-ink/0 transition-colors duration-300 group-hover:bg-ink/25">
                 <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink opacity-0 transition-opacity duration-200 group-hover:opacity-100">

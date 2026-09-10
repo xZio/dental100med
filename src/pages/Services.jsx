@@ -44,7 +44,7 @@ export default function Services() {
           <h1>Услуги и цены</h1>
           <p>Актуальный прайс-лист. Окончательная стоимость — после осмотра врача.</p>
         </div>
-        <img className="page-hero-tooth" src="/images/teeth/tooth-joy.webp" alt="" aria-hidden="true" width="600" height="600" />
+        <img className="page-hero-tooth" src="/images/teeth/tooth-joy.webp" alt="" aria-hidden="true" width="600" height="600" fetchPriority="high" />
       </section>
 
       {/* Цветные пятна под стеклянными карточками — иначе стеклу нечего размывать */}

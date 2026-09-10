@@ -20,7 +20,7 @@ export default function Doctors() {
           <h1>Люди, которым<br />доверяют улыбки.</h1>
           <p>Опыт, внимание и любовь к своему делу. Знакомьтесь с командой клиники.</p>
         </div>
-        <img className="page-hero-tooth" src="/images/teeth/tooth-happy.webp" alt="" aria-hidden="true" width="600" height="600" />
+        <img className="page-hero-tooth" src="/images/teeth/tooth-happy.webp" alt="" aria-hidden="true" width="600" height="600" fetchPriority="high" />
       </section>
 
       <section className="section-pad">
@@ -34,11 +34,12 @@ export default function Doctors() {
 
         {doctors && (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {doctors.map((doc) => (
+            {doctors.map((doc, i) => (
               <article key={doc._id} className="card p-6">
                 <div className="mb-4 h-24 w-24 overflow-hidden rounded-2xl bg-[#cce9f2]">
+                  {/* Первый ряд виден сразу под hero — его не откладываем */}
                   {doc.photo && (
-                    <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading="lazy" />
+                    <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading={i < 3 ? 'eager' : 'lazy'} />
                   )}
                 </div>
                 <h2 className="text-lg font-semibold leading-snug tracking-tight text-ink">{doc.name}</h2>
