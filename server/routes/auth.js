@@ -19,9 +19,9 @@ const accounts = () => [
 
 // POST /api/auth/login
 router.post('/login', (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body ?? {};
 
-  if (!email || !password)
+  if (typeof email !== 'string' || typeof password !== 'string' || !email || !password)
     return res.status(400).json({ message: 'Введите email и пароль' });
 
   const login = email.trim().toLowerCase();

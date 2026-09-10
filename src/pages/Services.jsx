@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
@@ -15,6 +15,8 @@ export default function Services() {
   });
 
   const [activeCategory, setActiveCategory] = useState('all');
+  const { hash } = useLocation();
+  const listRef = useRef(null);
 
   const { data: services, loading, error } = useFetch(api.getServices);
   const { data: categoryList } = useFetch(api.getCategories);
@@ -23,9 +25,20 @@ export default function Services() {
   const categories = useMemo(() => groupByCategory(services, categoryList), [services, categoryList]);
   const filtered = activeCategory === 'all' ? categories : categories.filter((c) => c.id === activeCategory);
 
+  // Ссылки с главной и из акций ведут на /services#Раздел: разделы грузятся
+  // асинхронно, поэтому браузер сам к якорю не прокрутит — включаем фильтр
+  // на нужный раздел и подводим к нему, когда прайс уже на странице
+  useEffect(() => {
+    if (!hash || categories.length === 0) return;
+    const wanted = decodeURIComponent(hash.slice(1));
+    if (!categories.some((c) => c.id === wanted)) return;
+    setActiveCategory(wanted);
+    requestAnimationFrame(() => listRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  }, [hash, categories]);
+
   return (
     <>
-      <section className="panel-blue page-hero page-hero-split">
+      <section className="panel-blue page-hero page-hero-split page-hero-with-tooth">
         <div>
           <span className="eyebrow">Прозрачные цены</span>
           <h1>Услуги и цены</h1>
@@ -40,7 +53,7 @@ export default function Services() {
           <span className="b1" /><span className="b2" /><span className="b3" />
         </div>
 
-        <div className="relative z-[1] mx-auto max-w-6xl">
+        <div ref={listRef} className="relative z-[1] mx-auto max-w-6xl scroll-mt-6">
           {/* Разделы */}
           <div className="mb-10 filter-bar" role="tablist" aria-label="Разделы прайса">
             <button

@@ -22,5 +22,9 @@ COPY server ./server
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 5000
-# При первом старте наполняем пустую базу, дальше просто поднимаем сервер
-CMD ["sh", "-c", "node server/seed.js --if-empty && node server/index.js"]
+# Coolify перезапускает контейнер, если API перестал отвечать
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "fetch('http://localhost:5000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+# При первом старте наполняем пустую базу, дальше поднимаем сервер.
+# exec — чтобы node был PID 1 и получал SIGTERM при остановке (иначе Docker ждёт таймаут и шлёт SIGKILL)
+CMD ["sh", "-c", "node server/seed.js --if-empty && exec node server/index.js"]

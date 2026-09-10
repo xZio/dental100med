@@ -17,5 +17,21 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // setState в эффекте после fetch/по смене роута — обычный паттерн этого проекта
+      'react-hooks/set-state-in-effect': 'off',
+      // Хелперы рядом с компонентом (reachGoal, formatDate, useAuth) — HMR от этого не страдает
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  // Бэкенд на Node: process, Buffer и прочее
+  {
+    files: ['server/**/*.js'],
+    languageOptions: { globals: globals.node },
+  },
+  // Service worker
+  {
+    files: ['public/sw.js'],
+    languageOptions: { globals: globals.serviceworker },
   },
 ])

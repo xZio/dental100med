@@ -97,7 +97,8 @@ function ServicesSection({ categories }) {
           <span className="eyebrow">Забота в деталях</span>
           <h2>Для здоровья.<br /><span className="soft-text">Для красоты. Для вас.</span></h2>
         </div>
-        <p>Всё, что нужно вашей улыбке,<br />в одной клинике. Найдём решение<br />и объясним каждый шаг.</p>
+        {/* Пробел перед <br /> обязателен: на телефоне переносы прячутся, и слова слипаются */}
+        <p>Всё, что нужно вашей улыбке, <br />в одной клинике. Найдём решение <br />и объясним каждый шаг.</p>
       </div>
 
       <div className="service-grid">
@@ -160,7 +161,7 @@ function DoctorsPreview({ doctors }) {
           <span className="eyebrow">В надёжных руках</span>
           <h2>Люди, которым<br /><span className="soft-text">доверяют улыбки.</span></h2>
         </div>
-        <p>Опыт, внимание и любовь<br />к своему делу.</p>
+        <p>Опыт, внимание и любовь <br />к своему делу.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -192,7 +193,7 @@ function ContactPanel() {
       <div className="contact-title">
         <span className="eyebrow">До встречи в клинике</span>
         <h2>Ваша улыбка —<br /><span className="handwritten">наша забота.</span></h2>
-        <p>Сделайте первый шаг. А мы позаботимся<br />о том, чтобы он был комфортным.</p>
+        <p>Сделайте первый шаг. А мы позаботимся <br />о том, чтобы он был комфортным.</p>
         <Link className="button button-light" to="/contacts">Записаться на приём <ArrowUpRight /></Link>
       </div>
       <div className="contact-details">
@@ -223,8 +224,8 @@ function ContactPanel() {
 }
 
 export default function Home() {
+  // Без title: имя сайта уже «ДенталстоМед — стоматология в Подольске», иначе фраза удваивается
   useSEO({
-    title: 'Стоматология в Подольске',
     description: 'Семейная стоматологическая клиника ДенталстоМед в Подольске. Лечение, имплантация, ортодонтия. Запись онлайн.',
   });
 

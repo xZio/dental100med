@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { db, now, mapRow } from '../config/db.js';
 import { uploadDir } from '../config/uploads.js';
-import { protect, adminOnly } from '../middleware/auth.js';
+import { adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 

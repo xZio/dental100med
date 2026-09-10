@@ -9,6 +9,9 @@ async function request(path) {
   return res.json();
 }
 
+// Бейдж рейтинга стоит на странице по 2–3 раза — запрос делаем один на сессию
+let ratingPromise = null;
+
 export const api = {
   getServices:    () => request('/services'),
   getCategories:  () => request('/categories'),
@@ -16,11 +19,19 @@ export const api = {
   getPromotions:  () => request('/promotions'),
   getGallery:     () => request('/gallery'),
   // 204 — Яндекс не ответил: показываем запасные цифры, а не ошибку
-  getRating:      () => fetch(`${BASE_URL}/rating`).then((res) => (res.status === 204 ? null : res.json())),
-  sendAppointment: (data) =>
-    fetch(`${BASE_URL}/appointments`, {
+  getRating: () => {
+    ratingPromise ??= fetch(`${BASE_URL}/rating`).then((res) => (res.status === 204 ? null : res.json()));
+    return ratingPromise;
+  },
+  sendAppointment: async (data) => {
+    const res = await fetch(`${BASE_URL}/appointments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then(res => res.json()),
+    });
+    // Сервер отвечает JSON и на ошибку — без проверки статуса форма показала бы «отправлено»
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.message || `Ошибка ${res.status}`);
+    return body;
+  },
 };

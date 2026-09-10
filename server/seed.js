@@ -91,7 +91,7 @@ function seed() {
 
   // С флагом --if-empty (первый запуск в проде) не трогаем уже заполненную базу
   if (process.argv.includes('--if-empty')) {
-    const { count } = db.prepare('SELECT COUNT(*) AS count FROM services').get();
+    const { count } = db.prepare('SELECT (SELECT COUNT(*) FROM services) + (SELECT COUNT(*) FROM doctors) AS count').get();
     if (count > 0) {
       console.log('База уже заполнена — сид пропущен');
       db.close();

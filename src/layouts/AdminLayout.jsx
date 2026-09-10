@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -16,34 +16,24 @@ const NAV = [
   { to: '/admin/appointments', label: 'Заявки',    icon: CalendarClock },
 ];
 
-export default function AdminLayout() {
-  const { logout, isAdmin } = useAuth();
-  const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
-  };
-
-  const SidebarContent = () => (
+function Sidebar({ isAdmin, onNavigate, onLogout }) {
+  return (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-teal-700">
         <div className="text-white font-bold text-lg leading-tight">
-          Dental100med
+          ДенталстоМед
         </div>
         <div className="text-teal-300 text-xs mt-0.5">Панель управления</div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        {NAV.filter((item) => isAdmin || !item.adminOnly).map(({ to, label, icon: Icon, end }) => (
+        {NAV.filter((item) => isAdmin || !item.adminOnly).map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
-            end={end}
-            onClick={() => setSidebarOpen(false)}
+            onClick={onNavigate}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
@@ -62,7 +52,8 @@ export default function AdminLayout() {
       {/* Logout */}
       <div className="px-3 py-4 border-t border-teal-700">
         <button
-          onClick={handleLogout}
+          type="button"
+          onClick={onLogout}
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-teal-100 hover:bg-white/10 hover:text-white transition-all"
         >
           <LogOut size={18} />
@@ -71,26 +62,51 @@ export default function AdminLayout() {
       </div>
     </div>
   );
+}
+
+export default function AdminLayout() {
+  const { logout, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Манифест PWA нужен только админке: без него iPhone не поставит её на «Домой»,
+  // а без установки Apple не шлёт push. На публичных страницах его быть не должно.
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = '/admin.webmanifest';
+    document.head.appendChild(link);
+    return () => link.remove();
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
+  };
+
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col w-60 bg-teal-700 flex-shrink-0">
-        <SidebarContent />
+        <Sidebar isAdmin={isAdmin} onNavigate={closeSidebar} onLogout={handleLogout} />
       </aside>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+          <div className="absolute inset-0 bg-black/50" onClick={closeSidebar} />
           <aside className="absolute left-0 top-0 bottom-0 w-60 bg-teal-700 flex flex-col">
             <button
-              onClick={() => setSidebarOpen(false)}
+              type="button"
+              onClick={closeSidebar}
               className="absolute top-4 right-4 text-white"
+              aria-label="Закрыть меню"
             >
               <X size={20} />
             </button>
-            <SidebarContent />
+            <Sidebar isAdmin={isAdmin} onNavigate={closeSidebar} onLogout={handleLogout} />
           </aside>
         </div>
       )}
@@ -99,10 +115,10 @@ export default function AdminLayout() {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Mobile topbar */}
         <header className="md:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 shadow-sm">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-600">
+          <button type="button" onClick={() => setSidebarOpen(true)} className="text-gray-600" aria-label="Открыть меню">
             <Menu size={22} />
           </button>
-          <span className="font-semibold text-gray-800">Dental100med</span>
+          <span className="font-semibold text-gray-800">ДенталстоМед</span>
         </header>
 
         {/* Content */}

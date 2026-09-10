@@ -10,12 +10,15 @@ const authHeaders = () => ({
 
 async function req(path, opts = {}) {
   const res = await fetch(`${BASE_URL}${path}`, opts);
-  if (res.status === 401) {
+  // Протухший токен — на вход. Сам логин на 401 отвечает «неверный пароль»:
+  // там редирект не нужен, ошибку должна показать форма
+  if (res.status === 401 && path !== '/auth/login') {
     localStorage.removeItem('admin_token');
     window.location.href = '/admin/login';
-    return;
+    throw new Error('Сессия истекла — войдите заново');
   }
-  const data = await res.json();
+  // Ответ не-JSON (например, HTML от прокси) не должен превращаться в SyntaxError
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || `Ошибка ${res.status}`);
   return data;
 }

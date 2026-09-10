@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect, adminOnly } from '../middleware/auth.js';
+import { adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 

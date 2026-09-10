@@ -14,7 +14,7 @@ export default function Doctors() {
 
   return (
     <>
-      <section className="panel-blue page-hero page-hero-split">
+      <section className="panel-blue page-hero page-hero-split page-hero-with-tooth">
         <div>
           <span className="eyebrow">В надёжных руках</span>
           <h1>Люди, которым<br />доверяют улыбки.</h1>

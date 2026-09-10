@@ -106,7 +106,8 @@ router.put('/:id', adminOnly, (req, res) => {
 
 router.delete('/:id', adminOnly, (req, res) => {
   try {
-    db.prepare('DELETE FROM promotions WHERE id = ?').run(Number(req.params.id));
+    const { changes } = db.prepare('DELETE FROM promotions WHERE id = ?').run(Number(req.params.id));
+    if (!changes) return res.status(404).json({ message: 'Акция не найдена' });
     res.json({ message: 'Акция удалена' });
   } catch (err) {
     res.status(500).json({ message: err.message });

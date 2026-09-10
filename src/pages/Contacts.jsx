@@ -49,7 +49,7 @@ const validators = {
   name: (v) => {
     if (!v.trim()) return 'Введите ваше имя';
     if (v.trim().length < 2) return 'Минимум 2 символа';
-    if (!/^[а-яёА-ЯЁa-zA-Z\s\-]+$/.test(v)) return 'Только буквы, пробелы и дефис';
+    if (!/^[а-яёА-ЯЁa-zA-Z\s-]+$/.test(v)) return 'Только буквы, пробелы и дефис';
     return '';
   },
   phone: (v) => {
@@ -122,16 +122,16 @@ export default function Contacts() {
     setForm((f) => ({ ...f, phone: formatPhone(raw) }));
   };
 
-  // Запрещаем вводить не-цифры после +7
+  // Запрещаем вводить не-цифры после +7. Сочетания с Ctrl/Cmd (вставка, выделение)
+  // и Enter пропускаем — иначе номер нельзя вставить из буфера и отправить с клавиатуры
   const handlePhoneKeyDown = (e) => {
-    const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
-    if (allowed.includes(e.key)) return;
+    if (e.ctrlKey || e.metaKey || e.key.length > 1) return;
     if (!/^\d$/.test(e.key)) e.preventDefault();
   };
 
   const handleNameChange = (e) => {
     // Запрещаем цифры и большинство спецсимволов прямо при вводе
-    const value = e.target.value.replace(/[^а-яёА-ЯЁa-zA-Z\s\-]/g, '');
+    const value = e.target.value.replace(/[^а-яёА-ЯЁa-zA-Z\s-]/g, '');
     setForm((f) => ({ ...f, name: value }));
   };
 
@@ -336,9 +336,9 @@ export default function Contacts() {
                   Режим работы
                 </h3>
                 <ul className="space-y-2 text-sm text-[#3d6a83]">
-                  <li className="flex justify-between"><span>Понедельник – Пятница</span><span className="font-medium">9:00 – 21:00</span></li>
-                  <li className="flex justify-between"><span>Суббота</span><span className="font-medium">9:00 – 19:00</span></li>
-                  <li className="flex justify-between"><span>Воскресенье</span><span className="font-medium">10:00 – 17:00</span></li>
+                  <li className="flex justify-between"><span>Понедельник — пятница</span><span className="font-medium">9:00–21:00</span></li>
+                  <li className="flex justify-between"><span>Суббота</span><span className="font-medium">9:00–19:00</span></li>
+                  <li className="flex justify-between"><span>Воскресенье</span><span className="font-medium">10:00–17:00</span></li>
                 </ul>
               </div>
 

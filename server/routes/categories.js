@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db, now, mapRow } from '../config/db.js';
-import { protect, adminOnly } from '../middleware/auth.js';
+import { adminOnly } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -50,6 +50,10 @@ router.put('/:id', adminOnly, (req, res) => {
     const newName = name?.trim() || old.name;
 
     if (newName !== old.name) {
+      // Проверяем до переноса услуг: иначе они уедут в чужую категорию,
+      // а само переименование упадёт по UNIQUE
+      const taken = db.prepare('SELECT id FROM categories WHERE name = ? AND id != ?').get(newName, id);
+      if (taken) return res.status(400).json({ message: 'Категория с таким названием уже есть' });
       db.prepare('UPDATE services SET category = ?, updatedAt = ? WHERE category = ?')
         .run(newName, now(), old.name);
     }

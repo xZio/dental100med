@@ -1,12 +1,5 @@
-import { motion } from 'framer-motion';
 import { useSEO } from '../hooks/useSEO.js';
 import { legal, legalContacts } from '../data/legal.js';
-
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
-};
 
 function H2({ children }) {
   return <h2 className="mt-10 text-xl md:text-2xl font-bold text-slate-800 first:mt-0">{children}</h2>;

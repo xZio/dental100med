@@ -8,7 +8,8 @@ const ORG_ID = '159190759541';
  */
 const WIDGET_URL = `https://yandex.ru/maps-reviews-widget/${ORG_ID}?comments`;
 
-const DAY = 24 * 60 * 60 * 1000;
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
 
 /** Вытаскиваем «5,0 332 отзыва • 440 оценок» из HTML виджета. null — формат сменился. */
 export function parseWidget(html) {
@@ -18,10 +19,10 @@ export function parseWidget(html) {
     .replace(/\s+/g, ' ');
 
   // Окончания только кириллицей: \w в JS — это [A-Za-z0-9_], русское «отзыва» им не ловится
-  const m = text.match(/(\d,\d)\s+(\d[\d\s ]*?)\s*отзыв[а-яё]*\s*[•·]?\s*(\d[\d\s ]*?)\s*оцен/i);
+  const m = text.match(/(\d,\d)\s+(\d[\d\s]*?)\s*отзыв[а-яё]*\s*[•·]?\s*(\d[\d\s]*?)\s*оцен/i);
   if (!m) return null;
 
-  const num = (s) => Number(s.replace(/[\s ]/g, ''));
+  const num = (s) => Number(s.replace(/[\s]/g, ''));
   const result = { rating: m[1], reviews: num(m[2]), ratings: num(m[3]) };
   return result.reviews > 0 && result.ratings > 0 ? result : null;
 }
@@ -48,6 +49,8 @@ export async function getYandexRating() {
   } catch {
     cache = { at: Date.now(), value: null };
   }
+  // Неудача не должна прятать рейтинг на сутки: пробуем снова через час
+  if (!cache.value) cache.at = Date.now() - DAY + HOUR;
 
   return cache.value;
 }

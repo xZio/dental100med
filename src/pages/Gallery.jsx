@@ -76,7 +76,7 @@ export default function Gallery() {
 
   return (
     <>
-      <section className="panel-blue page-hero page-hero-split">
+      <section className="panel-blue page-hero page-hero-split page-hero-with-tooth">
         <div>
           <span className="eyebrow">Посмотрите сами</span>
           <h1>Галерея</h1>

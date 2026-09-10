@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
  */
 export function useAutoRefresh(refresh, intervalMs = 60000) {
   const saved = useRef(refresh);
-  saved.current = refresh;
+  useEffect(() => { saved.current = refresh; }, [refresh]);
 
   useEffect(() => {
     const run = () => saved.current();
