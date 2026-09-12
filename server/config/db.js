@@ -108,15 +108,28 @@ export const connectDB = () => {
   // Акции-печати в hero ведут на страницу сайта (запись или раздел услуг)
   addColumn('promotions', 'link', "TEXT NOT NULL DEFAULT '/contacts'");
 
+  // Цвет и подпись печати выбираются в админке. Раньше цвет назначался по
+  // порядку акции, а подпись вычислялась из ссылки — у существующих строк
+  // повторяем то же самое, чтобы после обновления сайт не изменился.
+  if (addColumn('promotions', 'color', "TEXT NOT NULL DEFAULT 'cyan'")) {
+    const tones = ['cyan', 'ink', 'ice'];
+    const rows = db.prepare('SELECT id FROM promotions ORDER BY createdAt, id').all();
+    const setColor = db.prepare('UPDATE promotions SET color = ? WHERE id = ?');
+    rows.forEach((row, i) => setColor.run(tones[i % tones.length], row.id));
+  }
+  if (addColumn('promotions', 'cta', "TEXT NOT NULL DEFAULT 'Записаться'")) {
+    db.exec("UPDATE promotions SET cta = 'Подробнее' WHERE link NOT LIKE '/contacts%'");
+  }
+
   console.log(`SQLite подключена: ${dbPath}`);
 };
 
-// ALTER TABLE ADD COLUMN нельзя выполнить дважды — проверяем по схеме
+/** ALTER TABLE ADD COLUMN нельзя выполнить дважды — проверяем по схеме. true, если колонку добавили сейчас. */
 const addColumn = (table, column, ddl) => {
   const columns = db.prepare(`PRAGMA table_info(${table})`).all();
-  if (!columns.some((c) => c.name === column)) {
-    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${ddl}`);
-  }
+  if (columns.some((c) => c.name === column)) return false;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${ddl}`);
+  return true;
 };
 
 export const now = () => new Date().toISOString();

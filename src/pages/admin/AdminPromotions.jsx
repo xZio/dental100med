@@ -1,162 +1,243 @@
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { adminApi } from '../../api/admin';
+import { api } from '../../api/index.js';
 import Modal from '../../components/admin/Modal';
-import { Plus, Pencil, Tag } from 'lucide-react';
 import DeleteButton from '../../components/admin/DeleteButton';
+import PromoSeal from '../../components/PromoSeal.jsx';
+import { ErrorNote, Label, PageTitle, Row, SaveButton, field } from '../../components/admin/ui.jsx';
+import { PROMO_COLORS, PROMO_COLOR_KEYS, PROMO_MAX, promoLinks, promoTopLines } from '../../lib/promo.js';
 
-const EMPTY = { title: '', description: '', discount: '', link: '/contacts', active: true, expiresAt: '' };
-const MAX_ACTIVE = 3;
+/** Пустая акция: цвет и ссылка сразу заполнены, чтобы не выбирать их каждый раз. */
+const blank = () => ({
+  _id: '',
+  title: '',
+  discount: '',
+  cta: 'Записаться',
+  link: '/contacts',
+  color: 'cyan',
+  description: '',
+  active: true,
+  expiresAt: '',
+});
 
-export default function AdminPromotions() {
-  const [promos, setPromos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState(EMPTY);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
+const toDateInput = (iso) => (iso ? iso.slice(0, 10) : '');
 
-  const load = () => adminApi.getPromotions().then(setPromos).finally(() => setLoading(false));
-  useEffect(() => { load(); }, []);
+function PromoForm({ promo, links, onDone }) {
+  const lines = promoTopLines(promo.title);
+  const [values, setValues] = useState({ ...promo, line1: lines[0] ?? '', line2: lines[1] ?? '' });
+  const [error, setError] = useState(null);
+  const [pending, setPending] = useState(false);
 
-  const toDateInput = (iso) => iso ? iso.slice(0, 10) : '';
+  const set = (key, value) => setValues((v) => ({ ...v, [key]: value }));
+  const id = promo._id || 'new';
 
-  const openAdd  = () => { setForm(EMPTY); setEditing(null); setError(''); setModal(true); };
-  const openEdit = (p) => {
-    setForm({ title: p.title, description: p.description, discount: p.discount, link: p.link || '/contacts', active: p.active, expiresAt: toDateInput(p.expiresAt) });
-    setEditing(p); setError(''); setModal(true);
-  };
-  const closeModal = () => setModal(false);
-  const f = (k) => (e) => setForm({ ...form, [k]: e.target.value });
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setError('');
+  const save = async () => {
+    setPending(true);
+    setError(null);
     try {
-      const data = { ...form, expiresAt: form.expiresAt || null };
-      if (editing) await adminApi.updatePromotion(editing._id, data);
-      else         await adminApi.createPromotion(data);
-      await load();
-      closeModal();
+      const data = {
+        title: [values.line1, values.line2].filter(Boolean).join('\n'),
+        discount: values.discount,
+        cta: values.cta,
+        link: values.link,
+        color: values.color,
+        description: values.description,
+        active: values.active,
+        expiresAt: values.expiresAt || null,
+      };
+      if (!data.title.trim()) throw new Error('Заполните верхнюю строку');
+      if (values._id) await adminApi.updatePromotion(values._id, data);
+      else await adminApi.createPromotion(data);
+      onDone();
     } catch (err) {
       setError(err.message);
     } finally {
-      setSaving(false);
+      setPending(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    await adminApi.deletePromotion(id);
-    await load();
+  const remove = async () => {
+    await adminApi.deletePromotion(values._id);
+    onDone();
   };
 
-  // Четвёртую активную сервер не пропустит — покажем его ответ над списком
-  const toggleActive = async (p) => {
-    setNotice('');
-    try {
-      await adminApi.updatePromotion(p._id, { active: !p.active });
-      load();
-    } catch (err) {
-      setNotice(err.message);
-    }
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid gap-5 sm:grid-cols-[190px_1fr] sm:items-start">
+        {/* Тот же круг, что на главной: сразу видно, влезает ли текст */}
+        <div className="flex justify-center rounded-2xl bg-gray-50 p-4 sm:justify-start">
+          <PromoSeal
+            preview
+            promo={{
+              title: [values.line1, values.line2].filter(Boolean).join('\n'),
+              discount: values.discount || '—',
+              cta: values.cta || '…',
+              color: values.color,
+            }}
+          />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor={`line1-${id}`}>Верхняя строка</Label>
+              <input id={`line1-${id}`} value={values.line1} onChange={(e) => set('line1', e.target.value)}
+                     maxLength={24} placeholder="Консультация" className={field} />
+            </div>
+            <div>
+              <Label htmlFor={`line2-${id}`}>Вторая строка</Label>
+              <input id={`line2-${id}`} value={values.line2} onChange={(e) => set('line2', e.target.value)}
+                     maxLength={24} placeholder="всех врачей" className={field} />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor={`big-${id}`}>Крупная строка</Label>
+              <input id={`big-${id}`} value={values.discount} onChange={(e) => set('discount', e.target.value)}
+                     maxLength={20} placeholder="бесплатно" className={field} />
+            </div>
+            <div>
+              <Label htmlFor={`cta-${id}`}>Подпись внизу</Label>
+              <input id={`cta-${id}`} value={values.cta} onChange={(e) => set('cta', e.target.value)}
+                     maxLength={24} placeholder="Записаться" className={field} />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor={`link-${id}`}>Куда ведёт</Label>
+            <select id={`link-${id}`} value={values.link} onChange={(e) => set('link', e.target.value)} className={field}>
+              {links.some((l) => l.href === values.link)
+                ? null
+                : <option value={values.link}>{values.link}</option>}
+              {links.map((link) => <option key={link.href} value={link.href}>{link.label}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <Label htmlFor={`color-${id}`}>Цвет</Label>
+            <div id={`color-${id}`} className="flex flex-wrap gap-2">
+              {PROMO_COLOR_KEYS.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => set('color', key)}
+                  aria-pressed={values.color === key}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-bold transition-colors ${
+                    values.color === key ? 'border-teal-600 bg-teal-50 text-teal-700' : 'border-gray-200 text-gray-500 hover:border-teal-400'
+                  }`}
+                >
+                  <span className={`h-3.5 w-3.5 rounded-full ${PROMO_COLORS[key].dot}`} aria-hidden />
+                  {PROMO_COLORS[key].label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Своё, чего у Денталии нет: акцию можно спрятать, не удаляя, и задать срок */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor={`until-${id}`}>Показывать до</Label>
+              <input id={`until-${id}`} type="date" value={toDateInput(values.expiresAt)}
+                     onChange={(e) => set('expiresAt', e.target.value)} className={field} />
+            </div>
+            <label className="flex cursor-pointer items-center gap-2 self-end pb-2.5">
+              <input type="checkbox" checked={values.active} onChange={(e) => set('active', e.target.checked)}
+                     className="h-4 w-4 accent-teal-600" />
+              <span className="text-sm text-gray-700">Показывать на сайте</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {error && <ErrorNote>{error}</ErrorNote>}
+
+      <div className="flex items-center gap-2">
+        <SaveButton onClick={save} pending={pending} />
+        {values._id && <DeleteButton variant="icon" onConfirm={remove} label={`Удалить акцию: ${values.discount || values.line1}`} />}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Акции-печати на главной: до трёх штук. Порядок в списке = порядок на экране:
+ * первая слева сверху, вторая справа, третья снизу. Если акций нет, hero просто
+ * остаётся без печатей.
+ */
+export default function AdminPromotions() {
+  const [promos, setPromos] = useState([]);
+  const [links, setLinks] = useState(promoLinks());
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+
+  const load = () => adminApi.getPromotions().then(setPromos).finally(() => setLoading(false));
+
+  useEffect(() => {
+    load();
+    // Разделы прайса тоже страницы сайта — акция может вести прямо в раздел
+    api.getCategories().then((cats) => setLinks(promoLinks(cats))).catch(() => {});
+  }, []);
+
+  const done = () => {
+    setAdding(false);
+    load();
   };
 
   const activeCount = promos.filter((p) => p.active).length;
 
-  if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
+  if (loading) return <div className="text-sm text-gray-400">Загрузка...</div>;
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Акции</h1>
-          <p className="text-gray-500 text-sm mt-1">На сайте {activeCount} из {MAX_ACTIVE} · всего {promos.length}</p>
-        </div>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-colors"
-        >
-          <Plus size={16} /> Добавить
-        </button>
-      </div>
+    <>
+      <PageTitle title="Акции" subtitle={`На сайте ${activeCount} из ${PROMO_MAX} · всего ${promos.length}`} />
+      <p className="mb-4 max-w-[640px] text-[13px] leading-relaxed text-gray-500">
+        Круглые печати поверх главной страницы. Порядок в списке — порядок на экране: первая слева сверху,
+        вторая справа, третья снизу.
+      </p>
 
-      {notice && <p className="mb-4 text-sm text-red-500">{notice}</p>}
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        {promos.map((p) => (
-          <div key={p._id} className={`bg-white rounded-2xl shadow-sm border p-5 ${p.active ? 'border-gray-100' : 'border-gray-100 opacity-60'}`}>
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Tag size={16} className="text-orange-500" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-800 text-sm">{p.title}</div>
-                  {p.discount && <div className="text-orange-600 text-xs font-medium">{p.discount}</div>}
-                </div>
-              </div>
-              <button
-                onClick={() => toggleActive(p)}
-                className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${p.active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-              >
-                {p.active ? 'Активна' : 'Скрыта'}
-              </button>
-            </div>
-            {p.description && <p className="text-gray-600 text-xs mb-3 line-clamp-2">{p.description}</p>}
-            {p.expiresAt && (
-              <div className="text-gray-400 text-xs mb-3">
-                До: {new Date(p.expiresAt).toLocaleDateString('ru-RU')}
-              </div>
-            )}
-            <div className="flex gap-2">
-              <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors">
-                <Pencil size={13} /> Изменить
-              </button>
-              <DeleteButton label="Удалить акцию" onConfirm={() => handleDelete(p._id)} />
-            </div>
-          </div>
+      <div className="flex flex-col gap-3">
+        {promos.map((promo) => (
+          <Row
+            key={promo._id}
+            summary={
+              <span className="flex items-center gap-3">
+                <span className={`h-8 w-8 shrink-0 rounded-full ${PROMO_COLORS[promo.color]?.dot ?? PROMO_COLORS.cyan.dot}`} aria-hidden />
+                <span className="min-w-0">
+                  <span className="block truncate text-[15px] font-bold text-gray-800">{promo.discount || '—'}</span>
+                  <span className="block truncate text-[12px] text-gray-500">
+                    {promoTopLines(promo.title).join(' ')}{promo.active ? '' : ' · скрыта'}
+                  </span>
+                </span>
+              </span>
+            }
+          >
+            <PromoForm promo={promo} links={links} onDone={done} />
+          </Row>
         ))}
+
+        {activeCount < PROMO_MAX ? (
+          <button
+            type="button"
+            onClick={() => setAdding(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-300 bg-white py-3.5 text-[13px] font-bold text-teal-600 transition-colors hover:border-teal-500"
+          >
+            <Plus size={16} />
+            Добавить акцию
+          </button>
+        ) : (
+          <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-3.5 text-center text-[13px] font-semibold text-gray-500">
+            Больше {PROMO_MAX} акций на главную не помещается. Скройте или удалите одну, чтобы добавить новую.
+          </p>
+        )}
       </div>
 
-      {modal && (
-        <Modal title={editing ? 'Редактировать акцию' : 'Новая акция'} onClose={closeModal}>
-          <form onSubmit={handleSave} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Мелкий текст (напр. «Консультация всех врачей»)</label>
-              <input value={form.title} onChange={f('title')} required maxLength={40} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Крупный текст (напр. «бесплатно», «4200 ₽», «в рассрочку»)</label>
-              <input value={form.discount} onChange={f('discount')} maxLength={20} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Куда ведёт (страница сайта, напр. /contacts или /services)</label>
-              <input value={form.link} onChange={f('link')} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Подсказка при наведении (необязательно)</label>
-              <textarea value={form.description} onChange={f('description')} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Действует до</label>
-              <input type="date" value={form.expiresAt} onChange={f('expiresAt')} className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            </div>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="w-4 h-4 accent-teal-600" />
-              <span className="text-sm text-gray-700">Акция активна</span>
-            </label>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <div className="flex gap-3 pt-2">
-              <button type="button" onClick={closeModal} className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">Отмена</button>
-              <button type="submit" disabled={saving} className="flex-1 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors disabled:opacity-60">
-                {saving ? 'Сохраняем...' : 'Сохранить'}
-              </button>
-            </div>
-          </form>
+      {adding && (
+        <Modal title="Новая акция" onClose={() => setAdding(false)}>
+          <PromoForm promo={blank()} links={links} onDone={done} />
         </Modal>
       )}
-    </div>
+    </>
   );
 }

@@ -3,17 +3,17 @@ import { createContext, useContext, useState } from 'react';
 const AuthContext = createContext(null);
 
 /**
- * Роль лежит в самом токене — отдельно её не храним, иначе она разъедется
- * с токеном. Подпись проверяет сервер; здесь payload нужен только чтобы
- * показать нужные пункты меню.
+ * Роль и почта лежат в самом токене — отдельно их не храним, иначе они
+ * разъедутся с токеном. Подпись проверяет сервер; здесь payload нужен только
+ * чтобы показать нужные пункты меню и имя вошедшего.
  */
-function readRole(token) {
-  if (!token) return null;
+function readPayload(token) {
+  if (!token) return {};
   try {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    return payload.role ?? 'admin';
+    return { role: payload.role ?? 'admin', email: payload.email ?? null };
   } catch {
-    return null;
+    return {};
   }
 }
 
@@ -30,11 +30,11 @@ export function AuthProvider({ children }) {
     setToken(null);
   };
 
-  const role = readRole(token);
+  const { role = null, email = null } = readPayload(token);
 
   return (
     <AuthContext.Provider
-      value={{ token, role, isAdmin: role === 'admin', isAuthenticated: !!token, login, logout }}
+      value={{ token, role, email, isAdmin: role === 'admin', isAuthenticated: !!token, login, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 
-const VIEWPORT = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
+// Зум запрещён: это панель-приложение, а не текст для чтения, и случайный
+// пинч только сбивает раскладку с нижней панелью. В установленном PWA iOS и
+// Android это уважают, в обычной вкладке Safari — игнорирует.
+const VIEWPORT = 'width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover';
 
 /**
  * Теги установки приложения — только для админки: на «Домой» ставится панель

@@ -78,12 +78,13 @@ const gallery = [
   { src: '/images/works/work-03.jpg', alt: 'Результат лечения в ДенталстоМед',      tab: 'works', order: 3 },
 ];
 
-// Акции-печати в hero: мелкий текст, крупный текст и куда ведёт. Те же три,
-// что сейчас у Денталии, — заготовка, клиника поменяет через админку.
+// Акции-печати в hero: верхний текст (до двух строк — перевод строки), крупный
+// текст, подпись, цвет и куда ведёт. Те же три, что сейчас у Денталии, —
+// заготовка, клиника поменяет через админку.
 const promotions = [
-  { title: 'Консультация всех врачей', discount: 'бесплатно',   link: '/contacts' },
-  { title: 'Панорамный снимок КТ',     discount: '4200 ₽',      link: '/contacts' },
-  { title: 'Брекеты',                  discount: 'в рассрочку', link: '/services#Брекеты и элайнеры' },
+  { title: 'Консультация\nвсех врачей', discount: 'бесплатно',   cta: 'Записаться', color: 'cyan', link: '/contacts' },
+  { title: 'Панорамный\nснимок КТ',     discount: '4200 ₽',      cta: 'Записаться', color: 'ink',  link: '/contacts' },
+  { title: 'Брекеты',                   discount: 'в рассрочку', cta: 'Подробнее',  color: 'ice',  link: '/services#Брекеты и элайнеры' },
 ];
 
 function seed() {
@@ -116,9 +117,9 @@ function seed() {
                                    VALUES (?, ?, ?, ?, ?, ?, 1, 50, 50, ?, ?)`);
   for (const d of doctors) insertDoctor.run(d.name, d.specialty, d.experience, d.description, d.photo, d.order, ts, ts);
 
-  const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, link, active, expiresAt, createdAt, updatedAt)
-                                  VALUES (?, '', ?, ?, 1, NULL, ?, ?)`);
-  for (const p of promotions) insertPromo.run(p.title, p.discount, p.link, ts, ts);
+  const insertPromo = db.prepare(`INSERT INTO promotions (title, description, discount, link, cta, color, active, expiresAt, createdAt, updatedAt)
+                                  VALUES (?, '', ?, ?, ?, ?, 1, NULL, ?, ?)`);
+  for (const p of promotions) insertPromo.run(p.title, p.discount, p.link, p.cta, p.color, ts, ts);
 
   const insertImage = db.prepare('INSERT INTO gallery (src, alt, tab, "order", createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
   for (const g of gallery) insertImage.run(g.src, g.alt, g.tab, g.order, ts, ts);

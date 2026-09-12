@@ -5,6 +5,7 @@ import { framingStyle } from '../lib/framing.js';
 import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
+import PromoSeal from '../components/PromoSeal.jsx';
 import Reviews from '../components/Reviews.jsx';
 import YandexRating from '../components/YandexRating.jsx';
 import { reachGoal } from '../components/Metrika.jsx';
@@ -12,29 +13,15 @@ import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 
 /**
- * Акции-печати в hero, как у Денталии: до трёх круглых наклеек с сияющей
- * аурой. Тон — по порядку (бирюза, глубокий синий, лёд), тексты и ссылка —
- * из админки. На десктопе висят справа от заголовка, на телефоне — под кнопкой.
+ * Акции-печати в hero: до трёх круглых наклеек с сияющей аурой. Тексты, цвет и
+ * ссылка — из админки, место и наклон задаёт порядок в списке. На десктопе
+ * висят справа от заголовка, на телефоне — под кнопкой записи.
  */
-const PROMO_TONES = ['cyan', 'ink', 'ice'];
-
 function HeroPromos({ promos, compact = false }) {
   if (promos.length === 0) return null;
   return (
     <div className={compact ? 'hero-promos hero-promos-compact' : 'hero-promos'} aria-label="Акции">
-      {promos.map((promo, i) => {
-        const link = promo.link || '/contacts';
-        return (
-          <Link key={promo._id} to={link} className={`promo-seal promo-seal-${PROMO_TONES[i]}`} title={promo.description || undefined}>
-            <span className="promo-aura" aria-hidden="true" />
-            <span className="promo-body">
-              <span className="promo-title">{promo.title}</span>
-              {promo.discount && <span className="promo-big">{promo.discount}</span>}
-              <span className="promo-cta">{link.startsWith('/contacts') ? 'Записаться' : 'Подробнее'} <ArrowUpRight /></span>
-            </span>
-          </Link>
-        );
-      })}
+      {promos.map((promo) => <PromoSeal key={promo._id} promo={promo} />)}
     </div>
   );
 }
