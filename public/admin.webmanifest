@@ -1,6 +1,6 @@
 {
-  "name": "ДенталстоМед — заявки",
-  "short_name": "Заявки",
+  "name": "СтоМед",
+  "short_name": "СтоМед",
   "description": "Заявки с сайта клиники «ДенталстоМед»",
   "start_url": "/admin",
   "scope": "/admin",

@@ -25,7 +25,8 @@ export default function AdminPWA() {
 
     for (const [name, content] of [
       ['apple-mobile-web-app-capable', 'yes'],
-      ['apple-mobile-web-app-title', 'Заявки'],
+      // Подпись под иконкой на iPhone. Android берёт её из short_name манифеста
+      ['apple-mobile-web-app-title', 'СтоМед'],
       ['apple-mobile-web-app-status-bar-style', 'default'],
     ]) {
       const meta = document.createElement('meta');
