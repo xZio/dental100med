@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AdminPWA from '../components/admin/AdminPWA';
 import {
   Stethoscope, UserRound, Tag, CalendarClock, Images,
   LogOut, Menu, X, ChevronRight,
@@ -69,16 +70,6 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Манифест PWA нужен только админке: без него iPhone не поставит её на «Домой»,
-  // а без установки Apple не шлёт push. На публичных страницах его быть не должно.
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'manifest';
-    link.href = '/admin.webmanifest';
-    document.head.appendChild(link);
-    return () => link.remove();
-  }, []);
-
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
@@ -88,6 +79,7 @@ export default function AdminLayout() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
+      <AdminPWA />
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col w-60 bg-teal-700 flex-shrink-0">
         <Sidebar isAdmin={isAdmin} onNavigate={closeSidebar} onLogout={handleLogout} />

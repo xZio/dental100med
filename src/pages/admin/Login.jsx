@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { adminApi } from '../../api/admin';
+import AdminPWA from '../../components/admin/AdminPWA';
 import { Lock } from 'lucide-react';
 
 export default function Login() {
@@ -28,6 +29,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 px-4">
+      {/* Приложение чаще всего ставят на телефон именно с этого экрана */}
+      <AdminPWA />
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8">
         <div className="flex flex-col items-center mb-8">
           <div className="w-14 h-14 bg-teal-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
