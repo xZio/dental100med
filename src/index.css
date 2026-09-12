@@ -127,8 +127,8 @@
 .handwritten { font-family: 'Caveat', 'Segoe Print', cursive; font-size: 53px; letter-spacing: -3px; font-weight: 400; line-height: 1.3; display: block; color: var(--cyan); }
 .soft-text { color: #6a9db7; }
 
-.button { display: inline-flex; align-items: center; justify-content: space-between; gap: 36px; padding: 20px 26px; font-size: 14px; font-weight: 600; border-radius: 14px; min-height: 61px; }
-.button svg { width: 19px; height: 19px; }
+.button { display: inline-flex; align-items: center; justify-content: space-between; gap: 40px; padding: 24px 32px; font-size: 16px; font-weight: 600; border-radius: 16px; min-height: 72px; }
+.button svg { width: 21px; height: 21px; }
 .button-light { background: #c0eaf5; color: #10475e; box-shadow: 0 6px 24px #216b9b14; }
 .button-light:hover { background: #ddf8ff; transform: translateY(-3px); box-shadow: 0 12px 25px #125c9025; }
 .button-blue { background: #247eaf; color: #fff; }
@@ -280,7 +280,7 @@
 .contact-title h2 { font-size: 48px; margin: 20px 0 28px; font-weight: 600; letter-spacing: -2px; line-height: 1.07; }
 .contact-title .handwritten { font-size: 52px; transform: rotate(-5deg); margin-top: 6px; white-space: nowrap; }
 .contact-title > p { font-size: 12px; line-height: 1.8; color: #dbf2fa; margin-bottom: 26px; }
-.contact-title > .button { min-height: 57px; font-size: 12px; }
+.contact-title > .button { min-height: 66px; font-size: 14px; }
 .contact-details { position: relative; z-index: 1; padding-top: 35px; }
 .contact-phone { display: flex; justify-content: space-between; align-items: center; font-size: 28px; font-weight: 500; letter-spacing: -.5px; white-space: nowrap; gap: 10px; }
 .contact-email { display: inline-block; font-size: 12px; color: #cfecf6; margin-top: 12px; }
@@ -342,7 +342,7 @@
   .hero-headline h1 { font-size: 133px; letter-spacing: -9px; } .hero-headline h1 > span { font-size: 149px; }
   .hero-art { width: 350px; left: calc(50% - 148px); } .hero-headline > .handwritten { font-size: 37px; top: -34px; }
   .hero-promos { display: none; }
-  .hero-rating { display: none; } .hero-rating-compact { display: flex; justify-content: center; padding: 0 26px 34px; }
+  .hero-rating { display: none; } .hero-rating-compact { display: flex; justify-content: center; padding: 0 14px 34px; }
   .page-hero-split { flex-direction: column; align-items: flex-start; gap: 30px; }
   /* Зубик, в отличие от широкого бейджа рейтинга, на планшете ещё помещается справа от текста */
   .page-hero-with-tooth { flex-direction: row; align-items: center; }
@@ -352,7 +352,7 @@
   .hero-promos-compact .promo-seal { position: relative; left: auto; right: auto; top: auto; width: 128px; height: 128px; }
   .pearl-one { left: 23%; top: 223px; }
   .hero-bottom { gap: 22px; grid-template-columns: 1fr auto auto; } .hero-bottom-copy p { font-size: 11px; }
-  .button { font-size: 12px; padding: 18px 21px; gap: 25px; min-height: 57px; }
+  .button { font-size: 14px; padding: 20px 24px; gap: 26px; min-height: 66px; }
   .section-pad { padding: 59px 28px; } .page-hero { padding-left: 28px; padding-right: 28px; } .section-heading h2, .page-hero h1 { font-size: 37px; } .section-heading > p { font-size: 11px; } .section-heading .eyebrow { font-size: 9px; }
   .service-grid { gap: 11px; } .service-card { padding: 18px; min-height: 205px; } .service-card h3 { font-size: 18px; } .service-description { font-size: 10px; line-height: 1.5; min-height: 30px; }
   .service-top { margin-bottom: 22px; } .service-bottom { padding-top: 15px; } .service-bottom > span { font-size: 10px; }
@@ -383,7 +383,7 @@
   .pearl-one { width: 21px; height: 21px; left: 21%; top: 126px; } .pearl-two { width: 10px; height: 10px; right: 12%; bottom: 55px; } .hero-floor { left: 7%; right: 7%; bottom: 2px; }
   .hero-bottom { margin: 6px 26px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 19px; padding: 19px 0 28px; }
   .hero-bottom-copy { text-align: center; order: 0; width: 100%; } .hero-bottom-copy p { font-size: 11px; font-weight: 400; line-height: 1.5; } .hero-bottom-copy p br { display: none; }
-  .hero-cta { flex: 1; order: 1; min-height: 55px; padding: 17px 19px; font-size: 12px; border-radius: 14px; gap: 8px; } .hero-scroll { order: 2; }
+  .hero-cta { flex: 1; order: 1; min-height: 62px; padding: 19px 22px; font-size: 14px; border-radius: 15px; gap: 8px; } .hero-scroll { order: 2; }
   .hero-scroll .circle { width: 40px; height: 40px; font-size: 21px; background: #b7e9f222; border-color: #bfe8f655; }
   .section-pad { padding: 47px 20px; } .section-heading { display: block; margin-bottom: 26px; } .section-heading h2 { font-size: 34px; letter-spacing: -1.4px; }
   .section-heading .eyebrow { font-size: 8px; letter-spacing: 1.6px; margin-bottom: 17px; } .section-heading > p { font-size: 12px; line-height: 1.7; padding: 0; margin-top: 20px; max-width: 300px; } .section-heading > p br { display: none; }
@@ -407,7 +407,7 @@
   .rating-big { margin: 18px 0 7px; } .rating-big > b { font-size: 61px; } .reviews-summary > .text-button { font-size: 11px; }
   .contact { grid-template-columns: 1fr; gap: 22px; border-radius: 24px; padding: 44px 24px 37px; } .contact-title > .eyebrow { font-size: 8px; letter-spacing: 1.6px; }
   .contact-title h2 { font-size: 37px; letter-spacing: -1.5px; margin: 22px 0 23px; } .contact-title .handwritten { font-size: 40px; letter-spacing: -2.5px; } .contact-title > p { font-size: 12px; margin-bottom: 25px; }
-  .contact-title > .button { font-size: 13px; width: 100%; padding: 18px 20px; } .contact-details { padding-top: 13px; } .contact-phone { font-size: 24px; letter-spacing: -.4px; } .contact-email { font-size: 12px; }
+  .contact-title > .button { font-size: 14px; width: 100%; padding: 20px 22px; } .contact-details { padding-top: 13px; } .contact-phone { font-size: 24px; letter-spacing: -.4px; } .contact-email { font-size: 12px; }
   .contact-address, .contact-hours { gap: 14px; } .contact-address h3 { font-size: 12px; line-height: 1.5; } .contact-address p { font-size: 11px; } .contact-address a { font-size: 11px; } .contact-hours > div { font-size: 11px; }
   .contact-decoration { bottom: -35px; left: -15px; font-size: 400px; }
   .footer { padding: 31px 21px 22px; } .footer-top { flex-wrap: wrap; gap: 26px; margin-bottom: 24px; } .footer .brand { font-size: 20px; order: 0; }

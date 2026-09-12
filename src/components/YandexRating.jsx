@@ -24,28 +24,28 @@ export default function YandexRating({ className = '' }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Рейтинг ${rating} из 5 на Яндекс Картах, ${reviews} ${reviewsWord} — открыть отзывы`}
-      className={`inline-flex -rotate-2 items-stretch gap-4 rounded-[18px] border border-[#c9e3ee] bg-white px-4 py-4 sm:gap-5 sm:px-6 shadow-lg shadow-blue/10 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:rotate-0 hover:border-blue/40 hover:shadow-xl hover:shadow-blue/20 ${className}`}
+      className={`inline-flex -rotate-2 items-stretch gap-4 rounded-[22px] border border-[#c9e3ee] bg-white px-4 py-4 sm:gap-6 sm:px-7 sm:py-5 shadow-lg shadow-blue/10 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:rotate-0 hover:border-blue/40 hover:shadow-xl hover:shadow-blue/20 ${className}`}
     >
       <div className="flex flex-col items-center justify-center">
-        <span className="text-[34px] font-black leading-none text-[#4d4d4d]">{rating}</span>
-        <div className="mt-1.5 flex gap-0.5" aria-hidden>
+        <span className="text-[38px] font-black leading-none text-[#4d4d4d] sm:text-[44px]">{rating}</span>
+        <div className="mt-2 flex gap-0.5" aria-hidden>
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={13} className="fill-[#FFCC00] text-[#FFCC00]" />
+            <Star key={i} size={15} className="fill-[#FFCC00] text-[#FFCC00]" />
           ))}
         </div>
-        <span className="mt-1.5 text-xs text-muted">
+        <span className="mt-2 whitespace-nowrap text-[13px] text-muted">
           {ratings} {plural(ratings, ['оценка', 'оценки', 'оценок'])}
         </span>
       </div>
 
       <span className="w-px shrink-0 bg-[#c9e3ee]" aria-hidden />
 
-      <div className="flex flex-col justify-center gap-1">
+      <div className="flex flex-col justify-center gap-1.5">
         <span className="inline-flex items-center gap-2">
-          <GoodPlaceBadge className="h-6 w-[42px] flex-shrink-0" />
-          <span className="text-[15px] font-bold text-ink">{reviewsSummary.award}</span>
+          <GoodPlaceBadge className="h-7 w-[48px] flex-shrink-0 sm:h-8 sm:w-[54px]" />
+          <span className="text-[16px] font-bold leading-tight text-ink sm:text-[19px]">{reviewsSummary.award}</span>
         </span>
-        <span className="text-[13px] text-muted">
+        <span className="text-[13.5px] leading-snug text-muted sm:text-[15px]">
           {reviews} {reviewsWord} на {reviewsSummary.source}
         </span>
       </div>
