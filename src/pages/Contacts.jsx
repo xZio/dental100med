@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock, ArrowUpRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/index.js';
@@ -11,13 +10,6 @@ import { useSEO } from '../hooks/useSEO.js';
 import { reachGoal } from '../components/Metrika.jsx';
 import YandexRating from '../components/YandexRating.jsx';
 import Reviews from '../components/Reviews.jsx';
-
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45 },
-};
 
 // Форматирует строку в маску +7 (XXX) XXX-XX-XX
 function formatPhone(raw) {
@@ -184,7 +176,7 @@ export default function Contacts() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
 
             {/* Form */}
-            <motion.div {...fadeUp} className="card p-6 sm:p-8">
+            <div className="card fade-up p-6 sm:p-8">
               <h2 className="mb-6 text-2xl font-semibold tracking-tight text-ink">Онлайн-запись</h2>
 
               {sent ? (
@@ -307,10 +299,10 @@ export default function Contacts() {
                   </p>
                 </form>
               )}
-            </motion.div>
+            </div>
 
             {/* Info */}
-            <motion.div {...fadeUp} transition={{ duration: 0.45, delay: 0.1 }} className="flex flex-col gap-5">
+            <div className="fade-up-delayed flex flex-col gap-5">
               <div className="card p-6">
                 <h3 className="mb-4 font-semibold tracking-tight text-ink">Как нас найти</h3>
                 <div className="space-y-3">
@@ -355,7 +347,7 @@ export default function Contacts() {
                 <MapPin size={14} />
                 Открыть в Яндекс Картах
               </a>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

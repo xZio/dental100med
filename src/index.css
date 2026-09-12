@@ -424,9 +424,20 @@
   .doctors .section-heading h2 { font-size: 27px; } .doctor-portrait { height: 248px; } .doctor-portrait img { width: 190px; height: 190px; } .doctor-portrait::before { width: 215px; height: 215px; }
   .contact-title h2 { font-size: 33px; } .contact-title .handwritten { font-size: 35px; } .contact-phone { font-size: 22px; }
 }
+/* Появление блоков: раньше этим занимался framer-motion, но ради двух
+   эффектов тянуть его в бандл всего сайта незачем */
+@keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoom-in { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fade-up .45s ease-out both; }
+.fade-up-delayed { animation: fade-up .45s ease-out .1s both; }
+.fade-in { animation: fade-in .2s ease-out both; }
+.zoom-in { animation: zoom-in .2s ease-out both; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .pearl-one, .pearl-two, .promo-aura, .page-hero-tooth, .animate-marquee-v, .animate-marquee-h { animation: none !important; }
+  .fade-up, .fade-up-delayed, .fade-in, .zoom-in { animation: none !important; }
 }
 
 /* ── Прайс: стеклянные карточки и фильтр разделов ────────────────────────── */

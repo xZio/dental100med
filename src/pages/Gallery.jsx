@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
@@ -27,12 +26,12 @@ function Lightbox({ photos, startIndex, onClose }) {
   }, [index]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d3a57]/90 p-4 backdrop-blur-sm"
+    <div
+      className="fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#0d3a57]/90 p-4 backdrop-blur-sm"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Просмотр фотографии"
     >
       <button onClick={onClose} className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20" aria-label="Закрыть">
         <X size={24} />
@@ -40,14 +39,11 @@ function Lightbox({ photos, startIndex, onClose }) {
       <button onClick={(e) => { e.stopPropagation(); prev(); }} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20" aria-label="Предыдущее фото">
         <ChevronLeft size={24} />
       </button>
-      <motion.img
+      <img
         key={index}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2 }}
         src={photos[index].src}
         alt={photos[index].alt}
-        className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+        className="zoom-in max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
       <button onClick={(e) => { e.stopPropagation(); next(); }} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20" aria-label="Следующее фото">
@@ -56,7 +52,7 @@ function Lightbox({ photos, startIndex, onClose }) {
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-white/60">
         {index + 1} / {photos.length}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -102,12 +98,9 @@ export default function Gallery() {
           ))}
         </div>
 
-        <motion.div
+        <div
           key={activeTab}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4"
+          className="fade-up grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4"
         >
           {currentTab?.photos.map((photo, i) => (
             <button
@@ -129,14 +122,12 @@ export default function Gallery() {
               </span>
             </button>
           ))}
-        </motion.div>
+        </div>
       </section>
 
-      <AnimatePresence>
-        {lightbox !== null && (
-          <Lightbox photos={currentTab?.photos ?? []} startIndex={lightbox} onClose={() => setLightbox(null)} />
-        )}
-      </AnimatePresence>
+      {lightbox !== null && (
+        <Lightbox photos={currentTab?.photos ?? []} startIndex={lightbox} onClose={() => setLightbox(null)} />
+      )}
     </>
   );
 }

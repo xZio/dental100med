@@ -3,13 +3,23 @@ const BASE_URL = import.meta.env.VITE_API_URL ||
 
 const getToken = () => localStorage.getItem('admin_token');
 
+/** Тот же предел, что у multer на сервере. */
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
+
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${getToken()}`,
 });
 
 async function req(path, opts = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, opts);
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, opts);
+  } catch {
+    // Сеть отвалилась или сервер лежит: fetch бросает «Failed to fetch»,
+    // показывать такое администратору клиники бессмысленно
+    throw new Error('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.');
+  }
   // Протухший токен — на вход. Сам логин на 401 отвечает «неверный пароль»:
   // там редирект не нужен, ошибку должна показать форма
   if (res.status === 401 && path !== '/auth/login') {
@@ -61,6 +71,12 @@ export const adminApi = {
 
   // Файл шлём как multipart — Content-Type проставит браузер сам
   uploadPhoto: (file) => {
+    // Столько же режет сервер. Проверяем здесь, чтобы не гнать зря десятки
+    // мегабайт с телефона и сказать понятным текстом, а не «ошибка 413»
+    if (file.size > MAX_UPLOAD_BYTES) {
+      const mb = (file.size / 1024 / 1024).toFixed(1).replace('.', ',');
+      return Promise.reject(new Error(`Файл весит ${mb} МБ, а можно до 15 МБ. Выберите снимок поменьше.`));
+    }
     const body = new FormData();
     body.append('file', file);
     return req('/uploads', { method: 'POST', headers: { Authorization: authHeaders().Authorization }, body });

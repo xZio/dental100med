@@ -3,6 +3,7 @@ import { adminApi } from '../../api/admin';
 import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import DeleteButton from '../../components/admin/DeleteButton';
 import PushToggle from '../../components/admin/PushToggle';
+import { ErrorNote } from '../../components/admin/ui.jsx';
 import { Phone, MessageSquare, Clock, Stethoscope, CalendarDays } from 'lucide-react';
 
 const STATUS = {
@@ -15,6 +16,7 @@ export default function AdminAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [error, setError] = useState('');
 
   // Пока в полёте наша правка, ответ автообновления игнорируем: сервер может
   // ответить состоянием ДО неё и перетереть только что нажатый статус
@@ -23,7 +25,8 @@ export default function AdminAppointments() {
   const load = () =>
     adminApi
       .getAppointments()
-      .then((data) => { if (pending.current === 0) setAppointments(data); })
+      .then((data) => { if (pending.current === 0) setAppointments(data); setError(''); })
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
 
   useEffect(() => { load(); }, []);
@@ -46,15 +49,20 @@ export default function AdminAppointments() {
       setAppointments((prev) => prev.map((a) => (a._id === id ? { ...a, status } : a)));
       try {
         await adminApi.updateAppointmentStatus(id, status);
-      } catch {
+      } catch (err) {
         setAppointments(before);
+        setError(err.message);
       }
     });
 
   const handleDelete = (id) =>
     mutate(async () => {
-      await adminApi.deleteAppointment(id);
-      setAppointments((prev) => prev.filter((a) => a._id !== id));
+      try {
+        await adminApi.deleteAppointment(id);
+        setAppointments((prev) => prev.filter((a) => a._id !== id));
+      } catch (err) {
+        setError(err.message);
+      }
     });
 
   // Дата визита приходит как ГГГГ-ММ-ДД — показываем по-русски
@@ -87,6 +95,8 @@ export default function AdminAppointments() {
         </div>
         <PushToggle />
       </div>
+
+      {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
 
       {/* Filter tabs */}
       <div className="flex flex-wrap gap-2 mb-6">

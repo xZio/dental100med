@@ -3,6 +3,7 @@ import { adminApi } from '../../api/admin';
 import Modal from '../../components/admin/Modal';
 import DeleteButton from '../../components/admin/DeleteButton';
 import { Plus, Pencil, Trash2, FolderCog, GripVertical, Check, X } from 'lucide-react';
+import { ErrorNote } from '../../components/admin/ui.jsx';
 
 const EMPTY_SERVICE = { name: '', category: '', price: '', note: '', order: 0 };
 
@@ -29,11 +30,20 @@ export default function AdminServices() {
   // Active filter
   const [filterCat, setFilterCat] = useState('');
 
+  // Ошибка загрузки/удаления: без неё страница просто висела бы пустой
+  const [listError, setListError] = useState('');
+
   const loadAll = useCallback(async () => {
-    const [s, c] = await Promise.all([adminApi.getServices(), adminApi.getCategories()]);
-    setServices(s);
-    setCategories(c.sort((a, b) => a.order - b.order));
-    setLoading(false);
+    try {
+      const [s, c] = await Promise.all([adminApi.getServices(), adminApi.getCategories()]);
+      setServices(s);
+      setCategories([...c].sort((a, b) => a.order - b.order));
+      setListError('');
+    } catch (err) {
+      setListError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
@@ -131,6 +141,8 @@ export default function AdminServices() {
           </button>
         </div>
       </div>
+
+      {listError && <div className="mb-4"><ErrorNote>{listError}</ErrorNote></div>}
 
       {/* Category filter */}
       <div className="flex flex-wrap gap-2 mb-6">

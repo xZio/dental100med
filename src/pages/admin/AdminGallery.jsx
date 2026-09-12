@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { adminApi } from '../../api/admin';
 import Dropzone from '../../components/admin/Dropzone';
 import DeleteButton from '../../components/admin/DeleteButton';
+import { ErrorNote, PageTitle } from '../../components/admin/ui.jsx';
 
 const TABS = [
   { id: 'clinic', label: 'Наша клиника', hint: 'Интерьер клиники — эти фото видны и на главной' },
@@ -16,31 +17,42 @@ export default function AdminGallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('clinic');
+  const [error, setError] = useState('');
 
-  const load = () => adminApi.getGallery().then(setImages).finally(() => setLoading(false));
+  const load = () => adminApi.getGallery()
+    .then((data) => { setImages(data); setError(''); })
+    .catch((err) => setError(err.message))
+    .finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
 
   const current = images.filter((p) => p.tab === tab);
 
   const add = async (src) => {
     const alt = tab === 'works' ? 'Работа клиники ДенталстоМед' : 'Интерьер клиники ДенталстоМед';
-    await adminApi.createGalleryImage({ src, alt, tab, order: current.length + 1 });
-    await load();
+    try {
+      await adminApi.createGalleryImage({ src, alt, tab, order: current.length + 1 });
+      await load();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const remove = async (id) => {
-    await adminApi.deleteGalleryImage(id);
-    await load();
+    try {
+      await adminApi.deleteGalleryImage(id);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Галерея</h1>
-        <p className="text-gray-500 text-sm mt-1">{images.length} фото</p>
-      </div>
+      <PageTitle title="Галерея" subtitle={`${images.length} фото`} />
+
+      {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
 
       <div className="flex gap-2 mb-5">
         {TABS.map((t) => (

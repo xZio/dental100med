@@ -5,6 +5,7 @@ import PhotoFramer from '../../components/admin/PhotoFramer';
 import DeleteButton from '../../components/admin/DeleteButton';
 import { DEFAULT_FRAMING, framingStyle } from '../../lib/framing';
 import { Plus, Pencil, UserRound } from 'lucide-react';
+import { ErrorNote } from '../../components/admin/ui.jsx';
 
 const EMPTY = { name: '', specialty: '', experience: '', description: '', photo: '', order: 0, ...DEFAULT_FRAMING };
 
@@ -16,8 +17,13 @@ export default function AdminDoctors() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  // Ошибка списка живёт отдельно от ошибки формы: они показываются в разных местах
+  const [listError, setListError] = useState('');
 
-  const load = () => adminApi.getDoctors().then(setDoctors).finally(() => setLoading(false));
+  const load = () => adminApi.getDoctors()
+    .then((data) => { setDoctors(data); setListError(''); })
+    .catch((err) => setListError(err.message))
+    .finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
 
   const openAdd  = () => { setForm(EMPTY); setEditing(null); setError(''); setModal(true); };
@@ -53,8 +59,12 @@ export default function AdminDoctors() {
   };
 
   const handleDelete = async (id) => {
-    await adminApi.deleteDoctor(id);
-    await load();
+    try {
+      await adminApi.deleteDoctor(id);
+      await load();
+    } catch (err) {
+      setListError(err.message);
+    }
   };
 
   if (loading) return <div className="text-gray-400 text-sm">Загрузка...</div>;
@@ -73,6 +83,8 @@ export default function AdminDoctors() {
           <Plus size={16} /> Добавить
         </button>
       </div>
+
+      {listError && <div className="mb-4"><ErrorNote>{listError}</ErrorNote></div>}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {doctors.sort((a, b) => a.order - b.order).map((d) => (

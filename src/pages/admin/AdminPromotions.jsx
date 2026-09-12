@@ -58,8 +58,12 @@ function PromoForm({ promo, links, onDone }) {
   };
 
   const remove = async () => {
-    await adminApi.deletePromotion(values._id);
-    onDone();
+    try {
+      await adminApi.deletePromotion(values._id);
+      onDone();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -171,8 +175,12 @@ export default function AdminPromotions() {
   const [links, setLinks] = useState(promoLinks());
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
+  const [listError, setListError] = useState('');
 
-  const load = () => adminApi.getPromotions().then(setPromos).finally(() => setLoading(false));
+  const load = () => adminApi.getPromotions()
+    .then((data) => { setPromos(data); setListError(''); })
+    .catch((err) => setListError(err.message))
+    .finally(() => setLoading(false));
 
   useEffect(() => {
     load();
@@ -196,6 +204,8 @@ export default function AdminPromotions() {
         Круглые печати поверх главной страницы. Порядок в списке — порядок на экране: первая слева сверху,
         вторая справа, третья снизу.
       </p>
+
+      {listError && <div className="mb-4"><ErrorNote>{listError}</ErrorNote></div>}
 
       <div className="flex flex-col gap-3">
         {promos.map((promo) => (
