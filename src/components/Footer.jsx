@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { legal } from '../data/legal.js';
+import { legal, clinic } from '../data/legal.js';
 
 /** Подвал из макета: бренд, ссылки, реквизиты и обязательная медицинская пометка. */
 export default function Footer() {
@@ -26,7 +26,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} {legal.shortName} · ИНН {legal.inn} · Лицензия № {legal.license.number}</span>
+        <span>© {clinic.foundedYear}–{new Date().getFullYear()} {legal.shortName} · ИНН {legal.inn} · Лицензия № {legal.license.number}</span>
         <Link to="/privacy">Политика конфиденциальности</Link>
       </div>
 

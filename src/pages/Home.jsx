@@ -4,6 +4,7 @@ import { api } from '../api/index.js';
 import { framingStyle } from '../lib/framing.js';
 import { plural } from '../lib/plural.js';
 import { groupByCategory } from '../lib/categories.js';
+import { clinic } from '../data/legal.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
 import PromoSeal from '../components/PromoSeal.jsx';
 import Reviews from '../components/Reviews.jsx';
@@ -112,7 +113,7 @@ function ServicesSection({ categories }) {
   );
 }
 
-function AboutPanel({ doctorsCount }) {
+function AboutPanel() {
   return (
     <section className="about section-pad" id="about">
       <div className="about-visual">
@@ -130,8 +131,8 @@ function AboutPanel({ doctorsCount }) {
         <p>Мы — ДенталстоМед. Семейная клиника в Подольске, где за каждой улыбкой видят человека. Его историю, переживания и ожидания.</p>
         <p>Внимательно выслушаем, понятно расскажем о лечении и вместе выберем подходящий путь. Чтобы приходить к стоматологу было спокойно.</p>
         <div className="about-facts">
-          <div><strong>с 2008</strong><span>заботимся об улыбках</span></div>
-          <div><strong>{doctorsCount} {plural(doctorsCount, ['врач', 'врача', 'врачей'])}</strong><span>одна команда</span></div>
+          <div><strong>с {clinic.foundedYear}</strong><span>заботимся об улыбках</span></div>
+          <div><strong>{clinic.doctorsCount} {plural(clinic.doctorsCount, ['врач', 'врача', 'врачей'])}</strong><span>одна команда</span></div>
         </div>
         <Link className="text-button" to="/doctors">Познакомиться с командой <ArrowUpRight /></Link>
       </div>
@@ -231,7 +232,7 @@ export default function Home() {
     <>
       <Hero promos={promos} />
       <ServicesSection categories={serviceCategories} />
-      <AboutPanel doctorsCount={physicians.length || 7} />
+      <AboutPanel />
       {physicians.length > 0 && <DoctorsPreview doctors={physicians} />}
       <Reviews />
       <ContactPanel />

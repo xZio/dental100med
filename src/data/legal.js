@@ -22,6 +22,16 @@ export const legal = {
   privacyUpdated: '7 сентября 2026 г.',
 };
 
+/**
+ * Цифры о клинике, которые показываются на сайте. Год основания и число врачей
+ * названы клиникой; в базе сейчас меньше карточек врачей, чем людей в штате,
+ * поэтому счётчик берётся отсюда, а не из длины списка.
+ */
+export const clinic = {
+  foundedYear: 2018,
+  doctorsCount: 12,
+};
+
 export const legalContacts = {
   phone: '+7 (495) 924-19-17',
   email: 'dental100med@yandex.ru',

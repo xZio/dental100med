@@ -1,24 +1,19 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
-import { api } from '../api/index.js';
-import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
 import YandexRating from '../components/YandexRating.jsx';
-import { legal } from '../data/legal.js';
+import { legal, clinic } from '../data/legal.js';
 import { plural } from '../lib/plural.js';
 
 /**
- * Страница «О клинике». Факты только проверяемые: год основания, состав
- * команды из базы, лицензия со скана. Никаких выдуманных вех.
+ * Страница «О клинике». Факты только проверяемые: год основания и число врачей
+ * названы клиникой (src/data/legal.js), лицензия со скана. Никаких выдуманных вех.
  */
 export default function About() {
   useSEO({
     title: 'О клинике',
-    description: 'ДенталстоМед — семейная стоматология в Подольске с 2008 года. Команда, принципы, лицензия.',
+    description: `ДенталстоМед — семейная стоматология в Подольске с ${clinic.foundedYear} года. Команда, принципы, лицензия.`,
   });
-
-  const { data: doctors } = useFetch(api.getDoctors);
-  const physicians = (doctors ?? []).filter((d) => /^врач/i.test(d.specialty)).length || 7;
 
   return (
     <>
@@ -26,7 +21,7 @@ export default function About() {
         <div>
           <span className="eyebrow">Давайте знакомиться</span>
           <h1>Хорошая стоматология<br />начинается<br /><span className="handwritten">с доверия.</span></h1>
-          <p>С 2008 года помогаем жителям Подольска сохранять здоровье и красоту улыбки.</p>
+          <p>С {clinic.foundedYear} года помогаем жителям Подольска сохранять здоровье и красоту улыбки.</p>
         </div>
         <YandexRating className="page-hero-badge" />
       </section>
@@ -48,8 +43,8 @@ export default function About() {
 
           <div className="grid grid-cols-2 gap-4">
             {[
-              { value: 'с 2008', label: 'заботимся об улыбках' },
-              { value: `${physicians} ${plural(physicians, ['врач', 'врача', 'врачей'])}`, label: 'одна команда' },
+              { value: `с ${clinic.foundedYear}`, label: 'заботимся об улыбках' },
+              { value: `${clinic.doctorsCount} ${plural(clinic.doctorsCount, ['врач', 'врача', 'врачей'])}`, label: 'одна команда' },
               { value: 'Вся семья', label: 'взрослые и дети' },
               { value: 'Лицензия', label: `№ ${legal.license.number}` },
             ].map(({ value, label }) => (
