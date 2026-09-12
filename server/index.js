@@ -51,6 +51,63 @@ app.use((req, res, next) => {
   next();
 });
 
+// ── Переезд на боевой домен ───────────────────────────────────────────────
+// Канонический адрес сайта — SITE_ORIGIN. Хосты из SITE_ALIASES (www, второй
+// домен клиники, старое превью на zio-dev) отвечают 301 на тот же путь основного
+// домена. Пока SITE_ALIASES не задан, ничего не редиректится.
+// /api не трогаем: у открытой на старом адресе админки запросы не должны
+// превращаться в GET после 301.
+const canonical = new URL(SITE_ORIGIN);
+const aliasHosts = new Set(
+  (process.env.SITE_ALIASES || '').split(',').map((h) => h.trim().toLowerCase()).filter(Boolean)
+);
+app.use((req, res, next) => {
+  const host = (req.hostname || '').toLowerCase();
+  if (!aliasHosts.has(host) || host === canonical.hostname || req.path.startsWith('/api/')) return next();
+  res.redirect(301, canonical.origin + req.originalUrl);
+});
+
+// Адреса старого сайта клиники на WordPress: по ним сайт знают Яндекс и Google,
+// они лежат в закладках. Ведём на ближайшую страницу нового сайта, а не в 404.
+const DOCTOR_PAGES = [
+  'ивина-елена-владимировна', 'тюриков-иван-николаевич', 'перевязкина-юлия-витальевна',
+  'рачковская-полина-алексеевна', 'логунова-полина-алексеевна', 'ионова-анна-эдуардовна',
+  'морсакова-елена-константиновна', 'паршин-виталий-степанович',
+  'муродалиева-нуринисо-садриддиновна', 'лопатина-юлия-олеговна',
+];
+const LEGACY_PAGES = {
+  'цены': '/services',
+  'услуги': '/services',
+  'детская-стоматология': '/services#Детская стоматология',
+  'наши-специалисты': '/doctors',
+  ...Object.fromEntries(DOCTOR_PAGES.map((slug) => [slug, '/doctors'])),
+  'галерея': '/gallery',
+  'фото-клиники': '/gallery',
+  'наши-работы': '/gallery',
+  'контакты': '/contacts',
+  'записаться-на-приём': '/contacts',
+  'записаться-на-прием': '/contacts',
+  'о-нас': '/about',
+  'лицензии': '/about',
+  'сертификаты': '/about',
+};
+app.use((req, res, next) => {
+  if (req.method !== 'GET' || req.path.startsWith('/api/')) return next();
+
+  let path;
+  try {
+    path = decodeURIComponent(req.path);
+  } catch {
+    return next();
+  }
+  const slug = path.replace(/^\/+|\/+$/g, '').toLowerCase();
+
+  if (LEGACY_PAGES[slug]) return res.redirect(301, encodeURI(LEGACY_PAGES[slug]));
+  // RSS-ленты WordPress и прочие кириллические страницы, которых нет в списке, — на главную
+  if (slug === 'feed' || slug === 'comments/feed' || /[а-яё]/.test(slug)) return res.redirect(301, '/');
+  next();
+});
+
 // Публичные POST без ограничений — это спам заявками с push на все телефоны и брутфорс пароля
 const limiter = (windowMs, limit, message) =>
   rateLimit({ windowMs, limit, standardHeaders: 'draft-7', legacyHeaders: false, message: { message } });
