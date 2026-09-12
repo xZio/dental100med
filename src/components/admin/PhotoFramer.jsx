@@ -95,7 +95,7 @@ export default function PhotoFramer({ photo, framing, onPhotoChange, onFramingCh
           pick(e.dataTransfer.files);
         }}
         onClick={() => { if (!photo) input.current?.click(); }}
-        className={`relative h-[190px] w-[190px] touch-none overflow-hidden rounded-3xl border-2 border-dashed transition-colors ${
+        className={`relative h-[190px] w-[190px] touch-none overflow-hidden rounded-full border-2 border-dashed transition-colors ${
           over ? 'border-teal-500 bg-teal-50' : photo ? 'border-transparent bg-gray-100' : 'border-gray-300 bg-gray-50'
         } ${photo ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
       >

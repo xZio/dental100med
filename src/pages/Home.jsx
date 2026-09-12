@@ -167,7 +167,7 @@ function DoctorsPreview({ doctors }) {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {doctors.slice(0, 3).map((doc) => (
           <Link key={doc._id} to="/doctors" className="card flex items-start gap-4 p-6 transition-transform duration-300 hover:-translate-y-1">
-            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl bg-[#cce9f2]">
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-[#cce9f2]">
               {doc.photo && <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading="lazy" />}
             </div>
             <div className="min-w-0">

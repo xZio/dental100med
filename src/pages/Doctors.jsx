@@ -36,7 +36,8 @@ export default function Doctors() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {doctors.map((doc, i) => (
               <article key={doc._id} className="card p-6">
-                <div className="mb-4 h-24 w-24 overflow-hidden rounded-2xl bg-[#cce9f2]">
+                {/* Круг, а не скруглённый квадрат: так же кадрирует превью в админке */}
+                <div className="mb-4 h-24 w-24 overflow-hidden rounded-full bg-[#cce9f2]">
                   {/* Первый ряд виден сразу под hero — его не откладываем */}
                   {doc.photo && (
                     <img src={doc.photo} alt={doc.name} className="h-full w-full object-cover" style={framingStyle(doc)} loading={i < 3 ? 'eager' : 'lazy'} />
