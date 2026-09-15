@@ -16,7 +16,9 @@ export const PROMO_COLORS = {
 
 export const PROMO_COLOR_KEYS = Object.keys(PROMO_COLORS);
 
-export const isPromoColor = (value) => Object.hasOwn(PROMO_COLORS, value);
+// Не Object.hasOwn: его нет в Safari до 15.4, а Vite замен не подставляет —
+// на старых iPhone главная падала в белый экран
+export const isPromoColor = (value) => Object.prototype.hasOwnProperty.call(PROMO_COLORS, value);
 
 /** Верхние строки печати: не больше двух, пустые отбрасываем. */
 export const promoTopLines = (title) =>
