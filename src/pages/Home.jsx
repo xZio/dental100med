@@ -12,6 +12,7 @@ import YandexRating from '../components/YandexRating.jsx';
 import { reachGoal } from '../components/Metrika.jsx';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 
 /**
  * Акции-печати в hero: до трёх круглых наклеек с сияющей аурой. Тексты, цвет и
@@ -31,13 +32,14 @@ function Hero({ promos }) {
   return (
     <section className="hero" id="top" aria-label="ДенталстоМед">
       <div className="hero-intro">
-        <span className="eyebrow"><i className="status-dot" /> Стоматология в Подольске</span>
+        {/* h1 — ключевая фраза для поиска; большой слоган ниже — оформление, не заголовок */}
+        <h1 className="eyebrow"><i className="status-dot" /> Стоматология в Подольске</h1>
       </div>
 
       <div className="hero-stage">
         <div className="hero-headline">
           <span className="handwritten">С любовью</span>
-          <h1>К вашей<br /><span>улыбке.</span></h1>
+          <p className="hero-title">К вашей<br /><span>улыбке.</span></p>
         </div>
         <div className="hero-aura" aria-hidden="true" />
         <img
@@ -212,10 +214,7 @@ function ContactPanel() {
 }
 
 export default function Home() {
-  // Без title: имя сайта уже «ДенталстоМед — стоматология в Подольске», иначе фраза удваивается
-  useSEO({
-    description: 'Семейная стоматологическая клиника ДенталстоМед в Подольске. Лечение, имплантация, ортодонтия. Запись онлайн.',
-  });
+  useSEO(PAGE_SEO['/']);
 
   const { data: services } = useFetch(api.getServices);
   const { data: categories } = useFetch(api.getCategories);

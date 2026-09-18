@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const SITE_NAME = 'ДенталстоМед — стоматология в Подольске';
+import { PAGE_SEO } from '../data/seo.js';
 
 function setMeta(selector, attrs) {
   let el = document.head.querySelector(selector);
@@ -15,12 +15,13 @@ function setMeta(selector, attrs) {
 /**
  * Заголовок, описание, canonical и Open Graph для текущей страницы.
  * SPA не перезагружает документ, поэтому теги переписываем при каждом переходе.
+ * Первый показ страницы те же теги получают с сервера (см. server/seo.js).
  */
 export function useSEO({ title, description, noindex = false }) {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const fullTitle = title;
     const url = `${window.location.origin}${pathname === '/' ? '/' : pathname.replace(/\/$/, '')}`;
 
     document.title = fullTitle;
@@ -37,7 +38,7 @@ export function useSEO({ title, description, noindex = false }) {
     setMeta('meta[name="robots"]', { name: 'robots', content: noindex ? 'noindex, nofollow' : 'index, follow' });
 
     return () => {
-      document.title = SITE_NAME;
+      document.title = PAGE_SEO['/'].title;
     };
   }, [title, description, noindex, pathname]);
 }

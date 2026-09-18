@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { rateLimit } from 'express-rate-limit';
@@ -16,6 +17,8 @@ import uploadsRoutes      from './routes/uploads.js';
 import galleryRoutes      from './routes/gallery.js';
 import pushRoutes         from './routes/push.js';
 import ratingRoutes       from './routes/rating.js';
+import { renderPage }     from './seo.js';
+import { PAGE_SEO }       from '../src/data/seo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app  = express();
@@ -138,7 +141,7 @@ app.use('/api', (_, res) => res.status(404).json({ message: 'Не найдено
 app.use('/uploads', express.static(uploadDir, { maxAge: '30d', immutable: true }));
 
 // Поисковикам: админку не индексировать, карта сайта — публичные страницы
-const PAGES = ['/', '/services', '/doctors', '/gallery', '/about', '/contacts', '/privacy'];
+const PAGES = Object.keys(PAGE_SEO);
 app.get('/robots.txt', (_, res) => {
   res.type('text/plain').send(`User-agent: *\nDisallow: /admin\nDisallow: /api\n\nSitemap: ${SITE_ORIGIN}/sitemap.xml\n`);
 });
@@ -151,7 +154,10 @@ app.get('/sitemap.xml', (_, res) => {
 if (isProd) {
   const distPath = path.join(__dirname, '../dist');
   // Файлы сборки с хешем в имени можно кешировать навсегда; index.html — нет
+  const indexHtml = fs.readFileSync(path.join(distPath, 'index.html'), 'utf8');
+  // index: false — иначе «/» уйдёт отдельным файлом мимо подстановки заголовков ниже
   app.use(express.static(distPath, {
+    index: false,
     setHeaders: (res, filePath) => {
       if (filePath.includes(`${path.sep}assets${path.sep}`)) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
@@ -165,7 +171,11 @@ if (isProd) {
   // <img> покажет значок битой картинки вместо запасной иконки.
   app.get('/{*path}', (req, res, next) => {
     if (path.extname(req.path)) return next();
-    res.sendFile(path.join(distPath, 'index.html'));
+    res.setHeader('Cache-Control', 'no-cache');
+    // Админка поиску не нужна (закрыта в robots.txt) и должна отвечать 200 — с неё ставят приложение
+    if (req.path === '/admin' || req.path.startsWith('/admin/')) return res.type('html').send(indexHtml);
+    const { status, html } = renderPage(indexHtml, req.path, SITE_ORIGIN);
+    res.status(status).type('html').send(html);
   });
 }
 

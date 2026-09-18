@@ -1,4 +1,5 @@
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 import { legal, legalContacts } from '../data/legal.js';
 
 function H2({ children }) {
@@ -21,10 +22,7 @@ function Ul({ items }) {
 
 /** Политика обработки персональных данных (152-ФЗ) и текст согласия для формы записи. */
 export default function Privacy() {
-  useSEO({
-    title: 'Политика конфиденциальности',
-    description: `Политика ${legal.shortName} в отношении обработки персональных данных пациентов и посетителей сайта.`,
-  });
+  useSEO(PAGE_SEO['/privacy']);
 
   return (
     <>

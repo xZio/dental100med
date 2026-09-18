@@ -3,6 +3,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 
 const TABS = [
   { id: 'clinic', label: 'Наша клиника' },
@@ -57,10 +58,7 @@ function Lightbox({ photos, startIndex, onClose }) {
 }
 
 export default function Gallery() {
-  useSEO({
-    title: 'Галерея',
-    description: 'Фотографии клиники ДенталстоМед в Подольске и примеры выполненных работ.',
-  });
+  useSEO(PAGE_SEO['/gallery']);
 
   const [activeTab, setActiveTab] = useState('clinic');
   const [lightbox, setLightbox] = useState(null);

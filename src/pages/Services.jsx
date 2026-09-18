@@ -5,14 +5,12 @@ import { api } from '../api/index.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonRow, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 import { groupByCategory } from '../lib/categories.js';
 import ServiceIcon from '../components/ServiceIcon.jsx';
 
 export default function Services() {
-  useSEO({
-    title: 'Услуги и цены',
-    description: 'Прайс-лист стоматологической клиники ДенталстоМед в Подольске. Терапия, имплантация, ортодонтия, детская стоматология.',
-  });
+  useSEO(PAGE_SEO['/services']);
 
   const [activeCategory, setActiveCategory] = useState('all');
   const { hash } = useLocation();

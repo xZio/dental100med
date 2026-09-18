@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 import YandexRating from '../components/YandexRating.jsx';
 import { legal, clinic } from '../data/legal.js';
 import { plural } from '../lib/plural.js';
@@ -10,10 +11,7 @@ import { plural } from '../lib/plural.js';
  * названы клиникой (src/data/legal.js), лицензия со скана. Никаких выдуманных вех.
  */
 export default function About() {
-  useSEO({
-    title: 'О клинике',
-    description: `ДенталстоМед — семейная стоматология в Подольске с ${clinic.foundedYear} года. Команда, принципы, лицензия.`,
-  });
+  useSEO(PAGE_SEO['/about']);
 
   return (
     <>

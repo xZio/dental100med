@@ -3,12 +3,10 @@ import { framingStyle } from '../lib/framing.js';
 import { useFetch } from '../hooks/useFetch.js';
 import { SkeletonCard, ErrorMessage } from '../components/Skeleton.jsx';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 
 export default function Doctors() {
-  useSEO({
-    title: 'Наши врачи',
-    description: 'Врачи стоматологии ДенталстоМед в Подольске: терапевты, ортопеды, ортодонт, стоматолог общей практики.',
-  });
+  useSEO(PAGE_SEO['/doctors']);
 
   const { data: doctors, loading, error } = useFetch(api.getDoctors);
 

@@ -7,6 +7,7 @@ import Select from '../components/ui/Select.jsx';
 import DatePicker from '../components/ui/DatePicker.jsx';
 import ClinicMap from '../components/ClinicMap.jsx';
 import { useSEO } from '../hooks/useSEO.js';
+import { PAGE_SEO } from '../data/seo.js';
 import { reachGoal } from '../components/Metrika.jsx';
 import YandexRating from '../components/YandexRating.jsx';
 import Reviews from '../components/Reviews.jsx';
@@ -81,10 +82,7 @@ function inputClass(touched, error) {
 }
 
 export default function Contacts() {
-  useSEO({
-    title: 'Контакты и запись',
-    description: 'Стоматология ДенталстоМед в Подольске. Адрес: пр. Юных Ленинцев, 82В, ТЦ Максимум. Запись онлайн или по телефону.',
-  });
+  useSEO(PAGE_SEO['/contacts']);
 
   const { data: categories } = useFetch(api.getCategories);
 

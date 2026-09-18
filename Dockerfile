@@ -20,6 +20,9 @@ RUN cd server && npm ci --omit=dev
 
 COPY server ./server
 COPY --from=builder /app/dist ./dist
+# Заголовки страниц для поиска — общие с фронтом (server/seo.js); package.json — ради "type": "module"
+COPY package.json ./
+COPY src/data ./src/data
 
 EXPOSE 5000
 # Coolify перезапускает контейнер, если API перестал отвечать

@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO.js';
+import { NOT_FOUND_SEO } from '../data/seo.js';
 
 export default function NotFound() {
-  useSEO({ title: 'Страница не найдена', description: 'Такой страницы на сайте нет.', noindex: true });
+  useSEO({ ...NOT_FOUND_SEO, noindex: true });
 
   return (
     <div className="page-shell">
