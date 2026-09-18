@@ -21,7 +21,7 @@ export default function Login() {
       login(token);
       navigate('/admin');
     } catch (err) {
-      setError(err.message || 'Неверный email или пароль');
+      setError(err.message || 'Неверный логин или пароль');
     } finally {
       setLoading(false);
     }
@@ -42,13 +42,16 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Логин</label>
             <input
-              type="email"
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-              placeholder="admin@dental100med.ru"
+              placeholder="admin"
               required
             />
           </div>

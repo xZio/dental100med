@@ -22,7 +22,7 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body ?? {};
 
   if (typeof email !== 'string' || typeof password !== 'string' || !email || !password)
-    return res.status(400).json({ message: 'Введите email и пароль' });
+    return res.status(400).json({ message: 'Введите логин и пароль' });
 
   const login = email.trim().toLowerCase();
   const account = accounts().find(
@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
   );
 
   if (!account)
-    return res.status(401).json({ message: 'Неверный email или пароль' });
+    return res.status(401).json({ message: 'Неверный логин или пароль' });
 
   const token = jwt.sign({ email: account.email, role: account.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
   res.json({ token, role: account.role });
