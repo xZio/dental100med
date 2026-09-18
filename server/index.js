@@ -43,10 +43,15 @@ app.disable('x-powered-by');
 if (!isProd) app.use(cors());
 app.use(express.json({ limit: '100kb' }));
 
-// Минимальные security-заголовки (без helmet: CSP пришлось бы подстраивать под Метрику и Карты)
+// Минимальные security-заголовки (без helmet: полный CSP пришлось бы подстраивать под Метрику и Карты)
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  // Не X-Frame-Options: Метрика открывает сайт во фрейме для карты кликов,
+  // скроллинга и аналитики форм. Встраивать разрешено только себе и Яндексу.
+  res.setHeader(
+    'Content-Security-Policy',
+    "frame-ancestors 'self' https://webvisor.com https://*.webvisor.com https://*.yandex.ru https://*.yandex.com https://*.yandex.by https://*.yandex.com.tr"
+  );
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   next();
 });
