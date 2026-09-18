@@ -15,7 +15,7 @@ const blank = () => ({
   discount: '',
   cta: 'Записаться',
   link: '/contacts',
-  color: 'cyan',
+  color: 'red',
   description: '',
   active: true,
   expiresAt: '',
@@ -213,7 +213,7 @@ export default function AdminPromotions() {
             key={promo._id}
             summary={
               <span className="flex items-center gap-3">
-                <span className={`h-8 w-8 shrink-0 rounded-full ${PROMO_COLORS[promo.color]?.dot ?? PROMO_COLORS.cyan.dot}`} aria-hidden />
+                <span className={`h-8 w-8 shrink-0 rounded-full ${PROMO_COLORS[promo.color]?.dot ?? PROMO_COLORS.red.dot}`} aria-hidden />
                 <span className="min-w-0">
                   <span className="block truncate text-[15px] font-bold text-gray-800">{promo.discount || '—'}</span>
                   <span className="block truncate text-[12px] text-gray-500">

@@ -111,12 +111,16 @@ export const connectDB = () => {
   // Цвет и подпись печати выбираются в админке. Раньше цвет назначался по
   // порядку акции, а подпись вычислялась из ссылки — у существующих строк
   // повторяем то же самое, чтобы после обновления сайт не изменился.
-  if (addColumn('promotions', 'color', "TEXT NOT NULL DEFAULT 'cyan'")) {
-    const tones = ['cyan', 'ink', 'ice'];
+  if (addColumn('promotions', 'color', "TEXT NOT NULL DEFAULT 'red'")) {
+    const tones = ['red', 'yellow', 'green'];
     const rows = db.prepare('SELECT id FROM promotions ORDER BY createdAt, id').all();
     const setColor = db.prepare('UPDATE promotions SET color = ? WHERE id = ?');
     rows.forEach((row, i) => setColor.run(tones[i % tones.length], row.id));
   }
+  // Палитра печатей сменилась с бирюзовый/синий/белый на красный/жёлтый/зелёный —
+  // старые значения переводим один к одному, повторный запуск ничего не меняет
+  db.exec(`UPDATE promotions SET color = CASE color WHEN 'cyan' THEN 'red' WHEN 'ink' THEN 'yellow' ELSE 'green' END
+           WHERE color IN ('cyan', 'ink', 'ice')`);
   if (addColumn('promotions', 'cta', "TEXT NOT NULL DEFAULT 'Записаться'")) {
     db.exec("UPDATE promotions SET cta = 'Подробнее' WHERE link NOT LIKE '/contacts%'");
   }

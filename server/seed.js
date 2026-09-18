@@ -82,9 +82,9 @@ const gallery = [
 // текст, подпись, цвет и куда ведёт. Те же три, что сейчас у Денталии, —
 // заготовка, клиника поменяет через админку.
 const promotions = [
-  { title: 'Консультация\nвсех врачей', discount: 'бесплатно',   cta: 'Записаться', color: 'cyan', link: '/contacts' },
-  { title: 'Панорамный\nснимок КТ',     discount: '4200 ₽',      cta: 'Записаться', color: 'ink',  link: '/contacts' },
-  { title: 'Брекеты',                   discount: 'в рассрочку', cta: 'Подробнее',  color: 'ice',  link: '/services#Брекеты и элайнеры' },
+  { title: 'Консультация\nвсех врачей', discount: 'бесплатно',   cta: 'Записаться', color: 'red',    link: '/contacts' },
+  { title: 'Панорамный\nснимок КТ',     discount: '4200 ₽',      cta: 'Записаться', color: 'yellow', link: '/contacts' },
+  { title: 'Брекеты',                   discount: 'в рассрочку', cta: 'Подробнее',  color: 'green',  link: '/services#Брекеты и элайнеры' },
 ];
 
 function seed() {

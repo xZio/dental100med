@@ -187,12 +187,12 @@
 .promo-big { margin-top: 5px; font-size: 21px; font-weight: 800; letter-spacing: -.6px; line-height: 1; }
 .promo-cta { display: inline-flex; align-items: center; gap: 3px; margin-top: 8px; font-size: 10px; font-weight: 700; }
 .promo-cta svg { width: 11px; height: 11px; }
-.promo-seal-cyan .promo-body { background: linear-gradient(135deg, #6ff5f5, #0fbcd2); color: #fff; --promo-glow: #7ff6f8; }
-.promo-seal-cyan .promo-aura { background: #8ff8fa; }
-.promo-seal-ink .promo-body { background: linear-gradient(135deg, #3d9bff, #1553d6); color: #fff; --promo-glow: #5aaaff; }
-.promo-seal-ink .promo-aura { background: #5aaaff; }
-.promo-seal-ice .promo-body { background: linear-gradient(135deg, #ffffff, #e2f4fc); color: var(--ink); --promo-glow: #ffffff; }
-.promo-seal-ice .promo-aura { background: #ffffff; }
+.promo-seal-red .promo-body { background: linear-gradient(135deg, #ff5a5f, #e0202e); color: #fff; --promo-glow: #ff6b70; }
+.promo-seal-red .promo-aura { background: #ff7a7e; }
+.promo-seal-yellow .promo-body { background: linear-gradient(135deg, #ffe04a, #ffb300); color: #3b2a00; --promo-glow: #ffd84a; }
+.promo-seal-yellow .promo-aura { background: #ffdf5e; }
+.promo-seal-green .promo-body { background: linear-gradient(135deg, #4be08a, #12a352); color: #fff; --promo-glow: #5ce89a; }
+.promo-seal-green .promo-aura { background: #6af0a4; }
 .floating-pearl { position: absolute; z-index: 4; border-radius: 50%; background: radial-gradient(circle at 31% 22%, #ddfcff 0, #8ee8f1 18%, #369ccc 49%, #176c9d 78%, #7cd3e9 100%); box-shadow: 2px 10px 13px #0d578541, inset -2px -2px 4px #7adff388; }
 .pearl-one { height: 31px; width: 31px; left: 32%; top: 218px; animation: pearl-float 6s ease-in-out infinite; }
 .pearl-two { height: 11px; width: 11px; right: 19%; bottom: 90px; animation: pearl-float 7s ease-in-out infinite reverse; }

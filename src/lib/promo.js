@@ -9,9 +9,9 @@ export const PROMO_MAX = 3;
 
 /** Цвета печатей: ключ хранится в базе, классы лежат в index.css. */
 export const PROMO_COLORS = {
-  cyan: { label: 'Бирюзовый', dot: 'bg-gradient-to-br from-[#6ff5f5] to-[#0fbcd2]' },
-  ink:  { label: 'Синий',     dot: 'bg-gradient-to-br from-[#3d9bff] to-[#1553d6]' },
-  ice:  { label: 'Белый',     dot: 'bg-gradient-to-br from-white to-[#e2f4fc] border border-[#c9e3ee]' },
+  red:    { label: 'Красный', dot: 'bg-gradient-to-br from-[#ff5a5f] to-[#e0202e]' },
+  yellow: { label: 'Жёлтый',  dot: 'bg-gradient-to-br from-[#ffe04a] to-[#ffb300]' },
+  green:  { label: 'Зелёный', dot: 'bg-gradient-to-br from-[#4be08a] to-[#12a352]' },
 };
 
 export const PROMO_COLOR_KEYS = Object.keys(PROMO_COLORS);

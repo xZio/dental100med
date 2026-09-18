@@ -15,7 +15,7 @@ const toISO = (value) => {
 };
 
 // Цвет печати выбирается из палитры сайта — произвольный в базу не пустим
-const COLORS = ['cyan', 'ink', 'ice'];
+const COLORS = ['red', 'yellow', 'green'];
 const cleanColor = (value) => (COLORS.includes(value) ? value : COLORS[0]);
 
 // Подпись внизу печати: короткая, иначе не влезет в круг
