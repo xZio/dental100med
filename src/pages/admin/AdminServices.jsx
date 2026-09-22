@@ -121,7 +121,7 @@ export default function AdminServices() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Услуги</h1>
           <p className="text-gray-500 text-sm mt-1">{services.length} позиций · {categories.length} категорий</p>
@@ -182,11 +182,12 @@ export default function AdminServices() {
                     <tbody className="divide-y divide-gray-50">
                       {items.map((s) => (
                         <tr key={s._id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-3 text-sm text-gray-800">{s.name}</td>
-                          <td className="px-6 py-3 text-sm font-semibold text-teal-700 whitespace-nowrap">
+                          {/* Длинное название переносится, а цена и кнопки остаются на экране — иначе на телефоне они уезжали за край */}
+                          <td className="w-full py-3 pl-4 pr-2 text-sm text-gray-800 [overflow-wrap:anywhere] sm:px-6">{s.name}</td>
+                          <td className="px-2 py-3 text-sm font-semibold text-teal-700 whitespace-nowrap sm:px-6">
                             {s.price}
                           </td>
-                          <td className="px-4 py-3 text-right whitespace-nowrap">
+                          <td className="py-3 pl-1 pr-3 text-right whitespace-nowrap sm:px-4">
                             <button onClick={() => openEditService(s)} className="p-1.5 text-gray-400 hover:text-teal-600 transition-colors">
                               <Pencil size={15} />
                             </button>
@@ -306,8 +307,8 @@ export default function AdminServices() {
                       </>
                     ) : (
                       <>
-                        <span className="flex-1 text-sm text-gray-800">{cat.name}</span>
-                        <span className="text-xs text-gray-400 mr-2">{svcCount} усл.</span>
+                        <span className="min-w-0 flex-1 text-sm text-gray-800 [overflow-wrap:anywhere]">{cat.name}</span>
+                        <span className="mr-2 shrink-0 text-xs text-gray-400">{svcCount} усл.</span>
                         <button onClick={() => handleRenameStart(cat)} className="p-1 text-gray-400 hover:text-teal-600 transition-colors">
                           <Pencil size={14} />
                         </button>
