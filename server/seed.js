@@ -1,12 +1,13 @@
 import 'dotenv/config';
 import { db, connectDB, now } from './config/db.js';
 
+// Порядок разделов на сайте просила клиника: первые четыре — жёстко, дальше любой
 const categories = [
   { name: 'Консультация и диагностика',    order: 1 },
   { name: 'Лечение зубов — терапия',       order: 2 },
-  { name: 'Реставрация',                   order: 3 },
+  { name: 'Детская стоматология',          order: 3 },
   { name: 'Гигиена и профилактика',        order: 4 },
-  { name: 'Детская стоматология',          order: 5 },
+  { name: 'Реставрация',                   order: 5 },
   { name: 'Протезирование — ортопедия',    order: 6 },
   { name: 'Виниры',                        order: 7 },
   { name: 'Имплантация',                   order: 8 },
