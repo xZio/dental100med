@@ -326,9 +326,7 @@ export default function Contacts() {
                   Режим работы
                 </h3>
                 <ul className="space-y-2 text-sm text-[#3d6a83]">
-                  <li className="flex justify-between"><span>Понедельник — пятница</span><span className="font-medium">9:00–21:00</span></li>
-                  <li className="flex justify-between"><span>Суббота</span><span className="font-medium">9:00–19:00</span></li>
-                  <li className="flex justify-between"><span>Воскресенье</span><span className="font-medium">10:00–17:00</span></li>
+                  <li className="flex justify-between"><span>Ежедневно</span><span className="font-medium">9:00–21:00</span></li>
                 </ul>
               </div>
 

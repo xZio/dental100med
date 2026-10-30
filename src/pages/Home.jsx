@@ -202,9 +202,7 @@ function ContactPanel() {
         <div className="contact-hours">
           <Clock />
           <div>
-            <div><span>Понедельник — пятница</span><b>9:00–21:00</b></div>
-            <div><span>Суббота</span><b>9:00–19:00</b></div>
-            <div><span>Воскресенье</span><b>10:00–17:00</b></div>
+            <div><span>Ежедневно</span><b>9:00–21:00</b></div>
           </div>
         </div>
       </div>
